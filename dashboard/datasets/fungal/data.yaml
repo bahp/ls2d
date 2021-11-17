@@ -1,0 +1,26 @@
+# data.yaml file
+
+pid: null
+
+features:
+  - Systemic inflammatory condition
+  - Age
+  - Band Intensity
+  - Asp GM Index Value
+
+outcomes:
+  - Probable IPA
+  - Possible IPA
+
+drop: []
+
+mappings: []
+
+# if no aggregation specified then the
+# agg function 'max' will be used. Only
+# useful when pid is not null.
+aggregations: {}
+
+titles: {}
+
+order: {}

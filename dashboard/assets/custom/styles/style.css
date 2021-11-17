@@ -1,0 +1,117 @@
+@media only screen and (min-width: 768px) {
+    html.fixed .inner-wrapper {
+        padding-top: 54px;
+    }
+}
+
+/**
+For plotly
+ */
+
+div.plotly-notifier {
+    visibility: hidden;
+}
+
+/*
+Removes aa from legend text (not necessary for plotly 2.0)
+ */
+g.pointtext {
+	display: none;
+}
+
+/**
+For all DataTables.
+ */
+table.dataTable td {
+	padding: 3px 10px;
+	width: 1px;
+	white-space: nowrap;
+}
+
+/**
+For demographic DataTable.
+ */
+th.tb-demo-selected {
+	color: rgb(102,0,0);
+}
+
+th.tb-demo-not-selected {
+	color: #749DAD;
+}
+
+/* Fix datatable issue when using fixed column in which
+   the background is transparent and the column values
+   cannot be seen neatly.
+ */
+
+table.dataTable.table-striped.DTFC_Cloned tbody tr:nth-of-type(odd) {
+    background-color: #F3F3F3;
+}
+table.dataTable.table-striped.DTFC_Cloned tbody tr:nth-of-type(even) {
+    background-color: white;
+}
+
+/*
+tr[role=row] {
+  background:white;
+}
+
+table.dataTable.table-striped.DTFC_Cloned tbody tr:nth-of-type(odd) {
+        background: #F3F3F3;
+}
+
+table.dataTable.table-striped.DTFC_Cloned tbody tr:nth-of-type(even) {
+        background: white;
+}
+}*/
+
+/* Minimum width of column datatable */
+/* table td { min-width: 75px; } */
+
+/*div.dataTables_scrollBody thead {
+    display: none;
+}*/
+
+/*
+table{
+  margin: 0 auto;
+  width: 100%;
+  clear: both;
+  border-collapse: collapse;
+  table-layout: fixed; // ***********add this
+  word-wrap:break-word; // ***********and this
+}
+ */
+
+
+
+.dt-button-collection a.buttons-columnVisibility:before,
+.dt-button-collection a.buttons-columnVisibility.active span:before {
+	display:block;
+	position:absolute;
+	top:1.2em;
+    left:0;
+	width:12px;
+	height:12px;
+	box-sizing:border-box;
+}
+
+.dt-button-collection a.buttons-columnVisibility:before {
+	content:' ';
+	margin-top:-6px;
+	margin-left:10px;
+	border:1px solid black;
+	border-radius:3px;
+}
+
+.dt-button-collection a.buttons-columnVisibility.active span:before {
+	content:'\2714';
+	margin-top:-11px;
+	margin-left:12px;
+	text-align:center;
+	text-shadow:1px 1px #DDD, -1px -1px #DDD, 1px -1px #DDD, -1px 1px #DDD;
+}
+
+.dt-button-collection a.buttons-columnVisibility span {
+    margin-left:20px;
+}
