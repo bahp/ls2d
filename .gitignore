@@ -1,5 +1,7 @@
 # Datasets
-*.csv
+datasets/dengue/
+datasets/covid19/
+datasets/fungal/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
