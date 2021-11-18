@@ -492,7 +492,7 @@ if __name__ == "__main__":
     from pathlib import Path
 
     # Folder
-    folder = Path('../datasets/iris')
+    folder = Path('../datasets/covid19')
 
     # Load configuration from file
     with open(folder / 'data.yaml') as file:
@@ -683,7 +683,7 @@ if __name__ == "__main__":
     model = Pipeline([
         ('imp', IterativeImputer(random_state=0)),
         ('scaler', Normalizer()),
-        ('model', pca_k)
+        ('model', lda)
     ])
 
     # Fit pipeline

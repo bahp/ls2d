@@ -400,6 +400,41 @@ async function main() {
                 showarrow: true
             },
 
+            // ------------------
+            // Select marker size
+            // ------------------
+            {
+                buttons: [
+                    {
+                        args: [{'marker.size': 2}],
+                        label: '2',
+                        method: 'update'
+                    },
+                    {
+                        args: [{'marker.size': 4}],
+                        label: '4',
+                        method: 'update'
+                    },
+                    {
+                        args: [{'marker.size': 6}],
+                        label: '6',
+                        method: 'update'
+                    },
+                    {
+                        args: [{'marker.size': 8}],
+                        label: '8',
+                        method: 'update'
+                    }
+                ],
+                pad: {'r': 0},
+                x: 4.2,
+                y: 1.16,
+                xref: 'paper',
+                yref: 'paper',
+                align: 'left',
+                showarrow: true
+            },
+
             // --------------------
             // Toggle reverse scale
             // --------------------
