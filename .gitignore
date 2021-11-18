@@ -2,6 +2,7 @@
 datasets/dengue/
 datasets/covid19/
 datasets/fungal/
+datasets/sepsis/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
