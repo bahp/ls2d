@@ -492,7 +492,7 @@ if __name__ == "__main__":
     from pathlib import Path
 
     # Folder
-    folder = Path('./datasets/dengue')
+    folder = Path('../datasets/iris')
 
     # Load configuration from file
     with open(folder / 'data.yaml') as file:
