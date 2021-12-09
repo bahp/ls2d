@@ -1,0 +1,20 @@
+# data.yaml file
+
+pid: null
+
+features: []
+outcomes: []
+drop: []
+mappings: []
+
+# if no aggregation specified then the
+# agg function 'max' will be used. Only
+# useful when pid is not null.
+aggregations: {}
+
+titles:
+  sepal length (cm): Sepal
+
+order:
+  distance: 1
+  Age: 2

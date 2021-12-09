@@ -1,0 +1,53 @@
+# data.yaml file
+
+pid: null
+
+features:
+  - RR
+  - HR
+  - SysBP
+  - DiaBP
+  - Temp
+
+outcomes:
+  - FiO2
+  - PaO2
+  - Sats %
+  - Urea
+  - Neut
+  - Lymph
+  - CRP
+  - ICU
+  - Admitted
+  - Cough
+  - Confusion
+  - SOB
+  - Fever
+  - Chronic lung disease
+  - Cardiac disease
+  - DM
+  - HTN
+  - ESRD on HD
+  - Gender
+  - Age
+  - Weight kg
+  - 14 day mortality
+
+drop: []
+
+mappings: []
+
+# if no aggregation specified then the
+# agg function 'max' will be used. Only
+# useful when pid is not null.
+aggregations: {}
+
+titles:
+  CRP: CRP
+  Temp: Temperature
+  Sats %: Saturation (%)
+  Weight kg: Weight (Kg)
+
+order:
+  distance: 1
+  Age: 2
