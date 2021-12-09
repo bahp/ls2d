@@ -1,0 +1,60 @@
+# IRIS dataset
+
+filepath: ./datasets/iris/data.csv
+output: ./outputs/iris/
+
+features:
+  - sepal length (cm)
+  - sepal width (cm)
+  - petal length (cm)
+  - petal width (cm)
+
+estimators:
+  - pca
+  - pcak
+  - pcai
+  - icaf
+  - iso
+  - nmf
+
+params:
+  pca:
+    pca__n_components: [2]
+
+  pcak:
+    pcak__n_components: [2]
+
+  pcai:
+    pcai__n_components: [2]
+
+  nmf:
+    nmf__n_components: [2]
+    nmf__tol: [0.0001, 0.001, 0.01]
+
+  icaf:
+    icaf__n_components: [2]
+
+  iso:
+    iso__n_components: [2]
+    iso__n_neighbors: [5, 10]
+
+  lda:
+    lda__n_components: [2]
+    lda__max_iter: [5]
+    lda__learning_method: [online]
+    lda__learning_offset: [50]
+    lda__random_state: [0]
+
+  ae:
+    ae__layers:
+      - []
+      - [3]
+      - [4]
+      - [5]
+      - [5, 4]
+      - [5, 3]
+      - [4, 3]
+      - [5, 4, 3]
+    ae__learning_rate: [0.01, 0.05, 0.1]
+    ae_epochs: [10, 30, 50, 100, 150, 250, 350, 500]
+    ae_batch_size: [16, 32]

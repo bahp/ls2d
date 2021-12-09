@@ -39,6 +39,9 @@ app = Flask(__name__,
 def dashboard():
     return render_template('dashboard.html')
 
+@app.route('/evaluation')
+def evaluation():
+    return render_template('page_evaluation.html')
 
 @app.route('/similarity-retrieval')
 def similarity_retrieval():
@@ -204,6 +207,46 @@ def get_demographics():
     # Return
     return response
 
+@app.route('/get_evaluation', methods=['GET'])
+def get_evaluation():
+    """This method returns datatable information.
+
+    .. todo: Allow options (e.g. filename).
+    .. todo: Mix mean +- std into one column.
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
+    # File path
+    filepath = '../outputs/iris/20211209-135359/results.csv'
+    # Load data from file
+    df = pd.read_csv(filepath)
+    # Filter out those columns starting with param_
+    df = df.loc[:, ~df.columns.str.startswith('param_')]
+    # Filter out those columns starting with rank
+    df = df.loc[:, ~df.columns.str.startswith('rank_')]
+    # Reorder
+    cols = list(df.columns)
+    cols.insert(3, cols.pop(cols.index('params')))
+    cols.insert(4, cols.pop(cols.index('mean_test_pearson')))
+    cols.insert(5, cols.pop(cols.index('mean_test_spearman')))
+    df = df[cols]
+
+    # Create response
+    resp = {
+        'columns': df.columns.tolist(),
+        'data': df.round(decimals=3) \
+                 .astype(str)
+                 .replace('nan', '-')
+                 .values
+                 .tolist()
+    }
+
+    # Return
+    return jsonify(resp)
 
 @app.route('/get_data_columns', methods=['GET'])
 def get_data_columns():
