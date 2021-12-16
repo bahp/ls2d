@@ -53,6 +53,27 @@ def trace():
     return render_template('patient_trace.html')
 
 
+@app.route('/similarity-retrieval2')
+def similarity_retrieval2():
+    """"""
+    from pipeline import PipelineMemory
+    from imblearn.pipeline import Pipeline
+    # Load model.
+    path = '../outputs/iris/20211216-142942/nrm-pcak/pipeline8/pipeline8-split1.p'
+    model = pickle.load(open(str(path), "rb"))
+
+    print(model)
+    # Include encodings
+    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
+    # Include encodings (not needed)
+    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
+
+    # Create KD-Tree
+    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
+
+    return render_template('similarity_retrieval.html')
+
+
 # -------------------------------------------------------
 # Static elements
 # -------------------------------------------------------
@@ -221,7 +242,7 @@ def get_evaluation():
     -------
     """
     # File path
-    filepath = '../outputs/iris/20211209-135359/results.csv'
+    filepath = '../outputs/iris/20211216-142942/results.csv'
     # Load data from file
     df = pd.read_csv(filepath)
     # Filter out those columns starting with param_

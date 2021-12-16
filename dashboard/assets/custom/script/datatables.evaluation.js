@@ -60,6 +60,18 @@
 					targets: [11],
 					className: 'tb-demo-selected'
 				},
+				{
+					targets: 0,
+					render: function (data, type, row) {
+						console.log(data, type, row)
+						var href = './' + row[40] + '/pipeline' + Math.trunc(row[38]) + '/pipeline' + Math.trunc(row[38]) + '-split1.p';
+						console.log(href)
+						//'./outputs/iris/20211216-151011/nrm-iso/pipeline1/pipeline1-split1.p'
+						var a = '<a href="/model?path=' + href + '"> ' + row[0] + "</a>"
+						//return row[0] + " MANUAL";
+						return a;
+					}
+				}
 			]
         });
 

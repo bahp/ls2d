@@ -74,3 +74,9 @@ def _load_pandas(path, **kwargs):
 """
 def format_cv_results
 """
+
+from sklearn.base import BaseEstimator
+
+class TransformWrapper(BaseEstimator):
+    def predict(self, *args, **kwargs):
+        return self.transform(*args, **kwargs)

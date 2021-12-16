@@ -109,8 +109,6 @@ sys.exit()
 # transformations (e.g. kbins10), standarization (e.g. std),
 # balancing of classes (e.g. smote), ...
 
-def predict(self, *args, **kwargs):
-    return self.transform(*args, **kwargs)
 
 def custom_metrics(est, X, y):
     """This method computes the metrics.
@@ -135,10 +133,12 @@ def custom_metrics(est, X, y):
         The y data in fit.
     """
     # Transform
-    y = est.predict(X)
+    y = est.transform(X)
     # Metrics
     m = custom_metrics_(X, y)
     # Add information
+    m['split'] = est.split
+    m['pipeline'] = est.pipeline
     # Return
     return m
 
@@ -181,6 +181,8 @@ def custom_metrics_(y_true, y_pred):
     }
 
 
+def predict(self, *args, **kwargs):
+    return self.transform(*args, **kwargs)
 
 
 # Compendium of results
@@ -198,17 +200,19 @@ for i, est in enumerate(estimators):
     # Option I: Not working.
     # Add the predict method if it does not have it.
     #estimator.predict = MethodType(predict, estimator)
+    #estimator.predict = predict.__get__(estimator)
+    #estimator.predict = predict
 
     # Option II:
     # Dynamically create wrapper
-    class Wrapper(estimator.__class__):
-        def predict(self, *args, **kwargs):
-            return self.transform(*args, **kwargs)
+    #class Wrapper(estimator.__class__):
+    #    def predict(self, *args, **kwargs):
+    #        return self.transform(*args, **kwargs)
 
     # Create pipeline
     pipe = PipelineMemory(steps=[
                                 ('nrm', Normalizer()),
-                                (est, Wrapper())
+                                (est, estimator)
                           ],
                           memory_path=pipeline_path,
                           memory_mode='pickle',
@@ -232,11 +236,12 @@ for i, est in enumerate(estimators):
     # Save results as csv
     results = grid.cv_results_
 
-    # Save
+    # Add information
     df = pd.DataFrame(results)
     df.insert(0, 'estimator', _DEFAULT_ESTIMATORS[est].__class__.__name__)
     df.insert(1, 'slug_short', pipe.slug_short)
     df.insert(2, 'slug_long', pipe.slug_long)
+    df['path'] = pipeline_path / pipe.slug_short
     df.to_csv(pipeline_path / pipe.slug_short / 'results.csv', index=False)
 
     # Append to total results
