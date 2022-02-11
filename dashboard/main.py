@@ -10,6 +10,7 @@ Description:
 # Libraries
 import os
 import sys
+import numpy as np
 import pandas as pd
 
 # Flask
@@ -221,7 +222,7 @@ def get_evaluation():
     -------
     """
     # File path
-    filepath = '../outputs/iris/20211209-135359/results.csv'
+    filepath = '../outputs/iris/20220211-142222/results.csv'
     # Load data from file
     df = pd.read_csv(filepath)
     # Filter out those columns starting with param_
@@ -535,7 +536,7 @@ if __name__ == "__main__":
     from pathlib import Path
 
     # Folder
-    folder = Path('../datasets/covid19')
+    folder = Path('../datasets/iris')
 
     # Load configuration from file
     with open(folder / 'data.yaml') as file:
@@ -706,6 +707,10 @@ if __name__ == "__main__":
     from sklearn.manifold import Isomap
     from sklearn.manifold import LocallyLinearEmbedding
 
+    from ls2d import pipeline
+    from ls2d.pipeline import PipelineMemory
+    from ls2d.autoencoder import SkorchAE
+
     # Models
     pca = PCA(n_components=2)
     nmf = NMF(n_components=2)
@@ -722,15 +727,27 @@ if __name__ == "__main__":
     iso = Isomap(n_components=2)
     lle = LocallyLinearEmbedding(n_components=2)
 
+    """
     # Create pipeline
     model = Pipeline([
         ('imp', IterativeImputer(random_state=0)),
         ('scaler', Normalizer()),
         ('model', lda)
     ])
+    """
 
     # Fit pipeline
-    model = model.fit(data_w[FEATURES])
+    #model = model.fit(data_w[FEATURES].to_numpy().astype(np.float32))
+
+    import pickle
+
+
+    path = '../outputs/iris/20220211-142222/nrm-sae/pipeline7/pipeline7-split1.p'
+    with open(path, 'rb') as f:
+        # The protocol version used is detected automatically, so we do not
+        # have to specify it.
+        model = pickle.load(f)
+
 
     # Include encodings
     data_w[['x', 'y']] = model.transform(data_w[FEATURES])
