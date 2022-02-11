@@ -2,6 +2,7 @@
 import yaml
 import time
 import json
+import numpy as np
 import pandas as pd
 
 from pathlib import Path
@@ -17,9 +18,9 @@ from sklearn.model_selection import GridSearchCV
 #from imblearn.over_sampling import SMOTE
 
 # Own libraries
-from pipeline import PipelineMemory
+from ls2d.pipeline import PipelineMemory
 #from settings import _DEFAULT_FILTERS
-from settings import _DEFAULT_ESTIMATORS
+from ls2d.settings import _DEFAULT_ESTIMATORS
 #from settings import _DEFAULT_PARAM_GRIDS
 #from settings import _DEFAULT_METRICS
 #from settings import _DEFAULT_TRANSFORMERS
@@ -32,7 +33,7 @@ from settings import _DEFAULT_ESTIMATORS
 # Load configuration
 # ------------------
 # Load configuration from file
-with open('settings.iris.yaml') as file:
+with open('datasets/iris/settings.iris.yaml') as file:
     config = yaml.full_load(file)
 
 # Features
@@ -55,50 +56,15 @@ data = pd.read_csv(config['filepath'])
 X = data[config['features']]
 y = data.target
 
+# To numpy (for NeuralNet)
+X = X.to_numpy().astype(np.float32)
+y = y.to_numpy().astype(np.int64)
+
 # Show
 print("\nData from '%s':" % config['filepath'])
 print(data)
 
 
-"""
-import torch
-from torch.utils.data import DataLoader
-from ae import Autoencoder
-from ae import train_autoencoder
-
-a = Autoencoder(
-    input_size=4,
-    layers=[3],
-    latent_dim=2,
-)
-
-loader_train = DataLoader(X.to_numpy(), 16, shuffle=True)
-loader_test = DataLoader(X.to_numpy(), 16, shuffle=False)
-
-optimizer = torch.optim.Adam(a.parameters(), lr=0.01)
-
-losses = train_autoencoder(a, optimizer, loader_train, loader_test, 10,
-                           # animation_data=loader_train_no_shuffle,
-                           # animation_colour=[train_info['shock'],
-                           #                   train_info['bleeding'],
-                           #                   train_info['ascites'],
-                           #                   train_info['abdominal_pain'],
-                           #                   train_info['bleeding_mucosal'],
-                           #                   train_info['bleeding_gum'],
-                           #                   train_info['bleeding_skin'],
-                           #                   train_info['gender']],
-                           # animation_labels=['Shock', 'Bleeding', 'Ascites', 'Abdominal pain',
-                           #                   'Bleeding mucosal', 'Bleeding gum',
-                           #                   'Bleeding skin', 'Gender'],
-                           # animation_path='animation.gif'
-                           )
-
-
-
-
-import sys
-sys.exit()
-"""
 
 
 # --------------------------------------------------------
@@ -135,19 +101,24 @@ def custom_metrics(est, X, y):
         The y data in fit.
     """
     # Transform
-    y = est.predict(X)
+    y_embd = est.predict(X)
     # Metrics
-    m = custom_metrics_(X, y)
+    m = custom_metrics_(X, y_embd, y)
     # Add information
     # Return
     return m
 
 
-def custom_metrics_(y_true, y_pred):
+def custom_metrics_(y_true, y_pred, y, n=1000):
     """This method computes the metrics.
 
-    .. note: It has to be included in GridSearchCv
+    .. note: It has to be included in GridSearchCV
              using the make_scorer function previously.
+
+    .. todo: At the moment we are computing the GMM ratio
+             based on the labels (y). It would be nice to
+             allow in the configuration file to indicate
+             which other labels are of interest (e.g. shock)
 
     Parameters
     ----------
@@ -165,6 +136,11 @@ def custom_metrics_(y_true, y_pred):
     from scipy.spatial.distance import cdist
     from scipy.spatial import procrustes
     from scipy.stats import spearmanr, pearsonr
+    from sklearn.mixture import GaussianMixture
+    from sklearn.mixture import BayesianGaussianMixture
+    from sklearn.metrics import silhouette_score
+    from ls2d.metrics import gmm_ratio_score
+    from ls2d.metrics import gmm_intersection_matrix
 
     # Compute distances
     true_dist = cdist(y_true, y_true).flatten()
@@ -174,10 +150,32 @@ def custom_metrics_(y_true, y_pred):
     pearson = pearsonr(true_dist, pred_dist)
     spearman = spearmanr(true_dist, pred_dist)
 
+    # Compute procrustes
+    """
+    y_padd = np.c_[y_pred,
+        np.zeros(y_true.shape[0]),
+        np.zeros(y_true.shape[0]),
+        np.zeros(y_true.shape[0])]
+    print("\n\n\n")
+    print(y_true.shape, y_padd.shape)
+    """
+    try:
+        mtx1, mtx2, disparity = procrustes(y_true, y_pred)
+    except ValueError as e:
+        mtx1, mtx2, disparity = None, None, -1
+
+    # GMMs
+    gmm_ratio_sum = gmm_ratio_score(y_pred, y)
+
+    # Compute silhouette
+    #silhouette = silhouette_score(y_pred, y, metric="sqeuclidean")
+
     # Return
     return {
         'pearson': pearson[0],
-        'spearman': spearman[0]
+        'spearman': spearman[0],
+        'procrustes': disparity,
+        'gmm_ratio_sum': gmm_ratio_sum
     }
 
 
@@ -199,20 +197,24 @@ for i, est in enumerate(estimators):
     # Add the predict method if it does not have it.
     #estimator.predict = MethodType(predict, estimator)
 
-    # Option II:
-    # Dynamically create wrapper
-    class Wrapper(estimator.__class__):
-        def predict(self, *args, **kwargs):
-            return self.transform(*args, **kwargs)
+    aux = getattr(estimator, "predict", None)
+    if not callable(aux):
+        # Option II:
+        # Dynamically create wrapper
+        class Wrapper(estimator.__class__):
+            def predict(self, *args, **kwargs):
+                return self.transform(*args, **kwargs)
+        estimator = Wrapper()
 
     # Create pipeline
     pipe = PipelineMemory(steps=[
                                 ('nrm', Normalizer()),
-                                (est, Wrapper())
+                                (est, estimator)
                           ],
                           memory_path=pipeline_path,
                           memory_mode='pickle',
                           verbose=True)
+
 
     # Warning
     if (pipeline_path / pipe.slug_short).exists():
@@ -227,7 +229,8 @@ for i, est in enumerate(estimators):
                               refit=False, n_jobs=1)
 
     # Fit grid search
-    grid.fit(X, X)
+    import numpy as np
+    grid.fit(X, y)
 
     # Save results as csv
     results = grid.cv_results_

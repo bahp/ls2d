@@ -10,12 +10,13 @@ features:
   - petal width (cm)
 
 estimators:
+  - sae
   - pca
   - pcak
   - pcai
   - icaf
   - iso
-  - nmf
+  - lda
 
 params:
   pca:
@@ -45,16 +46,9 @@ params:
     lda__learning_offset: [50]
     lda__random_state: [0]
 
-  ae:
-    ae__layers:
-      - []
-      - [3]
-      - [4]
-      - [5]
-      - [5, 4]
-      - [5, 3]
-      - [4, 3]
-      - [5, 4, 3]
-    ae__learning_rate: [0.01, 0.05, 0.1]
-    ae_epochs: [10, 30, 50, 100, 150, 250, 350, 500]
-    ae_batch_size: [16, 32]
+  sae:
+    sae__module__layers:
+      - [4, 2]
+      - [4, 3, 2]
+    sae__lr: [0.01]
+    sae__max_epochs: [10]
