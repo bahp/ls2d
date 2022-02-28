@@ -9,6 +9,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
+from sklearn.base import BaseEstimator
+
 from torch.utils.data import DataLoader
 from skorch import NeuralNet
 
@@ -22,6 +24,28 @@ class SkorchAE(NeuralNet):
 
     def fit(self, X, y, *args, **kwargs):
         super().fit(X, X)
+
+    def get_params(self, deep=True, **kwargs):
+        """Overwritten.
+
+        In order to get unique signatures when creating the pipelines,
+        it is necessary to remove those parameters from NeuralNet that
+        are created dynamically. Thus, in addition to avoid including
+        the callbacks, we have to remove also the valid split as these
+        are not part of the model hyperparameter configuration.
+
+        'train_split':
+            <skorch.dataset.ValidSplit object at 0x1544ffcd0>
+        """
+        params = BaseEstimator.get_params(self, deep=deep, **kwargs)
+        # Callback parameters are not returned by .get_params, needs
+        # special treatment.
+        #params_cb = self._get_params_callbacks(deep=deep)
+        #params.update(params_cb)
+        # don't include the following attributes
+        to_exclude = {'_modules', '_criteria', '_optimizers', 'train_split'}
+        return {key: val for key, val in params.items()
+            if key not in to_exclude}
 
 
 class MyModule(nn.Module):
@@ -159,7 +183,7 @@ class AE(nn.Module):
         self.decoder = nn.Sequential(*dec)
 
     def forward(self, x):
-        encoded = self.encoder(x)
+        encoded = self.encoder(x.float())
         decoded = self.decoder(encoded)
         return decoded
 
@@ -316,11 +340,6 @@ if __name__ == '__main__':
         """This method computes the metrics."""
         # Transform
         y = est.predict(X)
-
-        print("EHHH")
-
-        import sys
-        sys.exit()
         # Return
         return mean_squared_error(y, X)
 

@@ -16,7 +16,7 @@ import json
 from pathlib import Path
 from datetime import datetime
 from sklearn.pipeline import Pipeline
-from imblearn.pipeline import Pipeline
+#from imblearn.pipeline import Pipeline
 
 # Specific
 import jsonpickle
@@ -93,17 +93,6 @@ class PipelineMemory(Pipeline):
         # Super constructor
         super(PipelineMemory, self).__init__(steps, **kwargs)
 
-
-    #@property
-    #def slug(self):
-    #    """.. todo: deprecate"""
-    #    return '-'.join([k for k in self.named_steps.keys()])
-
-    #@property
-    #def slugd(self):
-    #    """.. todo: deprecate"""
-    #    return '-'.join([v.__class__.__name__ for v in self.named_steps.values()])
-
     @property
     def filepath(self):
         """This method creates the filepath."""
@@ -137,7 +126,7 @@ class PipelineMemory(Pipeline):
             # Add signature
             if signature not in globals()['signatures']:
                 globals()['signatures'][signature] = \
-                    [len(globals()['signatures']), 1]
+                    [len(globals()['signatures']), 0]
             else:
                 globals()['signatures'][signature][1] += 1
 

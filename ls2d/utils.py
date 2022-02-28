@@ -71,6 +71,88 @@ def _load_pandas(path, **kwargs):
 # ---------------------------------------------------------
 # Format cv_results_
 # ---------------------------------------------------------
-"""
-def format_cv_results
-"""
+def format_workbench(df):
+    """This method...
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
+    # --------------------
+    # Create info
+    # --------------------
+    # Information
+    info = df.copy(deep=True)
+
+    # Filter out those columns starting with param_
+    info = info.loc[:, ~info.columns.str.startswith('param_')]
+    info = info.loc[:, ~info.columns.str.startswith('rank_')]
+    info = info.loc[:, ~info.columns.str.startswith('mean_')]
+    info = info.loc[:, ~info.columns.str.startswith('std_')]
+    info = info.loc[:, ~info.columns.str.startswith('split')]
+
+    # --------------------
+    # Create metrics
+    # --------------------
+    # Metrics
+    metrics = pd.DataFrame()
+
+    # Get std and mean columns
+    cols = set(["_".join(c.split("_")[1:]) for c in df.columns
+                if c.startswith('mean_') | c.startswith('std_')])
+
+    # Create metrics
+    for c in cols:
+        metrics['%s' % c] = \
+            df['mean_%s' % c].round(3).astype(str) + ' ± ' + \
+            df['std_%s' % c].round(3).astype(str)
+
+    # Sort
+    metrics = metrics[sorted(metrics.columns)]
+
+    # Format
+    metrics.fillna('-', inplace=True)
+
+    # Return
+    return pd.concat([info, metrics], axis=1)
+
+def format_pipeline(series):
+    """This method...
+
+    Parameters
+    ----------
+
+    Returns
+    -------
+    """
+    # Copy
+    raw = series.copy(deep=True)
+
+    # Keep columns starting with split
+    aux = raw[raw.index.str.startswith('split')]
+
+    # Keep other to concatenate later
+    #raw = raw[~raw.index.isin(aux.index)]
+
+    # Columns and rows
+    rows = set([c.split('_', 1)[0] for c in aux.index])
+    cols = set([c.split('_', 1)[1] for c in aux.index])
+
+    # Create metrics
+    table = pd.DataFrame()
+    for r in rows:
+        for c in cols:
+            table.loc[r, c] = aux['%s_%s' % (r, c)]
+
+    # Sort
+    table['slug_short'] = raw['slug_short']
+    table = table[sorted(table.columns)]
+
+    # Format
+    table.fillna('-', inplace=True)
+
+    # Return
+    return table.reset_index()
+

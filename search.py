@@ -26,6 +26,19 @@ from ls2d.settings import _DEFAULT_ESTIMATORS
 #from settings import _DEFAULT_TRANSFORMERS
 
 
+from functools import wraps
+
+
+def add_method(cls):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func(*args, **kwargs)
+        setattr(cls, func.__name__, wrapper)
+        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
+        return func # returning func means func can still be used normally
+    return decorator
+
 # --------------------------------------------------------
 # Configuration
 # --------------------------------------------------------
@@ -104,7 +117,6 @@ def custom_metrics(est, X, y):
     y_embd = est.predict(X)
     # Metrics
     m = custom_metrics_(X, y_embd, y)
-    # Add information
     # Return
     return m
 
@@ -186,6 +198,8 @@ compendium = pd.DataFrame()
 
 # For each estimator
 for i, est in enumerate(estimators):
+    
+    print(i)
 
     # Get the estimator.
     estimator = _DEFAULT_ESTIMATORS[est]
@@ -199,12 +213,30 @@ for i, est in enumerate(estimators):
 
     aux = getattr(estimator, "predict", None)
     if not callable(aux):
+
+        # Option I:
+        #@add_method(estimator.__class__)
+        #def predict(self, *args, **kwargs):
+        #    return self.transform(*args, **kwargs)
+
+        # Option I.5:
+        def predict(self, *args, **kwargs):
+            return self.transform(*args, **kwargs)
+        setattr(estimator.__class__, 'predict', predict)
+
+
+        """
         # Option II:
         # Dynamically create wrapper
         class Wrapper(estimator.__class__):
             def predict(self, *args, **kwargs):
                 return self.transform(*args, **kwargs)
         estimator = Wrapper()
+        """
+
+
+
+
 
     # Create pipeline
     pipe = PipelineMemory(steps=[
@@ -214,7 +246,6 @@ for i, est in enumerate(estimators):
                           memory_path=pipeline_path,
                           memory_mode='pickle',
                           verbose=True)
-
 
     # Warning
     if (pipeline_path / pipe.slug_short).exists():
