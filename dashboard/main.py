@@ -10,6 +10,7 @@ Description:
 # Libraries
 import os
 import sys
+import json
 import numpy as np
 import pandas as pd
 
@@ -31,6 +32,11 @@ sys.path.insert(0, os.path.abspath('../..'))
 app = Flask(__name__,
     template_folder=Path('./') / 'templates',
     static_folder=Path('./') / 'assets')
+
+
+@app.route('/sample/dataframe/')
+def sample_dataframe():
+    return render_template('sample_dataframe.html')
 
 
 # ------------------------------------------------------
@@ -249,6 +255,295 @@ def get_evaluation():
     # Return
     return jsonify(resp)
 
+
+
+
+
+FILEPATH = '../outputs/iris/20220221-174814/results.csv'
+
+@app.route('/workbench/<id>/', methods=['GET'])
+def page_workbench(id):
+    """Returns the workbench page"""
+    # Libraries
+    from ls2d.utils import format_workbench
+    # Read data and format it.
+    aux = format_workbench(pd.read_csv(FILEPATH))
+
+    print(aux)
+    # Create html
+    html = aux.to_html(table_id='workbench_table')
+    # Return
+    return render_template('page_workbench.html',
+        workbench_id=1, tables=[html],
+        titles=[aux.columns.values])
+
+
+@app.route('/workbench/<wid>/pipeline/<pid>/', methods=['GET'])
+def page_pipeline(wid, pid):
+    """Returns the pipeline page"""
+    # Libraries
+    from ls2d.utils import format_pipeline
+    # Read csv
+    df = pd.read_csv(FILEPATH)
+    # Read data and format it.
+    aux = format_pipeline(df.loc[int(pid), :])
+    # Create html
+    html = aux.to_html(table_id='pipeline_table')
+    # Return
+    return render_template('page_pipeline.html',
+        pipeline_id=1, tables=[html],
+        titles=[aux.columns.values])
+
+@app.route('/workbench/<wid>/pipeline/<pid>/split/<sid>/', methods=['GET'])
+def page_split(wid, pid, sid):
+    # Libraries
+    import pickle
+    from pathlib import Path
+
+    # Path
+    path = Path('../outputs/iris/20220221-175047/nrm-sae/pipeline7/pipeline7-split1.p')
+    print(path)
+    # Load model
+    aux = pickle.load(open(str(path.resolve()), "rb"))
+    print(aux)
+
+    #return '{0}/{1}/pipeline{2}/pipeline{2}-split{3}'.format( \
+    #    self.memory_path, self.slug_short, self.pipeline, self.split)
+
+    # Return
+    return render_template('page_split.html',
+        workbench_id=wid,
+        pipeline_id=aux.pipeline,
+        split_id=aux.split,
+        path=path)
+
+
+@app.route('/workbench/list/', methods=['GET'])
+def page_workbench_list():
+    """Page to list all workbenches."""
+    # Constants
+    ROOT, depth = '../outputs/', 3
+    paths = sorted([str(root)
+        for root, dirs, files in os.walk(ROOT)
+            if root.count(os.sep) == depth])
+    # Return
+    return render_template('page_workbench_list.html', paths=paths)
+
+@app.route('/model/list/', methods=['GET'])
+def page_model_list():
+    """Page to list all models within a workbench.
+
+    Parameters
+    ----------
+    path: The path to the workbench.
+    """
+    # Get model path
+    path = Path(request.args.get('path', None))
+    # List of paths
+    paths = sorted([str(p) for p in Path(path).rglob('*.p')])
+
+    """
+    # Libraries
+    from ls2d.utils import format_workbench
+    # Read data and format it.
+    aux = format_workbench(pd.read_csv(FILEPATH))
+    # Create html
+    import json
+    html = aux.to_html(table_id='workbench_table')
+    djso = aux.to_json(orient='records')
+    data = json.loads(djso)
+    """
+
+    # Return
+    return render_template('page_model_list.html',
+        path=path, paths=paths)
+        #tables=[html],
+        #titles=[aux.columns.values], json=djso,
+        #data=data, df_title=aux.columns.values)
+
+
+
+@app.route('/pipeline2/', methods=['GET'])
+def page_pipeline2():
+    """Returns the pipeline page"""
+    # Read params
+    path = Path(request.args.get('path', None))
+    pipe = request.args.get('pipe', None)
+    # Return
+    return render_template('page_pipeline.html',
+        path=path, pipe=pipe)
+
+@app.route('/model/', methods=['GET'])
+def page_model():
+    """Page to interact with the model.
+
+    The method sets the global variable <model>, updates the
+    embeddings <x, y> and recomputes the KD-Tree for similarity
+    retrieval. These KD-Trees could be precomputed if needed.
+
+    .. note: We might need to load the data again if the
+             previous workbench was with a different
+             dataset.
+
+    Parameters
+    ----------
+    path: The path to the model.
+    """
+    # Libraries
+    import pickle
+    from pathlib import Path
+    # Get model path
+    path = Path(request.args.get('path', None))
+    # Load model
+    model = pickle.load(open(str(path.resolve()), "rb"))
+
+    # Include encodings
+    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
+    # Include encodings (not needed)
+    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
+    # Create KD-Tree
+    global tree
+    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
+
+    # Return
+    return render_template('page_model.html', model=model,
+        path=path)
+
+
+
+
+def response_dataframe(df):
+    """"""
+    # Create response
+    data = json.loads(df.to_json(orient='values'))
+    cols = df.columns.tolist()
+    response = jsonify(dict(columns=cols, data=data))
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    # Return
+    return response
+
+@app.route('/api/dataframe/workbench/', methods=['GET'])
+def api_dataframe_workbench():
+    """This method returns columns and data for datatables.
+
+    Parameters
+    ----------
+    path: The workbench path
+
+    Returns
+    -------
+    {
+      columns: ['A', 'B', 'C'],
+      data: [[1,2,3], [4,5,6], [7,8,9]]
+    }
+    """
+    # Libraries
+    from ls2d.utils import format_workbench
+    from pathlib import Path
+    # Get model path
+    path = Path(request.args.get('path', None)) / 'results.csv'
+    # Read data and format it.
+    aux = format_workbench(pd.read_csv(path))
+    aux = aux.reset_index()
+    # Return
+    return response_dataframe(aux)
+
+@app.route('/api/dataframe/pipeline/', methods=['GET'])
+def api_dataframe_pipeline():
+    """"""
+    # Libraries
+    from ls2d.utils import format_pipeline
+    from pathlib import Path
+    # Get model path
+    path = Path(request.args.get('path', None)) / 'results.csv'
+    pipe = request.args.get('pipe', None)
+    # Read data and format it.
+    aux = pd.read_csv(path)
+    aux = format_pipeline(aux.loc[int(pipe), :])
+    aux = aux.reset_index()
+    # Return
+    return response_dataframe(aux)
+
+
+@app.route('/api/get_data/', methods=['GET'])
+def api_get_data():
+    """This method returns the aggregated dataset.
+
+    Returns
+    -------
+    x, y: list
+        The position of the x and y coordinates
+    ids: list
+        The id numbers used to plot the markers.
+    """
+    # Get data
+    x = data_w.x.round(decimals=3).tolist()
+    y = data_w.y.round(decimals=3).tolist()
+    ids = data_w.index.tolist()
+    text = data_w[PID].tolist()
+
+    # Create response
+    resp = {
+        'x': x,
+        'y': y,
+        'ids': ids,
+        'text': text
+    }
+    response = jsonify(resp)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    # Return
+    return response
+
+
+@app.route('/api/pipeline/summary/', methods=['GET'])
+def api_get_pipeline_summary():
+    json = {
+        "data": [
+            [
+                "Tiger Nixon",
+                "System Architect",
+                "Edinburgh",
+                "5421",
+                "2011/04/25",
+                "$320,800"
+            ],
+            [
+                "Garrett Winters",
+                "Accountant",
+                "Tokyo",
+                "8422",
+                "2011/07/25",
+                "$170,750"
+            ],
+            [
+                "Garrett Winters",
+                "Accountant",
+                "Tokyo",
+                "8422",
+                "2011/07/25",
+                "$170,750"
+            ],
+            [
+                "Garrett Winters",
+                "Accountant",
+                "Tokyo",
+                "8422",
+                "2011/07/25",
+                "$170,750"
+            ]
+        ]
+    }
+
+    response = jsonify(json)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    # Return
+    return response
+
+
+
+
 @app.route('/get_data_columns', methods=['GET'])
 def get_data_columns():
     """The columns within the data.
@@ -338,10 +633,15 @@ def get_retrieved():
     retrieved['distance'] = None
     retrieved['distance'] = results[0][0]
 
+    print(retrieved)
+    print(type(retrieved))
+
+    # .round(decimals=3) \
+
     # Create response
     resp = {
         'columns': retrieved.columns.tolist(),
-        'data': retrieved.round(decimals=3) \
+        'data': retrieved \
             .astype(str) \
             .values \
             .tolist()
@@ -689,6 +989,7 @@ if __name__ == "__main__":
     # -----------------------------------------------------
     # Adding encodings
     # -----------------------------------------------------
+    """
     # ----------------------------
     # Model
     # ----------------------------
@@ -727,14 +1028,13 @@ if __name__ == "__main__":
     iso = Isomap(n_components=2)
     lle = LocallyLinearEmbedding(n_components=2)
 
-    """
+   
     # Create pipeline
-    model = Pipeline([
-        ('imp', IterativeImputer(random_state=0)),
-        ('scaler', Normalizer()),
-        ('model', lda)
-    ])
-    """
+    # model = Pipeline([
+    #    ('imp', IterativeImputer(random_state=0)),
+    #    ('scaler', Normalizer()),
+    #    ('model', lda)
+    #])
 
     # Fit pipeline
     #model = model.fit(data_w[FEATURES].to_numpy().astype(np.float32))
@@ -742,7 +1042,7 @@ if __name__ == "__main__":
     import pickle
 
 
-    path = '../outputs/iris/20220211-142222/nrm-sae/pipeline7/pipeline7-split1.p'
+    path = '../outputs/iris/20220221-175047/nrm-sae/pipeline7/pipeline7-split1.p'
     with open(path, 'rb') as f:
         # The protocol version used is detected automatically, so we do not
         # have to specify it.
@@ -757,6 +1057,7 @@ if __name__ == "__main__":
 
     # Create KD-Tree
     tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
+    """
 
     # -----------------------------------------------------
     # Demographics

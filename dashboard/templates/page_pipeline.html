@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+
+{% endblock %}
+
+{% block page_title %}
+    The title
+{% endblock %}
+
+{% block page_content %}
+
+    <!-- start: page -->
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <!-- -------------------------------- -->
+            <!-- DataTable  (from HTML)           -->
+            <!-- -------------------------------- -->
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-up"></a>
+                        <a href="#" class="fa fa-times"></a>
+                    </div>
+                    <h2 class="panel-title">Summary</h2>
+                    <p class="panel-subtitle">Brief description of the models and performance.</p>
+                </header>
+                <div class="panel-body">
+                    <table id="example" class="display" style="width:100%"></table>
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    <!-- Stylesheet default -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"/>
+
+    <!-- Load scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+
+    <script>
+
+        $.ajax({url: "/api/dataframe/pipeline?path={{ path }}&pipe={{ pipe }}",
+            success: function(result){
+
+                // Show
+                console.log(result)
+
+                // Create datatable
+                $('#example').DataTable( {
+                    data: result.data,
+                    columns: result.columns
+                        .map(elem => ({title: elem})),
+                    autoWidth:      true,
+                    scrollY:        500,
+                    scrollX:        true,
+                    scrollCollapse: true,
+                    paging:         false,
+                    fixedColumns:   {
+                        left: 1
+                    },
+                    search: {
+                        return: true
+                    },
+                    columnDefs: [
+                        {
+                            "targets": [ 0 ],
+                            "visible": false,
+                            "searchable": false
+                        },
+                        {
+                            "targets": 1,
+                            "render": function (data, type, row) {
+                                var path = '{{ path }}/' + row[2] + '/';
+                                path += 'pipeline{{pipe}}/pipeline{{pipe}}-' + row[1] + '.p';
+                                var url = "/model?path=" + path;
+                                return '<a href="' + url + '">' + data + '</a>'
+                            },
+                        }
+                    ]
+            });
+        }});
+
+    </script>
+
+
+{% endblock %}
+
+
+<!--
+<!doctype html>
+<html class="fixed">
+<head>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+
+</head>
+<body>
+    It works! {{ pipeline_id }}
+
+    {% for table in tables %}
+        {{ titles[loop.index] }}
+        {{ table|safe }}
+    {% endfor %}
+
+</body>
+
+<script>
+    $(document).ready(function() {
+        $('#pipeline_table').DataTable({
+             autoWidth:      true,
+             scrollY:        500,
+             scrollX:        true,
+             scrollCollapse: true,
+             paging:         false,
+             fixedColumns:   {
+                left: 1
+             },
+             search: {
+                return: true
+             },
+          });
+    });
+</script>
+</html>
+-->

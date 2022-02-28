@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block page_head %}
+
+{% endblock %}
+
+{% block page_title %}
+    Pipelines
+{% endblock %}
+
+{% block page_content %}
+
+    <!-- start: page -->
+    <div class="row">
+
+        <div class="col-md-6">
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-up"></a>
+                        <a href="#" class="fa fa-times"></a>
+                    </div>
+                    <h2 class="panel-title">List of models</h2>
+                    <p class="panel-subtitle">List of models for further inspection in drive.</p>
+                </header>
+                <div class="panel-body">
+                    {% for path in paths %}
+                        <a href="/model?path={{ path }}/">{{ path }}</a><br>
+                    {% endfor %}
+                </div>
+            </section>
+        </div>
+
+    </div>
+
+
+    <!-- start: page -->
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <!-- -------------------------------- -->
+            <!-- DataTable  (from HTML)           -->
+            <!-- -------------------------------- -->
+            <!--
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-up"></a>
+                        <a href="#" class="fa fa-times"></a>
+                    </div>
+                    <h2 class="panel-title">Summary</h2>
+                    <p class="panel-subtitle">Brief description of the models and performance.</p>
+                </header>
+                <div class="panel-body">
+                    {% for table in tables %}
+                        {{ titles[loop.index] }}
+                        {{ table|safe }}
+                    {% endfor %}
+                </div>
+            </section>
+            -->
+
+            <!-- -------------------------------- -->
+            <!-- DataTable  (from HTML)           -->
+            <!-- -------------------------------- -->
+            <section class="panel">
+                <header class="panel-heading">
+                    <div class="panel-actions">
+                        <a href="#" class="fa fa-caret-up"></a>
+                        <a href="#" class="fa fa-times"></a>
+                    </div>
+                    <h2 class="panel-title">Summary</h2>
+                    <p class="panel-subtitle">Brief description of the models and performance.</p>
+                </header>
+                <div class="panel-body">
+                    <table id="example-4" class="display" style="width:100%"></table>
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+    <!-- Stylesheet default -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css"/>
+
+    <!-- Load scripts -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+
+    <!-- Vendor CSS -->
+    <!--
+    <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.css" />
+    <link rel="stylesheet" href="/assets/vendor/font-awesome/css/font-awesome.css" />
+    <link rel="stylesheet" href="/assets/vendor/magnific-popup/magnific-popup.css" />
+    <link rel="stylesheet" href="/assets/vendor/bootstrap-datepicker/css/datepicker3.css" />
+    -->
+
+    <!-- Vendor -->
+    <!--<script src="/assets/vendor/jquery/jquery.js"></script>
+    <script src="/assets/vendor/jquery-browser-mobile/jquery.browser.mobile.js"></script>
+    <script src="/assets/vendor/bootstrap/js/bootstrap.js"></script>
+    <script src="/assets/vendor/nanoscroller/nanoscroller.js"></script>
+    <script src="/assets/vendor/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="/assets/vendor/magnific-popup/magnific-popup.js"></script>
+    <script src="/assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
+    -->
+
+    <!-- Format table -->
+    <script>
+        $(document).ready(function() {
+            $('#workbench_table').DataTable({
+                 autoWidth:      true,
+                 scrollY:        500,
+                 scrollX:        true,
+                 scrollCollapse: true,
+                 paging:         false,
+                 fixedColumns:   {
+                    left: 1
+                 },
+                 search: {
+                    return: true
+                 },
+              });
+        });
+    </script>
+
+    <script>
+
+        $.ajax({url: "/api/dataframe/workbench?path={{ path }}",
+            success: function(result){
+
+                // Show
+                //console.log(result)
+
+                // Create datatable
+                $('#example-4').DataTable( {
+                    data: result.data,
+                    columns: result.columns
+                        .map(elem => ({title: elem})),
+                    autoWidth:      true,
+                    scrollY:        500,
+                    scrollX:        true,
+                    scrollCollapse: true,
+                    paging:         false,
+                    fixedColumns:   {
+                        left: 1
+                    },
+                    search: {
+                        return: true
+                    },
+                    columnDefs: [
+                        {
+                            "targets": [ 0 ],
+                            "visible": false,
+                            "searchable": false
+                        },
+                        {
+                            "targets": 1,
+                            "render": function (data, type, row) {
+                                var url = "/pipeline2?path={{ path }}&pipe=" + row[0];
+                                return '<a href="' + url + '">' + data + '</a>'
+                            },
+                        }
+                    ]
+            });
+        }});
+
+    </script>
+
+{% endblock %}

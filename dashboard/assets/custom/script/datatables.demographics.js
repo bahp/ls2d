@@ -11,7 +11,7 @@ function updateDemographics(datao) {
     console.log("Updating demographics...")
 
     // Create url
-    var url = "get_demographics?idxs=" + datao.indexes.toString();
+    var url = "/get_demographics?idxs=" + datao.indexes.toString();
 
     if (datatableDemographics != null) {
         // Clear data
@@ -23,7 +23,7 @@ function updateDemographics(datao) {
 
         // Ajax column
         $.ajax({
-            url: 'get_demo_columns',
+            url: '/get_demo_columns',
             success: function (data) {
 
                 // Show columns

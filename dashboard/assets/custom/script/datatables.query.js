@@ -322,7 +322,7 @@
         Query settings information.
 		 */
 		$.ajax({
-			url: 'settings',
+			url: '/settings',
 			success: function(data) {
 				// Set data received as settings globally.s
 				var FEATURES = JSON.parse(data.features)

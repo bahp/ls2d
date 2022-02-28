@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block head %}
+
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.4/css/jquery.dataTables.min.css">
+
+{% endblock %}
+
+
+
+{% block page_content %}
+
+    It works! {{ workbench_id }}
+
+    {% for table in tables %}
+        {{ titles[loop.index] }}
+        {{ table|safe }}
+    {% endfor %}
+
+
+{% endblock %}
+
+
+{% block scripts %}
+
+    <script>
+        $(document).ready(function() {
+            $('#workbench_table').DataTable({
+                 autoWidth:      true,
+                 scrollY:        500,
+                 scrollX:        true,
+                 scrollCollapse: true,
+                 paging:         false,
+                 fixedColumns:   {
+                    left: 1
+                 },
+                 search: {
+                    return: true
+                 },
+              });
+        });
+    </script>
+
+{% endblock %}

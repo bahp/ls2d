@@ -19,7 +19,7 @@ function updateKNearestInfo(datao) {
     //    datao.indexes.toString(),
     //    datao.distances.toString());
 
-    var url = 'get_retrieved?idxs={}'.format(
+    var url = '/get_retrieved?idxs={}'.format(
         datao.indexes.toString());
 
     if (datatableAux != null) {
@@ -30,7 +30,7 @@ function updateKNearestInfo(datao) {
 
         // Ajax column
         $.ajax({
-            url: 'get_data_columns',
+            url: '/get_data_columns',
             success: function (data) {
 
                 // Show columns

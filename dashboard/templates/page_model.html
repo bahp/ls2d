@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html class="fixed">
 <head>
@@ -126,12 +128,41 @@
                 <h2>Similarity retrieval</h2>
             </header>
 
+
             <!-- -------------------------------- -->
             <!-- First Row                        -->
             <!-- -------------------------------- -->
             <!-- start: page -->
             <div class="row">
+
                 <div class="col-xl-5 col-lg-6">
+
+                    <!-- -------------------------------- -->
+                    <!-- Model Information                -->
+                    <!-- -------------------------------- -->
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-up"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+                            <h2 class="panel-title">{{ model.slug_long }}</h2>
+                            <p class="panel-subtitle">
+                                Browse for more information about the pipeline.
+                            </p>
+                        </header>
+                        <div class="panel-body" style="display:none;"d>
+                            Path: {{ path }} <br>
+                            Slug (short): {{ model.slug_short }} <br>
+                            Slug (long): {{ model.slug_long }} <br>
+                            Timestamp: {{ model.timestamp }} <br>
+                            Pipeline: {{ model.pipeline }} <br>
+                            Split: {{ model.split }} <br><br>
+                            Description:<br>
+                            {{ model }}
+                        </div>
+                    </section>
+
 
                     <!-- -------------------------------- -->
                     <!-- Latent Space                     -->
@@ -168,15 +199,14 @@
                     </section>
 
                     <!-- -------------------------------- -->
-                    <!-- Create your query Table          -->
+                    <!-- Create your query table          -->
                     <!-- -------------------------------- -->
                     <section class="panel">
                         <header class="panel-heading">
                             <div class="panel-actions">
-                                <a href="#" class="fa fa-caret-down"></a>
+                                <a href="#" class="fa fa-caret-up"></a>
                                 <a href="#" class="fa fa-times"></a>
                             </div>
-
                             <h2 class="panel-title">Create your query patient</h2>
                             <p class="panel-subtitle">
                                 Encode a patient's data and retrieve nearest neighbours.

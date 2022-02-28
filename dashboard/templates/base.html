@@ -1,0 +1,146 @@
+<!doctype html>
+<html class="fixed">
+<head>
+
+    <!-- Basic -->
+    <meta charset="UTF-8">
+
+    <title>Similarity retrieval</title>
+    <meta name="keywords" content="HTML5 application" />
+    <meta name="description" content="Similarity retrieval - Interactive examples">
+
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- Web Fonts  -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+    <!-- Vendor CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/stylesheets/theme.min.css" />
+    <link rel="stylesheet" href="/assets/stylesheets/skins/default.min.css" />
+    <link rel="stylesheet" href="/assets/custom/styles/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+
+    <!-- Head Libs -->
+    <script src="/assets/vendor/modernizr/modernizr.min.js"></script>
+
+    {% block page_head %}
+    {% endblock %}
+
+</head>
+<body>
+<section class="body">
+    <div class="inner-wrapper">
+        <!-- start: sidebar -->
+        <aside id="sidebar-left" class="sidebar-left" style="top: 0px">
+
+            <div class="sidebar-header">
+                <div class="sidebar-title" style="color: #FFFFFF">
+                    Navigation
+                </div>
+                <div class="sidebar-toggle hidden-xs"
+                     data-toggle-class="sidebar-left-collapsed"
+                     data-target="html"
+                     data-fire-event="sidebar-left-toggle">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
+            </div>
+
+            <div class="nano">
+                <div class="nano-content">
+                    <nav id="menu" class="nav-main" role="navigation">
+                        <ul class="nav nav-main">
+                            <li>
+                                <a href="/">
+                                    <i class="fa fa-home" aria-hidden="true"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-active">
+								<a href="/workbench/list/">
+									<i class="fa fa-home" aria-hidden="true"></i>
+									<span>Workbenches</span>
+								</a>
+							</li>
+                            <li class="nav-parent nav-expanded nav-active">
+                                <a>
+                                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                                    <span>Applications</span>
+                                </a>
+                                <ul class="nav nav-children">
+                                    <li class="nav-active">
+                                        <a href="similarity-retrieval">
+                                            Similarity retrieval
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="trace">
+                                            Patient trace
+                                        </a>
+                                    </li>
+                                    <li>
+										<a href="evaluation">
+											Evaluation
+										</a>
+									</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </aside>
+        <!-- end: sidebar -->
+
+        <section role="main" class="content-body">
+            <header class="page-header" style="top: 0px">
+                <h2>
+                    {% block page_title %}
+                    {% endblock %}
+                </h2>
+            </header>
+
+            {% block page_content %}
+            {% endblock %}
+
+        </section>
+
+    </div>
+</section>
+
+<!-- Vendor -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+
+<!-- Specific Page Vendor -->
+<script src="/assets/vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js"></script>
+<script src="/assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js"></script>
+
+<!-- Theme Base, Components and Settings -->
+<script src="/assets/javascripts/theme.js"></script>
+<script src="/assets/javascripts/theme.custom.js"></script>
+<script src="/assets/javascripts/theme.init.js"></script>
+
+{% block scripts %}
+{% endblock %}
+
+
+<!-- Examples -->
+<!--
+<script src="/assets/custom/script/main.js"></script>
+<script src="/assets/custom/script/datatables.query.js"></script>
+<script src="/assets/custom/script/datatables.demographics.js"></script>
+<script src="/assets/custom/script/datatables.retrieved.js"></script>-->
+
+</body>
+</html>
