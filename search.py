@@ -88,8 +88,6 @@ print(data)
 # transformations (e.g. kbins10), standarization (e.g. std),
 # balancing of classes (e.g. smote), ...
 
-def predict(self, *args, **kwargs):
-    return self.transform(*args, **kwargs)
 
 def custom_metrics(est, X, y):
     """This method computes the metrics.
@@ -117,6 +115,12 @@ def custom_metrics(est, X, y):
     y_embd = est.predict(X)
     # Metrics
     m = custom_metrics_(X, y_embd, y)
+    #y = est.transform(X)
+    # Metrics
+    #m = custom_metrics_(X, y)
+    ## Add information
+    #m['split'] = est.split
+    #m['pipeline'] = est.pipeline
     # Return
     return m
 
@@ -191,6 +195,8 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
     }
 
 
+def predict(self, *args, **kwargs):
+    return self.transform(*args, **kwargs)
 
 
 # Compendium of results
@@ -210,6 +216,8 @@ for i, est in enumerate(estimators):
     # Option I: Not working.
     # Add the predict method if it does not have it.
     #estimator.predict = MethodType(predict, estimator)
+    #estimator.predict = predict.__get__(estimator)
+    #estimator.predict = predict
 
     aux = getattr(estimator, "predict", None)
     if not callable(aux):
@@ -233,10 +241,6 @@ for i, est in enumerate(estimators):
                 return self.transform(*args, **kwargs)
         estimator = Wrapper()
         """
-
-
-
-
 
     # Create pipeline
     pipe = PipelineMemory(steps=[
@@ -266,11 +270,12 @@ for i, est in enumerate(estimators):
     # Save results as csv
     results = grid.cv_results_
 
-    # Save
+    # Add information
     df = pd.DataFrame(results)
     df.insert(0, 'estimator', _DEFAULT_ESTIMATORS[est].__class__.__name__)
     df.insert(1, 'slug_short', pipe.slug_short)
     df.insert(2, 'slug_long', pipe.slug_long)
+    df['path'] = pipeline_path / pipe.slug_short
     df.to_csv(pipeline_path / pipe.slug_short / 'results.csv', index=False)
 
     # Append to total results

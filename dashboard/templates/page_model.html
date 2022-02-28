@@ -1,5 +1,3 @@
-
-
 <!doctype html>
 <html class="fixed">
 <head>
@@ -128,17 +126,15 @@
                 <h2>Similarity retrieval</h2>
             </header>
 
-
             <!-- -------------------------------- -->
             <!-- First Row                        -->
             <!-- -------------------------------- -->
             <!-- start: page -->
             <div class="row">
-
                 <div class="col-xl-5 col-lg-6">
 
                     <!-- -------------------------------- -->
-                    <!-- Model Information                -->
+                    <!-- Pipeline Info                    -->
                     <!-- -------------------------------- -->
                     <section class="panel">
                         <header class="panel-heading">
@@ -164,6 +160,24 @@
                     </section>
 
 
+                    <!--
+                            <h2 class="panel-title"> Pipeline </h2>
+                            <p class="panel-subtitle">
+                                {% if pipeline %}
+                                    {{ pipeline.name }}
+                                {% else %}
+                                    No pipeline selected.
+                                {% endif %}
+                            </p>
+                        </header>
+
+                        <div class="panel-body" style="display:none;">
+                            {% if pipeline %}
+                                {{ pipeline }}
+                            {% endif %}
+                        </div>
+                    </section>-->
+
                     <!-- -------------------------------- -->
                     <!-- Latent Space                     -->
                     <!-- -------------------------------- -->
@@ -174,6 +188,12 @@
                             <p class="panel-subtitle"></p>
                         </header>
                         -->
+                         <!--
+                         <header class="panel-heading">
+                            <h2 class="panel-title"> KernelPCA </h2>
+                            <p class="panel-subtitle"></p>
+                        </header>-->
+
                         <div class="panel-body">
                             <div id='latentSpace'>
                                 Loading latent space...
