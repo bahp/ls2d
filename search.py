@@ -46,7 +46,7 @@ def add_method(cls):
 # Load configuration
 # ------------------
 # Load configuration from file
-with open('datasets/diabetes/settings.diabetes.yaml') as file:
+with open('datasets/dengue/settings.dengue.yaml') as file:
     config = yaml.full_load(file)
 
 # Features
@@ -73,17 +73,14 @@ data = data.dropna(how='any', subset=config['features'])
 
 # Create X and y
 X = data[config['features']]
-#y = data.target
-y = data.age
+y = data[config['targets']]
 
 # To numpy (for NeuralNet)
-X = X.to_numpy().astype(np.float32)
-y = y.to_numpy().astype(np.int64)
+#X = X.to_numpy().astype(np.float32)
+#y = y.to_numpy().astype(np.int64)
 
 # Show
 print("\nData from '%s':" % config['filepath'])
-print(data)
-
 
 
 # --------------------------------------------------------
@@ -142,6 +139,11 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
              allow in the configuration file to indicate
              which other labels are of interest (e.g. shock)
 
+    .. note: computation of pairwise distances takes too
+             long when datasets are big. Thus, instead
+             select a random number of examples and compute
+             on them.
+
     Parameters
     ----------
     y_true: np.array
@@ -164,6 +166,7 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
     from ls2d.metrics import gmm_ratio_score
     from ls2d.metrics import gmm_intersection_matrix
 
+    """
     # Compute distances
     true_dist = cdist(y_true, y_true).flatten()
     pred_dist = cdist(y_pred, y_pred).flatten()
@@ -171,6 +174,9 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
     # Compute scores
     pearson = pearsonr(true_dist, pred_dist)
     spearman = spearmanr(true_dist, pred_dist)
+    """
+    pearson = [-1]
+    spearman = [-1]
 
     # Compute procrustes
     """
@@ -186,19 +192,30 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
     except ValueError as e:
         mtx1, mtx2, disparity = None, None, -1
 
-    # GMMs
-    gmm_ratio_sum = gmm_ratio_score(y_pred, y)
+    # Compute gmm scores for selected outcomes
+    gmm_scores = {}
+    for c in y.columns:
+        try:
+            idx = y[c].notna()
+            y_true_, y_pred_, y_ = \
+                y_true[idx], y_pred[idx], y[c][idx]
+            gmm_scores['gmm_ratio_sum_%s' % c] = \
+                gmm_ratio_score(y_pred_, y_, 'sum')
+        except:
+            gmm_scores['gmm_ratio_sum_%s' % c] = -1
 
     # Compute silhouette
     #silhouette = silhouette_score(y_pred, y, metric="sqeuclidean")
 
+    # Create metrics dictioanry
+    d = {}
+    d['pearson'] = pearson[0]
+    d['spearman'] = spearman[0]
+    d['procrustes'] = disparity
+    d.update(gmm_scores)
+
     # Return
-    return {
-        'pearson': pearson[0],
-        'spearman': spearman[0],
-        'procrustes': disparity,
-        'gmm_ratio_sum': gmm_ratio_sum
-    }
+    return d
 
 
 def predict(self, *args, **kwargs):
@@ -210,11 +227,11 @@ compendium = pd.DataFrame()
 
 # For each estimator
 for i, est in enumerate(estimators):
-    
-    print(i)
 
-    # Get the estimator.
+    # Get the estimator
     estimator = _DEFAULT_ESTIMATORS[est]
+    # Get the param grid
+    param_grid = config['params'].get(est, {})
 
     # Information
     print("\n    Method: %s. %s" % (i, estimator))
@@ -250,8 +267,10 @@ for i, est in enumerate(estimators):
 
     # Create pipeline
     pipe = PipelineMemory(steps=[
-                                # SimpleImputer
-                                ('nrm', Normalizer()),
+                                #('simp', SimpleImputer()),
+                                #('iimp', IterativeImputer()),
+                                #('nrm', Normalizer()),
+                                ('std', StandardScaler()),
                                 (est, estimator)
                           ],
                           memory_path=pipeline_path,
@@ -265,13 +284,12 @@ for i, est in enumerate(estimators):
         continue
 
     # Create grid search (another option is RandomSearchCV)
-    grid = GridSearchCV(pipe, param_grid=config['params'][est],
+    grid = GridSearchCV(pipe, param_grid=param_grid,
                               cv=2, scoring=custom_metrics,
                               return_train_score=True, verbose=2,
                               refit=False, n_jobs=1)
 
     # Fit grid search
-    import numpy as np
     grid.fit(X, y)
 
     # Save results as csv
