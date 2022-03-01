@@ -1,0 +1,410 @@
+<!doctype html>
+<html class="fixed">
+<head>
+
+    <!-- Basic -->
+    <meta charset="UTF-8">
+
+    <title>Similarity retrieval</title>
+    <meta name="keywords" content="HTML5 application" />
+    <meta name="description" content="Similarity retrieval - Interactive examples">
+
+    <!-- Mobile Metas -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <!-- Web Fonts  -->
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+
+    <!-- Vendor CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css">
+
+    <!-- Specific Page Vendor CSS -->
+    <!--
+    <link rel="stylesheet" href="assets/vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css" />
+    -->
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="/assets/stylesheets/theme.min.css" />
+    <link rel="stylesheet" href="/assets/stylesheets/skins/default.min.css" />
+    <link rel="stylesheet" href="/assets/custom/styles/style.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+          integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <!--
+    <link rel="stylesheet" href="assets/vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css" />
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css" type="text/css" media="all" />
+    -->
+
+    <!-- Vendor CSS -->
+    <!--
+    <link rel="stylesheet" href="assets/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css" />
+    <link rel="stylesheet" href="assets/vendor/jstree/themes/default/style.css" />
+    -->
+    <!--
+    <link rel="stylesheet" href="assets/vendor/select2/select2.css" />
+    <link rel="stylesheet" href="assets/vendor/jquery-datatables-bs3/assets/css/datatables.css" />
+    <link rel="stylesheet" href="assets/vendor/jstree/themes/default/style.css" />
+    <link rel="stylesheet" href="assets/vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css" />
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css" type="text/css" media="all" />
+-->
+
+
+    <!-- Datatables CSS -->
+    <!-- It was on
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"/>
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.0.1/css/buttons.dataTables.min.css"/>-->
+
+    <!-- Head Libs -->
+    <script src="/assets/vendor/modernizr/modernizr.min.js"></script>
+
+    <!-- Load plotly -->
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+</head>
+<body>
+<section class="body">
+    <div class="inner-wrapper">
+        <!-- start: sidebar -->
+        <aside id="sidebar-left" class="sidebar-left" style="top: 0px">
+
+            <div class="sidebar-header">
+                <div class="sidebar-title" style="color: #FFFFFF">
+                    Navigation
+                </div>
+                <div class="sidebar-toggle hidden-xs"
+                     data-toggle-class="sidebar-left-collapsed"
+                     data-target="html"
+                     data-fire-event="sidebar-left-toggle">
+                    <i class="fa fa-bars" aria-label="Toggle sidebar"></i>
+                </div>
+            </div>
+
+            <div class="nano">
+                <div class="nano-content">
+                    <nav id="menu" class="nav-main" role="navigation">
+                        <ul class="nav nav-main">
+                            <li>
+                                <a href="/">
+                                    <i class="fa fa-home" aria-hidden="true"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+                            <li class="nav-parent nav-expanded nav-active">
+                                <a>
+                                    <i class="fa fa-tasks" aria-hidden="true"></i>
+                                    <span>Applications</span>
+                                </a>
+                                <ul class="nav nav-children">
+                                    <li class="nav-active">
+                                        <a href="similarity-retrieval">
+                                            Similarity retrieval
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="trace">
+                                            Patient trace
+                                        </a>
+                                    </li>
+                                    <li>
+										<a href="evaluation">
+											Evaluation
+										</a>
+									</li>
+
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+
+        </aside>
+        <!-- end: sidebar -->
+
+        <section role="main" class="content-body">
+            <header class="page-header" style="top: 0px">
+                <h2>Similarity retrieval</h2>
+            </header>
+
+            <!-- -------------------------------- -->
+            <!-- First Row                        -->
+            <!-- -------------------------------- -->
+            <!-- start: page -->
+            <div class="row">
+                <div class="col-xl-5 col-lg-6">
+
+                    <!-- -------------------------------- -->
+                    <!-- Pipeline Info                    -->
+                    <!-- -------------------------------- -->
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-up"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+                            <h2 class="panel-title">{{ model.slug_long }}</h2>
+                            <p class="panel-subtitle">
+                                Browse for more information about the pipeline.
+                            </p>
+                        </header>
+                        <div class="panel-body" style="display:none;"d>
+                            Path: {{ path }} <br>
+                            Slug (short): {{ model.slug_short }} <br>
+                            Slug (long): {{ model.slug_long }} <br>
+                            Timestamp: {{ model.timestamp }} <br>
+                            Pipeline: {{ model.pipeline }} <br>
+                            Split: {{ model.split }} <br><br>
+                            Description:<br>
+                            {{ model }}
+                        </div>
+                    </section>
+
+
+                    <!--
+                            <h2 class="panel-title"> Pipeline </h2>
+                            <p class="panel-subtitle">
+                                {% if pipeline %}
+                                    {{ pipeline.name }}
+                                {% else %}
+                                    No pipeline selected.
+                                {% endif %}
+                            </p>
+                        </header>
+
+                        <div class="panel-body" style="display:none;">
+                            {% if pipeline %}
+                                {{ pipeline }}
+                            {% endif %}
+                        </div>
+                    </section>-->
+
+                    <!-- -------------------------------- -->
+                    <!-- Latent Space                     -->
+                    <!-- -------------------------------- -->
+                    <section class="panel">
+                        <!--
+                         <header class="panel-heading">
+                            <h2 class="panel-title">Autoencoder - Latent Space</h2>
+                            <p class="panel-subtitle"></p>
+                        </header>
+                        -->
+                         <!--
+                         <header class="panel-heading">
+                            <h2 class="panel-title"> KernelPCA </h2>
+                            <p class="panel-subtitle"></p>
+                        </header>-->
+
+                        <div class="panel-body">
+                            <div id='latentSpace'>
+                                Loading latent space...
+                            </div>
+                        </div>
+                        <div class="panel-footer">
+
+                            <div id="selectK" class="mt-lg mb-lg slider-primary"
+                                 data-plugin-slider
+                                 data-plugin-options='{ "value": 100,
+                                                        "range": "min",
+                                                        "min":1,
+                                                        "max": 100 }'
+                                 data-plugin-slider-output="#listenSlider">
+                                <input id="listenSlider" type="hidden" value="100" />
+                            </div>
+                            <p class="output">Select <b>100</b> nearest patients</p>
+                            <!--<img width=50 height=50 src="assets/custom/imgs/ZKZg.gif"/>
+                            <i class="fa fa-spinner fa-spin" style="font-size:24px;color:rgb(75, 183, 245);"></i>
+                            -->
+                        </div>
+
+                    </section>
+
+                    <!-- -------------------------------- -->
+                    <!-- Create your query table          -->
+                    <!-- -------------------------------- -->
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-up"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+                            <h2 class="panel-title">Create your query patient</h2>
+                            <p class="panel-subtitle">
+                                Encode a patient's data and retrieve nearest neighbours.
+                            </p>
+                        </header>
+                        <div class="panel-body">
+                            <div class="row">
+
+                                <!--
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="Study Number" id="q">
+                                </div>
+                                <div class="col-md-6">
+                                	<select class="form-control mb-md">
+                                        <option>Option 1</option>
+                                        <option>Option 2</option>
+                                        <option>Option 3</option>
+                                    </select>
+                                </div>
+                                -->
+
+                                <div class="col-sm-12">
+                                    <div class="mb-md">
+                                        <button id="addToTable" class="btn btn-primary">Add <i class="fa fa-plus"></i></button>
+                                        <button id="submitTable" class="btn btn-primary" type="submit">Submit</button>
+                                        <button id="resetTable" class="btn btn-default" type="">Reset</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <table id="datatable-editable"
+                                   class="table
+                                          table-bordered
+                                          table-striped
+                                          mb-none"
+                                   style="width: 100%;">
+                                <!-- Headers and Body set on JS -->
+                            </table>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- -------------------------------- -->
+                <!-- Demographics Table               -->
+                <!-- -------------------------------- -->
+                <div class="col-xl-7 col-lg-6">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-down"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+
+                            <h2 class="panel-title">Demographics table</h2>
+                            <p class="panel-subtitle">
+                                Summary table for the retrieved patients.
+                            </p>
+                        </header>
+                        <div class="panel-body">
+                            <!--
+                            <button id="test-feature" class="btn btn-primary"> Feature </button>
+                            <button id="test-phenotype" class="btn btn-primary"> Phenotype </button>
+                            <button id="test-init" class="btn btn-primary"> Init </button>
+                            -->
+                            <div id="auxtb"></div>
+                            <table id="datatable-demographics",
+                                   class="table
+                                          table-bordered
+                                          table-striped
+                                          mb-none"
+                                   style="width: 100%;">
+                                <!-- Headers and Body set on JS -->
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+            <!-- end: page -->
+
+            <!-- -------------------------------- -->
+            <!-- Third row        -->
+            <!-- -------------------------------- -->
+            <!-- start: page -->
+            <div class="row">
+
+                <!-- -------------------------------- -->
+                <!-- Retrieved Patients               -->
+                <!-- -------------------------------- -->
+                <div class="col-md-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            <div class="panel-actions">
+                                <a href="#" class="fa fa-caret-down"></a>
+                                <a href="#" class="fa fa-times"></a>
+                            </div>
+
+                            <h2 class="panel-title">Top K retrieved patients</h2>
+                            <p class="panel-subtitle">
+                                The clinical data collected for the retrieved patients for their hospital stay.
+                            </p>
+                        </header>
+                        <div class="panel-body">
+                            <table id="datatable-knearest-info"
+                                   class="table
+                                          table-bordered
+                                          table-striped
+                                          mb-none
+                                          display"
+                                   cellspacing="0"
+                                   style="width:100%">
+                                <!-- Headers and Body set on JS -->
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</section>
+
+
+<!-- Vendor -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.nanoscroller/0.8.7/javascripts/jquery.nanoscroller.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.2/jquery.validate.min.js"></script>
+
+<!-- Specific Page Vendor -->
+<script src="/assets/vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js"></script>
+<script src="/assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js"></script>
+
+<!-- Theme Base, Components and Settings -->
+<script src="/assets/javascripts/theme.js"></script>
+<script src="/assets/javascripts/theme.custom.js"></script>
+<script src="/assets/javascripts/theme.init.js"></script>
+
+<!-- Specific Page Vendor -->
+<!--
+<script src="assets/vendor/select2/select2.js"></script>
+<script src="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
+<script src="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+<script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+-->
+
+<!-- This breaks slider -->
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/r/dt/jq-3.6.0,jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.2.2,b-colvis-1.0.3,b-flash-1.0.3,b-html5-1.0.3/datatables.css"?>
+<script src="https://cdn.datatables.net/r/dt/jszip-2.5.0,pdfmake-0.1.18,dt-1.10.9,b-1.2.2,b-colvis-1.0.3,b-flash-1.0.3,b-html5-1.0.3/datatables.js"></script>
+
+
+<!-- The new version doesnt work with the column visibility
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+-->
+
+<!-- Datatables -->
+<!--
+<script src="https://cdn.datatables.net/1.10.9/js/jquery.dataTables.min.js"></script>-->
+<!---
+<script src="https://cdn.datatables.net/buttons/2.0.1/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.0.1/js/buttons.colVis.min.js"></script>-->
+<script src="https://cdn.datatables.net/fixedcolumns/4.0.0/js/dataTables.fixedColumns.min.js"></script>
+
+
+<!-- Examples -->
+<script src="/assets/custom/script/main.js"></script>
+<script src="/assets/custom/script/datatables.query.js"></script>
+<script src="/assets/custom/script/datatables.demographics.js"></script>
+<script src="/assets/custom/script/datatables.retrieved.js"></script>
+
+
+</body>
+</html>

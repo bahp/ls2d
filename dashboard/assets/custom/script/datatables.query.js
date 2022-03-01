@@ -299,7 +299,7 @@
 			// Sendto server
 			$.ajax({
 				type: "POST",
-				url: 'query/patient',
+				url: url_query,
 				data: {
 					table: JSON.stringify(records)
 				},

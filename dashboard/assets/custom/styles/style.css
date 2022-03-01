@@ -4,6 +4,11 @@
     }
 }
 
+.alignright {
+	float: right;
+}
+
+
 /**
 For plotly
  */

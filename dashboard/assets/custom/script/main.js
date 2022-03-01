@@ -12,12 +12,17 @@
 
 // Constants
 const domain = document.location.origin;
-const url_dataset = domain + '/get_data';
-const url_knearest = domain + '/get_k_nearest';
-const url_knearest_info = domain + '/get_retrieved'
+const url_dataset = domain + '/api/data/';
+const url_knearest = domain + '/api/nearest/';
+const url_demographics = domain + '/api/dataframe/demographics/'
+const url_knearest_info = domain + '/api/dataframe/nearest/info/'
+const url_trace = domain + '/api/trace/'
+const url_query = domain + '/api/query/'
+
 const url_background = domain + '/query/column/boolean';
 const url_trajectory = domain + '/enc_patient';
-const url_trace = domain + '/get_trace';
+//const url_trace = domain + '/get_trace';
+
 
 let N = 0;
 

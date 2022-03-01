@@ -3,8 +3,6 @@ Interactive application server.
 
 Description:
 
-
-
 """
 
 # Libraries
@@ -17,6 +15,7 @@ import pandas as pd
 # Flask
 from flask import Flask
 from flask import request
+from flask import redirect
 from flask import jsonify
 from flask import render_template
 from flask import send_from_directory
@@ -33,52 +32,42 @@ app = Flask(__name__,
     template_folder=Path('./') / 'templates',
     static_folder=Path('./') / 'assets')
 
-
+# -------------------------------------------------------
+# Test
+# -------------------------------------------------------
 @app.route('/sample/dataframe/')
 def sample_dataframe():
     return render_template('sample_dataframe.html')
 
 
-# ------------------------------------------------------
-# Render Pages
-# ------------------------------------------------------
-@app.route('/')
-def dashboard():
-    return render_template('dashboard.html')
+# -------------------------------------------------------
+# Helper
+# -------------------------------------------------------
+def response_dataframe(df):
+    """This method returns a dataframe json.
 
-@app.route('/evaluation')
-def evaluation():
-    return render_template('page_evaluation.html')
+    Params
+    ------
+    df: pd.DataFrame
+        The dataframe
 
-@app.route('/similarity-retrieval')
-def similarity_retrieval():
-    return render_template('similarity_retrieval.html')
-
-
-@app.route('/trace')
-def trace():
-    return render_template('patient_trace.html')
-
-
-@app.route('/similarity-retrieval2')
-def similarity_retrieval2():
-    """"""
-    from pipeline import PipelineMemory
-    from imblearn.pipeline import Pipeline
-    # Load model.
-    path = '../outputs/iris/20211216-142942/nrm-pcak/pipeline8/pipeline8-split1.p'
-    model = pickle.load(open(str(path), "rb"))
-
-    print(model)
-    # Include encodings
-    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
-    # Include encodings (not needed)
-    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
-
-    # Create KD-Tree
-    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
-
-    return render_template('similarity_retrieval.html')
+    Returns
+    -------
+    Response with...
+    {columns: [a, b, c...],
+     data: [
+       [p1, p2, p4],
+       [p2, p2, p3],
+       ...
+     ]
+    """
+    # Create response
+    data = json.loads(df.to_json(orient='values'))
+    cols = df.columns.tolist()
+    response = jsonify(dict(columns=cols, data=data))
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    # Return
+    return response
 
 
 # -------------------------------------------------------
@@ -87,7 +76,6 @@ def similarity_retrieval2():
 @app.route('/favicon.ico')
 def favicon():
     return app.send_static_file('custom/favicon.ico')
-
 
 @app.route('/settings')
 def settings():
@@ -98,11 +86,240 @@ def settings():
     return response
 
 
+
+# ------------------------------------------------------
+# Render Pages
+# ------------------------------------------------------
+@app.route('/')
+def page_dashboard():
+    return page_workbench_list()
+    #return redirect("/workbench/list/")
+    #return render_template('dashboard.html')
+
+
+@app.route('/workbench/list/', methods=['GET'])
+def page_workbench_list():
+    """Page to list all workbenches.
+
+    .. note: Why depth had to be changed from 3 when using
+             mac to 1 when using windows? Investigate.
+    """
+    # Constants
+    ROOT, depth = '../outputs/', 1
+    paths = sorted([str(Path(root))
+        for root, dirs, files in os.walk(ROOT)
+            if root.count(os.sep) == depth])
+    # Return
+    return render_template('page_workbench_list.html', paths=paths)
+
+@app.route('/model/list/', methods=['GET'])
+def page_model_list():
+    """Page to list all models within a workbench.
+
+    Parameters
+    ----------
+    path: The path to the workbench.
+    """
+    # Get model path
+    path = Path(request.args.get('path', None))
+    # List of paths
+    paths = sorted([str(p) for p in Path(path).rglob('*.p')])
+    # Return
+    return render_template('page_model_list.html',
+        path=str(path), paths=paths)
+
+@app.route('/pipeline/', methods=['GET'])
+def page_pipeline():
+    """Returns the pipeline page"""
+    # Read params
+    path = Path(request.args.get('path', None))
+    pipe = request.args.get('pipe', None)
+    # Return
+    return render_template('page_pipeline.html',
+        path=str(path), pipe=pipe)
+
+@app.route('/model/', methods=['GET'])
+def page_model():
+    """Page to interact with the model.
+
+    The method sets the global variable <model>, updates the
+    embeddings <x, y> and recomputes the KD-Tree for similarity
+    retrieval. These KD-Trees could be precomputed if needed.
+
+    .. note: We might need to load the data again if the
+             previous workbench was with a different
+             dataset.
+
+    .. note: We are having all variables as global, but model
+             could be also something to be loaded on each
+             method if the path is in the url.
+
+    Parameters
+    ----------
+    path: The path to the model.
+    """
+    # Libraries
+    import pickle
+    from pathlib import Path
+    # Get model path
+    path = Path(request.args.get('path', None))
+    # Load model
+    global model
+    model = pickle.load(open(str(path.resolve()), "rb"))
+
+    # Include encodings
+    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
+    # Include encodings (not needed)
+    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
+    # Create KD-Tree
+    global tree
+    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
+
+    # Return
+    return render_template('page_model.html', model=model,
+        path=path)
+
+
+
 # -------------------------------------------------------
 # API
 # -------------------------------------------------------
-@app.route('/get_data', methods=['GET'])
-def get_data():
+@app.route('/api/dataframe/workbench/', methods=['GET'])
+def api_dataframe_workbench():
+    """This method returns columns and data for datatables.
+
+    Parameters
+    ----------
+    path: The workbench path
+
+    Returns
+    -------
+    {
+      columns: ['A', 'B', 'C'],
+      data: [[1,2,3], [4,5,6], [7,8,9]]
+    }
+    """
+    # Libraries
+    from ls2d.utils import format_workbench
+    from pathlib import Path
+    # Get model path
+    path = Path(request.args.get('path', None)) / 'results.csv'
+    # Read data and format it.
+    aux = format_workbench(pd.read_csv(path))
+    aux = aux.reset_index()
+    # Return
+    return response_dataframe(aux)
+
+@app.route('/api/dataframe/pipeline/', methods=['GET'])
+def api_dataframe_pipeline():
+    """"""
+    # Libraries
+    from ls2d.utils import format_pipeline
+    from pathlib import Path
+    # Get model path
+    path = Path(request.args.get('path', None)) / 'results.csv'
+    pipe = request.args.get('pipe', None)
+    # Read data and format it.
+    aux = pd.read_csv(path)
+    aux = format_pipeline(aux.loc[int(pipe), :])
+    aux = aux.reset_index()
+    # Return
+    return response_dataframe(aux)
+
+@app.route('/api/dataframe/demographics/', methods=['GET'])
+def api_dataframe_demographics():
+    """This method retrieves the closest k neighbours.
+
+       Parameters
+       ----------
+       idxs: list
+         The list of idxs to compute demographics
+
+       Returns
+       -------
+       demographics:
+           The dataframe with the demographics information
+       """
+    # Libraries
+    import ast
+    from ls2d.utils import format_demographics
+
+    # Get idxs and format
+    idxs = request.args.get('idxs')
+    idxs = pd.Series(ast.literal_eval(idxs))
+
+    # Copy data
+    data = data_w.copy(deep=True)
+
+    # Edit cluster column for demographics
+    data['cluster'] = 0
+    data.loc[idxs, 'cluster'] = 1
+
+    # Create TableOne
+    aux = TableOne(data, columns=COLUMNS,
+        categorical=CATEGORICAL, nonnormal=NONNORMAL,
+        groupby=['cluster'], rename={}, missing=True,
+        overall=True, pval=True, label_suffix=False)
+    aux = format_demographics(aux.tableone, TITLES=TITLES)
+    # Return
+    return response_dataframe(aux)
+
+
+@app.route('/api/dataframe/nearest/info/', methods=['GET'])
+def api_get_dataframe_knearest_info():
+    """This method retrieves the information for idxs.
+
+    .. note: Rename to... get_agg_rows.
+    .. note: How to avoid calling the tree.query method
+             here when it was already called in the
+             get_k_nearest.
+
+    Parameters
+    ----------
+    idxs: list
+      The list of idxs to compute demographics
+
+    Returns
+    -------
+    retrieved:
+        The dataframe with the demographics information
+    """
+    # Libraries
+    import ast
+
+    # Get params idxs and format
+    idxs = request.args.get('idxs')
+    idxs = pd.Series(ast.literal_eval(idxs))
+
+    # Create retrieved table (for datatable)
+    retrieved = data_w.iloc[idxs, :].copy(deep=True)
+    # retrieved = retrieved.reset_index(drop=True)
+    #retrieved = retrieved.fillna('')
+    retrieved = retrieved.convert_dtypes()
+    # retrieved.insert(loc=0, column='', value='')
+
+    # Extract information from request. First element
+    # is the query and the total number of elements
+    # in the array is k
+    id = int(idxs[0])
+    k = int(idxs.size)
+
+    # Get query information
+    q = data_w.loc[id, ['x', 'y']].to_list()
+
+    # Query distances
+    results = tree.query([q], k=k, return_distance=True)
+
+    # Initialise distances
+    retrieved['distance'] = None
+    retrieved.distance = results[0][0]
+    retrieved.distance = retrieved.distance.round(decimals=3)
+
+    # Return
+    return response_dataframe(retrieved)
+
+@app.route('/api/data/', methods=['GET'])
+def api_get_data():
     """This method returns the aggregated dataset.
 
     Returns
@@ -132,8 +349,8 @@ def get_data():
     return response
 
 
-@app.route('/get_k_nearest', methods=['GET'])
-def get_k_nearest():
+@app.route('/api/nearest/', methods=['GET'])
+def api_get_knearest():
     """This method retrieves the closest k neighbours.
 
     Parameters
@@ -170,20 +387,226 @@ def get_k_nearest():
     return response
 
 
-@app.route('/get_demographics', methods=['GET'])
-def get_demographics():
-    """This method retrieves the closest k neighbours.
+@app.route('/api/trace/', methods=['GET'])
+def api_trace():
+    """Returns the trace for a given patient.
 
     Parameters
     ----------
-    idxs: list
-      The list of idxs to compute demographics
+    study_no: string
+        The study_ number of the patient.
 
     Returns
     -------
-    demographics:
-        The dataframe with the demographics information
+    study_no: string
+        The study_no which is q by default.
+    x, y: list
+        The encodings.
+    text:
+        The information to display.
     """
+    # Get patient information
+    study_no = request.args.get('study_no', None)
+
+    # Get patient data (already encoded)
+    patient = data_f.loc[data_f[PID] == str(study_no)]
+
+    # Sort values
+    if DATE in  patient.columns:
+        # Rearrange values
+        patient = patient.sort_values(DATE, ignore_index=True)
+        # Compute day when empty and format date
+        date = patient[DATE].dt.strftime('%Y-%m-%d').tolist()
+        days = (patient[DATE] - patient[DATE].min()).dt.days
+        patient['day'] = days
+        #if patient.day_from_admission.isna().all():
+        #    patient.day_from_admission = days
+    else:
+        patient['day'] = range(patient.shape[0])
+
+    # Show information
+    print("Trace for %s: %s" % (study_no, patient.shape))
+
+    # Create response
+    resp = {
+        'study_no': study_no,
+        'x': patient.x.round(decimals=3).tolist(),
+        'y': patient.y.round(decimals=3).tolist(),
+        'text': patient.day.tolist()
+    }
+    # 'text': patient.day_from_admission.tolist()
+    response = jsonify(resp)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    # Return
+    return response
+
+
+
+@app.route('/api/query/', methods=['POST'])
+def api_query_patient():
+    """Query a new patient
+
+    Parameters
+    ----------
+    table: json
+        It is an array of lists with the feature information
+        for the patient. Note that the first column indicates
+        the day_from_admission so it shouldn't be used for
+        the encoding.
+
+        [
+            {day:x, f1:y, f2:z},
+            {day:x, f1:y, f3:z}
+        ]
+
+    Returns
+    -------
+    study_no: string
+        The study_no which is q by default.
+    x, y: list
+        The encodings.
+    text:
+        The information to display.
+    """
+    # Libraries
+    import json
+
+    # Load data
+    aux = pd.DataFrame(json.loads(request.form.get('table')))
+
+    """
+    path = request.args.get('path', None)
+    if path is not None:
+        # Load model
+        model = pickle.load(open(str(path.resolve()), "rb"))
+    """
+
+    # Compute encodes. The model has been set on the method
+    # page_model, thus it is not designed to do generic queries
+    # to different models but just to be used within the
+    # interface (change it if possible).
+    # Include encodings (not needed)
+    aux[['x', 'y']] = model.transform(aux[FEATURES])
+
+    # Sort by first column (day)
+    aux = aux.sort_values(aux.columns[0])
+
+    # Create response
+    resp = {
+        'study_no': 'q',
+        'x': aux.x.round(decimals=3).tolist(),
+        'y': aux.y.round(decimals=3).tolist(),
+        'text': aux[aux.columns[0]].tolist()
+    }
+    response = jsonify(resp)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    # Return
+    return response
+
+
+
+
+
+
+
+
+
+
+
+
+
+"""
+@app.route('/')
+def dashboard():
+    return render_template('dashboard.html')
+"""
+
+@app.route('/evaluation')
+def evaluation():
+    return render_template('page_evaluation.html')
+
+@app.route('/similarity-retrieval')
+def similarity_retrieval():
+    return render_template('similarity_retrieval.html')
+
+
+@app.route('/trace')
+def trace():
+    return render_template('patient_trace.html')
+
+
+@app.route('/similarity-retrieval2')
+def similarity_retrieval2():
+    """"""
+    from pipeline import PipelineMemory
+    from imblearn.pipeline import Pipeline
+    # Load model.
+    path = '../outputs/iris/20211216-142942/nrm-pcak/pipeline8/pipeline8-split1.p'
+    model = pickle.load(open(str(path), "rb"))
+
+    print(model)
+    # Include encodings
+    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
+    # Include encodings (not needed)
+    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
+
+    # Create KD-Tree
+    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
+
+    return render_template('similarity_retrieval.html')
+
+
+
+"""
+@app.route('/get_data', methods=['GET'])
+def get_data():
+
+    # Get data
+    x = data_w.x.round(decimals=3).tolist()
+    y = data_w.y.round(decimals=3).tolist()
+    ids = data_w.index.tolist()
+    text = data_w[PID].tolist()
+
+    # Create response
+    resp = {
+        'x': x,
+        'y': y,
+        'ids': ids,
+        'text': text
+    }
+    response = jsonify(resp)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    # Return
+    return response
+
+@app.route('/get_k_nearest', methods=['GET'])
+def get_k_nearest():
+    # Extract information from request.
+    id = int(request.args.get('id'))
+    k = int(request.args.get('k'))
+
+    # Get query information
+    q = data_w.loc[id, ['x', 'y']].to_list()
+
+    # Retrieve similar observations
+    results = tree.query([q], k=k, return_distance=True)
+
+    # Create response
+    resp = {
+        'indexes': results[1][0].tolist(),
+        'distances': results[0][0].tolist()
+    }
+    response = jsonify(resp)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+
+    # Return
+    return response
+
+@app.route('/get_demographics', methods=['GET'])
+def get_demographics():
     # Libraries
     import ast
 
@@ -234,6 +657,7 @@ def get_demographics():
 
     # Return
     return response
+"""
 
 @app.route('/get_evaluation', methods=['GET'])
 def get_evaluation():
@@ -280,241 +704,11 @@ def get_evaluation():
 
 
 
-FILEPATH = '../outputs/iris/20220221-174814/results.csv'
-
-@app.route('/workbench/<id>/', methods=['GET'])
-def page_workbench(id):
-    """Returns the workbench page"""
-    # Libraries
-    from ls2d.utils import format_workbench
-    # Read data and format it.
-    aux = format_workbench(pd.read_csv(FILEPATH))
-
-    print(aux)
-    # Create html
-    html = aux.to_html(table_id='workbench_table')
-    # Return
-    return render_template('page_workbench.html',
-        workbench_id=1, tables=[html],
-        titles=[aux.columns.values])
-
-
-@app.route('/workbench/<wid>/pipeline/<pid>/', methods=['GET'])
-def page_pipeline(wid, pid):
-    """Returns the pipeline page"""
-    # Libraries
-    from ls2d.utils import format_pipeline
-    # Read csv
-    df = pd.read_csv(FILEPATH)
-    # Read data and format it.
-    aux = format_pipeline(df.loc[int(pid), :])
-    # Create html
-    html = aux.to_html(table_id='pipeline_table')
-    # Return
-    return render_template('page_pipeline.html',
-        pipeline_id=1, tables=[html],
-        titles=[aux.columns.values])
-
-@app.route('/workbench/<wid>/pipeline/<pid>/split/<sid>/', methods=['GET'])
-def page_split(wid, pid, sid):
-    # Libraries
-    import pickle
-    from pathlib import Path
-
-    # Path
-    path = Path('../outputs/iris/20220221-175047/nrm-sae/pipeline7/pipeline7-split1.p')
-    print(path)
-    # Load model
-    aux = pickle.load(open(str(path.resolve()), "rb"))
-    print(aux)
-
-    #return '{0}/{1}/pipeline{2}/pipeline{2}-split{3}'.format( \
-    #    self.memory_path, self.slug_short, self.pipeline, self.split)
-
-    # Return
-    return render_template('page_split.html',
-        workbench_id=wid,
-        pipeline_id=aux.pipeline,
-        split_id=aux.split,
-        path=path)
-
-
-@app.route('/workbench/list/', methods=['GET'])
-def page_workbench_list():
-    """Page to list all workbenches."""
-    # Constants
-    ROOT, depth = '../outputs/', 3
-    paths = sorted([str(root)
-        for root, dirs, files in os.walk(ROOT)
-            if root.count(os.sep) == depth])
-    # Return
-    return render_template('page_workbench_list.html', paths=paths)
-
-@app.route('/model/list/', methods=['GET'])
-def page_model_list():
-    """Page to list all models within a workbench.
-
-    Parameters
-    ----------
-    path: The path to the workbench.
-    """
-    # Get model path
-    path = Path(request.args.get('path', None))
-    # List of paths
-    paths = sorted([str(p) for p in Path(path).rglob('*.p')])
-
-    """
-    # Libraries
-    from ls2d.utils import format_workbench
-    # Read data and format it.
-    aux = format_workbench(pd.read_csv(FILEPATH))
-    # Create html
-    import json
-    html = aux.to_html(table_id='workbench_table')
-    djso = aux.to_json(orient='records')
-    data = json.loads(djso)
-    """
-
-    # Return
-    return render_template('page_model_list.html',
-        path=path, paths=paths)
-        #tables=[html],
-        #titles=[aux.columns.values], json=djso,
-        #data=data, df_title=aux.columns.values)
-
-
-
-@app.route('/pipeline2/', methods=['GET'])
-def page_pipeline2():
-    """Returns the pipeline page"""
-    # Read params
-    path = Path(request.args.get('path', None))
-    pipe = request.args.get('pipe', None)
-    # Return
-    return render_template('page_pipeline.html',
-        path=path, pipe=pipe)
-
-@app.route('/model/', methods=['GET'])
-def page_model():
-    """Page to interact with the model.
-
-    The method sets the global variable <model>, updates the
-    embeddings <x, y> and recomputes the KD-Tree for similarity
-    retrieval. These KD-Trees could be precomputed if needed.
-
-    .. note: We might need to load the data again if the
-             previous workbench was with a different
-             dataset.
-
-    Parameters
-    ----------
-    path: The path to the model.
-    """
-    # Libraries
-    import pickle
-    from pathlib import Path
-    # Get model path
-    path = Path(request.args.get('path', None))
-    # Load model
-    model = pickle.load(open(str(path.resolve()), "rb"))
-
-    # Include encodings
-    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
-    # Include encodings (not needed)
-    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
-    # Create KD-Tree
-    global tree
-    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
-
-    # Return
-    return render_template('page_model.html', model=model,
-        path=path)
 
 
 
 
-def response_dataframe(df):
-    """"""
-    # Create response
-    data = json.loads(df.to_json(orient='values'))
-    cols = df.columns.tolist()
-    response = jsonify(dict(columns=cols, data=data))
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    # Return
-    return response
 
-@app.route('/api/dataframe/workbench/', methods=['GET'])
-def api_dataframe_workbench():
-    """This method returns columns and data for datatables.
-
-    Parameters
-    ----------
-    path: The workbench path
-
-    Returns
-    -------
-    {
-      columns: ['A', 'B', 'C'],
-      data: [[1,2,3], [4,5,6], [7,8,9]]
-    }
-    """
-    # Libraries
-    from ls2d.utils import format_workbench
-    from pathlib import Path
-    # Get model path
-    path = Path(request.args.get('path', None)) / 'results.csv'
-    # Read data and format it.
-    aux = format_workbench(pd.read_csv(path))
-    aux = aux.reset_index()
-    # Return
-    return response_dataframe(aux)
-
-@app.route('/api/dataframe/pipeline/', methods=['GET'])
-def api_dataframe_pipeline():
-    """"""
-    # Libraries
-    from ls2d.utils import format_pipeline
-    from pathlib import Path
-    # Get model path
-    path = Path(request.args.get('path', None)) / 'results.csv'
-    pipe = request.args.get('pipe', None)
-    # Read data and format it.
-    aux = pd.read_csv(path)
-    aux = format_pipeline(aux.loc[int(pipe), :])
-    aux = aux.reset_index()
-    # Return
-    return response_dataframe(aux)
-
-
-@app.route('/api/get_data/', methods=['GET'])
-def api_get_data():
-    """This method returns the aggregated dataset.
-
-    Returns
-    -------
-    x, y: list
-        The position of the x and y coordinates
-    ids: list
-        The id numbers used to plot the markers.
-    """
-    # Get data
-    x = data_w.x.round(decimals=3).tolist()
-    y = data_w.y.round(decimals=3).tolist()
-    ids = data_w.index.tolist()
-    text = data_w[PID].tolist()
-
-    # Create response
-    resp = {
-        'x': x,
-        'y': y,
-        'ids': ids,
-        'text': text
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
 
 
 @app.route('/api/pipeline/summary/', methods=['GET'])
@@ -564,33 +758,20 @@ def api_get_pipeline_summary():
 
 
 
-
+"""
 @app.route('/get_data_columns', methods=['GET'])
 def get_data_columns():
-    """The columns within the data.
 
-    Returns
-    -------
-    columns: list
-        The columns within the dataset.
-    """
     # Create response
     resp = {'columns': data_w.columns.tolist()}
     response = jsonify(resp)
     response.headers.add('Access-Control-Allow-Origin', '*')
     # Return
     return response
-
-
+"""
+"""
 @app.route('/get_demo_columns', methods=['GET'])
 def get_demo_columns():
-    """The columns when calling TableOne.
-
-    Returns
-    -------
-    columns: list
-        The columns that will be return by TableOne.
-    """
     # Create response
     resp = {'columns': [
         '',
@@ -607,26 +788,8 @@ def get_demo_columns():
     # Return
     return response
 
-
 @app.route('/get_retrieved', methods=['GET'])
 def get_retrieved():
-    """This method retrieves the information for idxs.
-
-    .. note: Rename to... get_agg_rows.
-    .. note: How to avoid calling the tree.query method
-             here when it was already called in the
-             get_k_nearest.
-
-    Parameters
-    ----------
-    idxs: list
-      The list of idxs to compute demographics
-
-    Returns
-    -------
-    retrieved:
-        The dataframe with the demographics information
-    """
     # Libraries
     import ast
 
@@ -672,90 +835,12 @@ def get_retrieved():
 
     # Return
     return response
+"""
 
 
-@app.route('/get_trace', methods=['GET'])
-def get_trace():
-    """Returns the trace for a given patient.
-
-    Parameters
-    ----------
-    study_no: string
-        The study_ number of the patient.
-
-    Returns
-    -------
-    study_no: string
-        The study_no which is q by default.
-    x, y: list
-        The encodings.
-    text:
-        The information to display.
-    """
-    # Get patient information
-    study_no = request.args.get('study_no', None)
-
-    # Get patient data (already encoded)
-    patient = data_f.loc[data_f[PID] == study_no]
-
-    # Get patient data (not working yet!)
-    # patient = data.loc[data.study_no == study_no]
-    # patient[['x', 'y']] = model.encode_inputs( \
-    #    DataLoader(scaler.transform(patient[features]),
-    #        16, shuffle=False))
-
-    # Sort values
-    patient = patient.sort_values('date', ignore_index=True)
-
-    # Compute day_from_admission when empty and format date
-    date = patient.date.dt.strftime('%Y-%m-%d').tolist()
-    days = (patient.date - patient.date.min()).dt.days
-    if patient.day_from_admission.isna().all():
-        patient.day_from_admission = days
-
-    # Show information
-    print("Trace (%s): %s" % (patient.shape, study_no))
-
-    # Create response
-    resp = {
-        'study_no': study_no,
-        'x': patient.x.round(decimals=3).tolist(),
-        'y': patient.y.round(decimals=3).tolist(),
-        'text': patient.day_from_admission.tolist()
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-
-
+"""
 @app.route('/query/patient', methods=['POST'])
 def query_patient():
-    """Query a new patient
-
-    Parameters
-    ----------
-    table: json
-        It is an array of lists with the feature information
-        for the patient. Note that the first column indicates
-        the day_from_admission so it shouldn't be used for
-        the encoding.
-
-        [
-            {day:x, f1:y, f2:z},
-            {day:x, f1:y, f3:z}
-        ]
-
-    Returns
-    -------
-    study_no: string
-        The study_no which is q by default.
-    x, y: list
-        The encodings.
-    text:
-        The information to display.
-    """
     # Libraries
     import json
 
@@ -780,7 +865,7 @@ def query_patient():
 
     # Return
     return response
-
+"""
 
 @app.route('/query/column/boolean', methods=['GET'])
 def query_column_boolean():
@@ -840,6 +925,71 @@ def query_column_boolean():
 
 
 
+FILEPATH = '../outputs/iris/20220221-174814/results.csv'
+
+@app.route('/workbench/<id>/', methods=['GET'])
+def page_workbench(id):
+    """Returns the workbench page"""
+    # Libraries
+    from ls2d.utils import format_workbench
+    # Read data and format it.
+    aux = format_workbench(pd.read_csv(FILEPATH))
+
+    print(aux)
+    # Create html
+    html = aux.to_html(table_id='workbench_table')
+    # Return
+    return render_template('page_workbench.html',
+        workbench_id=1, tables=[html],
+        titles=[aux.columns.values])
+
+
+@app.route('/workbench/<wid>/pipeline/<pid>/', methods=['GET'])
+def page_pipeline3(wid, pid):
+    """Returns the pipeline page"""
+    # Libraries
+    from ls2d.utils import format_pipeline
+    # Read csv
+    df = pd.read_csv(FILEPATH)
+    # Read data and format it.
+    aux = format_pipeline(df.loc[int(pid), :])
+    # Create html
+    html = aux.to_html(table_id='pipeline_table')
+    # Return
+    return render_template('page_pipeline.html',
+        pipeline_id=1, tables=[html],
+        titles=[aux.columns.values])
+
+@app.route('/workbench/<wid>/pipeline/<pid>/split/<sid>/', methods=['GET'])
+def page_split(wid, pid, sid):
+    # Libraries
+    import pickle
+    from pathlib import Path
+
+    # Path
+    path = Path('../outputs/iris/20220221-175047/nrm-sae/pipeline7/pipeline7-split1.p')
+    print(path)
+    # Load model
+    aux = pickle.load(open(str(path.resolve()), "rb"))
+    print(aux)
+
+    #return '{0}/{1}/pipeline{2}/pipeline{2}-split{3}'.format( \
+    #    self.memory_path, self.slug_short, self.pipeline, self.split)
+
+    # Return
+    return render_template('page_split.html',
+        workbench_id=wid,
+        pipeline_id=aux.pipeline,
+        split_id=aux.split,
+        path=path)
+
+
+
+
+
+
+
+
 
 
 
@@ -889,6 +1039,9 @@ if __name__ == "__main__":
     if PID is None:
         PID = 'index'
 
+    # Dates
+    DATE = 'date'
+
     # The features used for encodings (in order).
     FEATURES = config['features']
     if (FEATURES is None) | (len(FEATURES) == 0):
@@ -931,7 +1084,8 @@ if __name__ == "__main__":
     # Convert dtypes
     #data = data.convert_dtypes() # ISSUE: TableOne
     data = data.reset_index()
-    data = data.dropna(axis=1, how='all')
+    data = data.dropna(axis=1, how='all')#
+    data[PID] = data[PID].astype(str)
 
     # Store the dtypes
     # .. note: This variable wont be necessary if TableOne

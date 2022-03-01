@@ -55,11 +55,30 @@
 
     <script>
 
-        $.ajax({url: "/api/dataframe/pipeline?path={{ path }}&pipe={{ pipe }}",
+        /* For some reason when using windows the paths are not working properly. In
+           particular, the paths are not being 'scaped' and backslashes or other
+           combinations are been converted. For instance, for the path
+           '..\outputs\iris\20220228' the '\' disappear and the path becomes
+           '..outputsiris?20228.
+
+           To avoid this issue we use the tojson + myFunc hack.
+         */
+
+        function myFunc(vars) {
+            return vars;
+        }
+
+        // Get path.
+        let path = myFunc({{ path|tojson }});
+        //var pipe = myFunc({{ pipe|tojson }});
+
+        // Retrieve data
+        //$.ajax({url: "/api/dataframe/pipeline?path={{ path }}&pipe={{ pipe }}",
+        $.ajax({url: "/api/dataframe/pipeline?path=" + path + "&pipe={{ pipe }}",
             success: function(result){
 
                 // Show
-                console.log(result)
+                //console.log(result)
 
                 // Create datatable
                 $('#example').DataTable( {
@@ -86,9 +105,8 @@
                         {
                             "targets": 1,
                             "render": function (data, type, row) {
-                                var path = '{{ path }}/' + row[2] + '/';
-                                path += 'pipeline{{pipe}}/pipeline{{pipe}}-' + row[1] + '.p';
-                                var url = "/model?path=" + path;
+                                var url = "/model?path=" + path + "/" + row[2] + '/';
+                                url += 'pipeline{{pipe}}/pipeline{{pipe}}-' + row[1] + '.p';
                                 return '<a href="' + url + '">' + data + '</a>'
                             },
                         }

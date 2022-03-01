@@ -132,7 +132,26 @@
 
     <script>
 
-        $.ajax({url: "/api/dataframe/workbench?path={{ path }}",
+        /* For some reason when using windows the paths are not working properly. In
+           particular, the paths are not being 'scaped' and backslashes or other
+           combinations are been converted. For instance, for the path
+           '..\outputs\iris\20220228' the '\' disappear and the path becomes
+           '..outputsiris?20228.
+
+           To avoid this issue we use the tojson + myFunc hack.
+         */
+
+        function myFunc(vars) {
+            return vars;
+        }
+
+        // Get path.
+        var path = myFunc({{ path|tojson }});
+
+        // Retrieve data
+        //$.ajax({url: "/api/dataframe/workbench/{{ path }}/",
+        //$.ajax({url: "/api/dataframe/workbench/?path={{ path }}/",
+        $.ajax({url: "/api/dataframe/workbench/?path=" + path,
             success: function(result){
 
                 // Show
@@ -163,7 +182,7 @@
                         {
                             "targets": 1,
                             "render": function (data, type, row) {
-                                var url = "/pipeline2?path={{ path }}&pipe=" + row[0];
+                                var url = "/pipeline?path=" + path + "&pipe=" + row[0];
                                 return '<a href="' + url + '">' + data + '</a>'
                             },
                         }
