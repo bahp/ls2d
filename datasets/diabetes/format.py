@@ -8,12 +8,13 @@ from sklearn.datasets import load_diabetes
 # Load dataset
 dataset = load_diabetes(as_frame=True)
 
-# Show keys
-print("\nKeys:")
-print(dataset.keys())
+# This dataset is for regression so it does not have
+# a lavel conversion. It is also weird the fact that
+# sex is a number.
 
 # Format
 data = dataset.data
+data['target'] = dataset.target
 
 # Show data
 print("\nData:")

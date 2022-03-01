@@ -1,0 +1,48 @@
+# IRIS dataset
+# If any datetime it should be called date
+
+pid: None
+
+
+filepath: ./datasets/diabetes/data.csv
+output: ./outputs/diabetes/
+
+features:
+  - age
+  - sex
+  - bmi
+  - bp
+  - s1
+  - s2
+  - s3
+  - s4
+  - s5
+  - s6
+
+estimators:
+  - pca
+  - pcak
+  - pcai
+  - icaf
+  - iso
+
+params:
+  pca:
+    pca__n_components: [2]
+
+  pcak:
+    pcak__n_components: [2]
+
+  pcai:
+    pcai__n_components: [2]
+
+  nmf:
+    nmf__n_components: [2]
+    nmf__tol: [0.0001, 0.001, 0.01]
+
+  icaf:
+    icaf__n_components: [2]
+
+  iso:
+    iso__n_components: [2]
+    iso__n_neighbors: [5, 10]

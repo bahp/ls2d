@@ -1,10 +1,24 @@
-# data.yaml file
+# IRIS dataset
 
 pid: null
 
-features: []
-outcomes: []
+features:
+  - age
+  - sex
+  - bmi
+  - bp
+  - s1
+  - s2
+  - s3
+  - s4
+  - s5
+  - s6
+
+outcomes:
+  - target
+
 drop: []
+
 mappings: []
 
 # if no aggregation specified then the
@@ -12,9 +26,9 @@ mappings: []
 # useful when pid is not null.
 aggregations: {}
 
-titles:
-  sepal length (cm): Sepal
+titles: {}
 
 order:
+  index: 0
   distance: 1
-  Age: 2
+  n_days: 2

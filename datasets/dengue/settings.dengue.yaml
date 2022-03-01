@@ -1,0 +1,29 @@
+# IRIS dataset
+# If any datetime it should be called date
+
+pid: study_no
+
+
+filepath: ./datasets/dengue/data.csv
+output: ./outputs/dengue/
+
+features:
+  - age
+  - weight
+  - body_temperature
+  - plt
+  - haematocrit_percent
+
+estimators:
+  - sae
+#  - pca
+
+params:
+#  pca:
+#    pca__n_components: [2]
+
+  sae:
+    sae__module__layers:
+      - [3]
+    sae__lr: [0.01]
+    sae__max_epochs: [10]
