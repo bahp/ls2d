@@ -329,6 +329,7 @@ function resizePlot() {
     /*
 
      */
+    console.log("RESIZE")
     let width = $("#latentSpace").parent().width();
     let height = $("#latentSpace").parent().height();
     Plotly.relayout('latentSpace', {
@@ -343,6 +344,7 @@ function resizePlot() {
 // ----------------------------------------------
 // Main
 // ----------------------------------------------
+
 // When document ready.
 $(document).ready(function () {
 
@@ -353,7 +355,7 @@ $(document).ready(function () {
         width and height. Investigate.
      */
     // Resize plot when resize.
-    //window.addEventListener('resize', resizePlot);
+    window.addEventListener('resize', resizePlot);
 
     /*
         This piece of code is to enable the slider.
