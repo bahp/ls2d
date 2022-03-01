@@ -46,7 +46,7 @@ def add_method(cls):
 # Load configuration
 # ------------------
 # Load configuration from file
-with open('datasets/iris/settings.iris.yaml') as file:
+with open('datasets/diabetes/settings.diabetes.yaml') as file:
     config = yaml.full_load(file)
 
 # Features
@@ -65,9 +65,16 @@ pipeline_path = Path(config['output']) / uuid
 # Load data
 data = pd.read_csv(config['filepath'])
 
+# There is the option to drop those that contain NaN or use
+# a SimpleImputer or IterativeImputer to fill the missing
+# values. For the second option it can be done within the
+# pipeline creation.
+data = data.dropna(how='any', subset=config['features'])
+
 # Create X and y
 X = data[config['features']]
-y = data.target
+#y = data.target
+y = data.age
 
 # To numpy (for NeuralNet)
 X = X.to_numpy().astype(np.float32)
@@ -76,7 +83,6 @@ y = y.to_numpy().astype(np.int64)
 # Show
 print("\nData from '%s':" % config['filepath'])
 print(data)
-
 
 
 
@@ -244,6 +250,7 @@ for i, est in enumerate(estimators):
 
     # Create pipeline
     pipe = PipelineMemory(steps=[
+                                # SimpleImputer
                                 ('nrm', Normalizer()),
                                 (est, estimator)
                           ],

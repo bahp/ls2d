@@ -156,3 +156,45 @@ def format_pipeline(series):
     # Return
     return table.reset_index()
 
+def format_demographics(df, TITLES):
+    """This method...
+
+    Params
+    ------
+
+    Returns
+    -------
+    """
+    # Copy
+    info = df.copy(deep=True)
+
+    # Modify
+    info.columns = info.columns.droplevel(0)
+    info.index.set_names(['name', 'value'], inplace=True)
+    info = info.reset_index()
+
+    # Add title
+    info.insert(loc=1, column='title',
+        value=info.name.map(TITLES))
+    info.title.fillna( \
+        info.name \
+            .str.title() \
+            .str.replace('_', ' '), inplace=True)
+
+    # Alternate column titles
+    idxfmt = info.name == info.name.shift(1)
+    info.iloc[idxfmt, 1] = ''
+
+    # Set column names
+    info.columns = [
+        '',
+        '',
+        '',
+        'Missing',
+        'Overall',
+        'Not Selected',
+        'Selected',
+        'P-value'
+    ]
+    # Return
+    return info
