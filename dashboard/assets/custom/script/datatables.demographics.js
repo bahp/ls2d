@@ -131,6 +131,16 @@ function updateDemographics(datao) {
                                     data.z,
                                     'background')
                             }
+
+                            if ((data.type == 'string')) {
+                                plotlyScatter2D(
+                                    'latentSpace',
+                                    data.x,
+                                    data.y,
+                                    data.z,
+                                    'background'
+                                )
+                            }
                         });
                     }
                 });

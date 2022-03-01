@@ -895,12 +895,16 @@ def query_column_boolean():
     # It is a number (histogram mean)
     z = []
     if (DTYPES[c] == 'Float64') | \
-            (DTYPES[c] == 'Int64'):
+       (DTYPES[c] == 'Int64'):
         z = data_w[c].tolist()
 
     # It is a boolean (density count)
     if (DTYPES[c] == 'boolean'):
         aux = aux[data_w[c] == 1]
+
+    # It is a string (scatter)
+    if (DTYPES[c] == 'string'):
+        z = data_w[c].tolist()
 
     # Get X, y
     x = aux.x.tolist()

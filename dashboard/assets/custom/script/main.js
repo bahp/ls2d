@@ -93,11 +93,13 @@ for (var i = 0; i < colormaps.length; i++) {
 // ----------------------------------------------
 //               Visualisation
 // ----------------------------------------------
-function deleteTraces(div, name) {
+function deleteTraces(div, tag) {
     /** This method deletes traces from Plotly by name.
      *
      * .. note: The trace dict needs to include the key 'name'.
      * .. note: Does it remove various traces with same name?
+     * .. note: Allow to pass more than one name! arr.includes(names)
+     *
      *
      * Parameters
      * ----------
@@ -106,13 +108,23 @@ function deleteTraces(div, name) {
      * name: str
      *  The name of the trace to delete.
      */
-        // Get the chart and loop
+    // Get all traces objects.
+    var aux = document.getElementById(div).data;
+    // Get indexes where the name matches.
+    var indices = aux.map((e, i) =>
+        e.tag === tag ? i : '').filter(String)
+    // Delete traces
+    Plotly.deleteTraces(div, indices)
+
+    /*
+
+    // Get the chart and loop
     var aux = document.getElementById(div);
     for (var i = 0; i < aux.data.length; i++) {
         if (aux.data[i]["name"] == name) {
             Plotly.deleteTraces(div, i);
         }
-    }
+    }*/
 }
 
 function plotlyTrajectory(div, x, y, text, name) {
@@ -163,7 +175,7 @@ function plotlyTrajectory(div, x, y, text, name) {
     Plotly.addTraces(div, [trace]);
 }
 
-function plotlyHistogram2dcontour(div, x, y, name) {
+function plotlyHistogram2dcontour(div, x, y, tag) {
     /** This method plots density contours from Plotly.
      *
      * Parameters
@@ -174,8 +186,11 @@ function plotlyHistogram2dcontour(div, x, y, name) {
      *  The coordinates of the points to estimate density.
      * name: str
      *  The name of the trace
+     *
+     *  Returns
+     *  -------
      */
-        // Define trace
+    // Define trace
     var trace = {
             x: x,
             y: y,
@@ -187,17 +202,18 @@ function plotlyHistogram2dcontour(div, x, y, name) {
             showscale: true,
             hoverinfo: 'skip',
             type: 'histogram2dcontour',
-            name: name
+            name: tag,
+            tag: tag
         };
 
     // Delete
-    deleteTraces(div, name)
+    deleteTraces(div, tag)
 
     // Plot
     Plotly.addTraces(div, [trace]);
 }
 
-function plotlyHistogram2davg(div, x, y, z, name) {
+function plotlyHistogram2davg(div, x, y, z, tag) {
     /** This method plots heatmap from Plotly.
      *
      * Parameters
@@ -208,8 +224,11 @@ function plotlyHistogram2davg(div, x, y, z, name) {
      *  The coordinates of the points and the value to average.
      * name: str
      *  The name of the trace
+     *
+     *  Returns
+     *  -------
      */
-        // Define trace
+    // Define trace
     var trace = {
             x: x,
             y: y,
@@ -221,16 +240,57 @@ function plotlyHistogram2davg(div, x, y, z, name) {
             colorscale: 'Reds',
             hoverongaps: false,
             hoverinfo: 'skip',
-            name: name
+            name: tag,
+            tag: tag,
         }
 
     // Delete
-    deleteTraces(div, name)
+    deleteTraces(div, tag)
 
     // Plot
     Plotly.addTraces(div, [trace]);
 }
 
+function plotlyScatter2D(div, x, y, z, tag) {
+    /** This method plots scatter with labels.
+     *
+     * Parameters
+     * ----------
+     * div: str
+     *  The id of the container
+     * x, y, z: vectors
+     *  The coordinates of the points and the label.
+     * name: str
+     *  The name of the trace
+     *
+     *  Returns
+     *  -------
+     */
+    // Delete
+    deleteTraces(div, tag)
+
+    // Loop for each label
+    Array.from(new Set(z)).forEach(function(label, i) {
+
+        // Filter data
+        let x_ = x.filter((_, i) => z[i] === label);
+        let y_ = y.filter((_, i) => z[i] === label);
+        let z_ = z.filter((_, i) => z[i] === label)
+
+        // Create trace
+        let trace_ = {
+            x: x_,
+            y: y_,
+            mode: 'markers',
+            type: 'scatter',
+            name: label,
+            tag: tag
+        }
+
+        // Plot
+        Plotly.addTraces(div, [trace_]);
+    });
+}
 
 
 
@@ -271,7 +331,7 @@ function resizePlot() {
      */
     let width = $("#latentSpace").parent().width();
     let height = $("#latentSpace").parent().height();
-    Plotly.relayout('scatterPlot', {
+    Plotly.relayout('latentSpace', {
         width: width,
         height: height
     })
@@ -388,7 +448,7 @@ async function main() {
             showgrid: false,
             zeroline: false
         },
-        colorway: COLORWAY,
+        //colorway: COLORWAY,
         updatemenus: [
 
             // ----------------
