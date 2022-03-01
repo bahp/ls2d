@@ -218,6 +218,7 @@ if __name__ == '__main__':
     # Intersection normalization
     ratio_sum = np.sum(gmm_ratios) - sum(gmm_ratios[np.diag_indices(3)])
     #ratio_avg = ratio_sum /
+    gmm_ratio_sum = gmm_ratio_score(y_pred, y, 'sum')
 
     # Show
     print("\nAreas:")
@@ -226,6 +227,8 @@ if __name__ == '__main__':
     print(gmm_ratios)
     print("\nRatio (sum):")
     print(ratio_sum)
+    print("\nRatio (sum):")
+    print(gmm_ratio_sum)
 
     # Compute silhouette
     silhouette = metrics.silhouette_score(y_pred, y, metric="sqeuclidean")
