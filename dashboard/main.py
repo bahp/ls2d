@@ -167,6 +167,9 @@ def page_model():
     global model
     model = pickle.load(open(str(path.resolve()), "rb"))
 
+    print(FEATURES)
+
+
     # Include encodings
     data_w[['x', 'y']] = model.transform(data_w[FEATURES])
     # Include encodings (not needed)
@@ -521,7 +524,6 @@ def api_query_patient():
 @app.route('/')
 def dashboard():
     return render_template('dashboard.html')
-"""
 
 @app.route('/evaluation')
 def evaluation():
@@ -539,7 +541,7 @@ def trace():
 
 @app.route('/similarity-retrieval2')
 def similarity_retrieval2():
-    """"""
+
     from pipeline import PipelineMemory
     from imblearn.pipeline import Pipeline
     # Load model.
@@ -556,7 +558,7 @@ def similarity_retrieval2():
     tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
 
     return render_template('similarity_retrieval.html')
-
+"""
 
 
 """
@@ -659,19 +661,10 @@ def get_demographics():
     return response
 """
 
+"""
 @app.route('/get_evaluation', methods=['GET'])
 def get_evaluation():
-    """This method returns datatable information.
 
-    .. todo: Allow options (e.g. filename).
-    .. todo: Mix mean +- std into one column.
-
-    Parameters
-    ----------
-
-    Returns
-    -------
-    """
     # File path
     filepath = '../outputs/iris/20220211-142222/results.csv'
     # Load data from file
@@ -699,7 +692,7 @@ def get_evaluation():
 
     # Return
     return jsonify(resp)
-
+"""
 
 
 
@@ -929,67 +922,6 @@ def query_column_boolean():
 
 
 
-FILEPATH = '../outputs/iris/20220221-174814/results.csv'
-
-@app.route('/workbench/<id>/', methods=['GET'])
-def page_workbench(id):
-    """Returns the workbench page"""
-    # Libraries
-    from ls2d.utils import format_workbench
-    # Read data and format it.
-    aux = format_workbench(pd.read_csv(FILEPATH))
-
-    print(aux)
-    # Create html
-    html = aux.to_html(table_id='workbench_table')
-    # Return
-    return render_template('page_workbench.html',
-        workbench_id=1, tables=[html],
-        titles=[aux.columns.values])
-
-
-@app.route('/workbench/<wid>/pipeline/<pid>/', methods=['GET'])
-def page_pipeline3(wid, pid):
-    """Returns the pipeline page"""
-    # Libraries
-    from ls2d.utils import format_pipeline
-    # Read csv
-    df = pd.read_csv(FILEPATH)
-    # Read data and format it.
-    aux = format_pipeline(df.loc[int(pid), :])
-    # Create html
-    html = aux.to_html(table_id='pipeline_table')
-    # Return
-    return render_template('page_pipeline.html',
-        pipeline_id=1, tables=[html],
-        titles=[aux.columns.values])
-
-@app.route('/workbench/<wid>/pipeline/<pid>/split/<sid>/', methods=['GET'])
-def page_split(wid, pid, sid):
-    # Libraries
-    import pickle
-    from pathlib import Path
-
-    # Path
-    path = Path('../outputs/iris/20220221-175047/nrm-sae/pipeline7/pipeline7-split1.p')
-    print(path)
-    # Load model
-    aux = pickle.load(open(str(path.resolve()), "rb"))
-    print(aux)
-
-    #return '{0}/{1}/pipeline{2}/pipeline{2}-split{3}'.format( \
-    #    self.memory_path, self.slug_short, self.pipeline, self.split)
-
-    # Return
-    return render_template('page_split.html',
-        workbench_id=wid,
-        pipeline_id=aux.pipeline,
-        split_id=aux.split,
-        path=path)
-
-
-
-
 
 
 
@@ -1000,9 +932,9 @@ def page_split(wid, pid, sid):
 
 if __name__ == "__main__":
 
-    # ---------------------------------------------------
+    # --------------------------------------------------------
     # Configuration
-    # ---------------------------------------------------
+    # --------------------------------------------------------
     # Libraries
     import yaml
     import pickle
@@ -1010,21 +942,31 @@ if __name__ == "__main__":
     # Specific
     from pathlib import Path
 
+    # ------------------
+    # Load configuration
+    # ------------------
+    # Set path
+    PATH_YAML = '../datasets/iris/settings.iris.yaml'
+
+    # Load configuration from file
+    with open(PATH_YAML) as file:
+        config = yaml.full_load(file)
+
+    """
     # Folder
     folder = Path('../datasets/iris')
 
     # Load configuration from file
     with open(folder / 'data.yaml') as file:
         config = yaml.full_load(file)
+    """
 
     # Load data
-    data = pd.read_csv(folder / 'data.csv')
+    data = pd.read_csv(config['filepath'])
 
     # Parse dates
     if 'date' in data:
         data.date = pd.to_datetime(data.date)
-
-
 
     # ----------------
     # Torch and KDTree
@@ -1033,7 +975,6 @@ if __name__ == "__main__":
     SEED = 0
     BATCH_SIZE = 16
     LEAF_SIZE = 40
-
 
     # --------------------
     # SET UP CONFIGURATION
@@ -1145,7 +1086,7 @@ if __name__ == "__main__":
         .dropna(how='any', subset=FEATURES) \
         .groupby(by=PID) \
         .size() \
-        .rename('n_days') \
+        .rename('n_days')
 
     # Add information
     data_w['distance'] = None
@@ -1311,15 +1252,6 @@ if __name__ == "__main__":
     # Show
     print("\n\nSummary:")
     print(summary)
-
-    print(data_w)
-    print(data_w.dtypes)
-
-
-
-
-
-
 
     # settings
     SETTINGS = {
