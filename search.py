@@ -2,6 +2,7 @@
 import yaml
 import time
 import json
+import shutil
 import numpy as np
 import pandas as pd
 
@@ -12,6 +13,7 @@ from types import MethodType
 from sklearn.metrics import make_scorer
 #from sklearn.impute import SimpleImputer
 #from sklearn.impute import IterativeImputer
+from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import Normalizer
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import GridSearchCV
@@ -25,9 +27,11 @@ from ls2d.settings import _DEFAULT_ESTIMATORS
 #from settings import _DEFAULT_METRICS
 #from settings import _DEFAULT_TRANSFORMERS
 
-
+# ----------------------------------------
+# Doesn't work add method dynamically.
+# ----------------------------------------
+# Librarie
 from functools import wraps
-
 
 def add_method(cls):
     def decorator(func):
@@ -35,8 +39,11 @@ def add_method(cls):
         def wrapper(self, *args, **kwargs):
             return func(*args, **kwargs)
         setattr(cls, func.__name__, wrapper)
-        # Note we are not binding func, but wrapper which accepts self but does exactly the same as func
-        return func # returning func means func can still be used normally
+        # Note we are not binding func, but wrapper
+        # which accepts self but does exactly the same
+        # as func. Returning func means func can still be used
+        # normally
+        return func
     return decorator
 
 # --------------------------------------------------------
@@ -45,15 +52,18 @@ def add_method(cls):
 # ------------------
 # Load configuration
 # ------------------
+# Yaml path
+PATH_YAML = Path('./datasets/iris/settings.iris.yaml')
+
 # Load configuration from file
-with open('datasets/dengue/settings.dengue.yaml') as file:
+with open(PATH_YAML) as file:
     config = yaml.full_load(file)
 
-# Features
-features = sorted(set(config['features']))
-
-# Algorithms
-estimators = sorted(set(config['estimators']))
+# Variables
+PATH_DATA = Path(config['filepath'])
+FEATURES = config['features']
+TARGETS = config['targets']
+ESTIMATORS = sorted(set(config['estimators']))
 
 # Define pipeline path
 uuid = time.strftime("%Y%m%d-%H%M%S")
@@ -63,24 +73,24 @@ pipeline_path = Path(config['output']) / uuid
 # Load data
 # ------------------
 # Load data
-data = pd.read_csv(config['filepath'])
+data = pd.read_csv(PATH_DATA)
 
-# There is the option to drop those that contain NaN or use
-# a SimpleImputer or IterativeImputer to fill the missing
-# values. For the second option it can be done within the
-# pipeline creation.
-data = data.dropna(how='any', subset=config['features'])
+# .. note: In addition to keep only the full profiles, there
+#          is the option to use SimpleImputer or IterativeImputer
+#          to fill the missing values. For the second option it
+#          can be done within the pipeline creation.
+data = data.dropna(how='any', subset=FEATURES)
 
 # Create X and y
-X = data[config['features']]
-y = data[config['targets']]
+X = data[FEATURES]
+y = data[TARGETS]
 
 # To numpy (for NeuralNet)
 #X = X.to_numpy().astype(np.float32)
 #y = y.to_numpy().astype(np.int64)
 
 # Show
-print("\nData from '%s':" % config['filepath'])
+print("\nData from '%s':" % PATH_DATA)
 
 
 # --------------------------------------------------------
@@ -111,7 +121,7 @@ def custom_metrics(est, X, y):
         The estimator or algorithm.
     X:  np.array
         The X data in fit.
-    y: np.array
+    y: np.array (dataframe)
         The y data in fit.
     """
     # Transform
@@ -146,10 +156,12 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
 
     Parameters
     ----------
-    y_true: np.array
+    y_true: np.array (dataframe!)
         Array with original data.
     y_pred: np.array
         Array with transformed data.
+    y: np.array (dataframe!)
+        Array with ....
 
     Returns
     -------
@@ -160,23 +172,28 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
     from scipy.spatial.distance import cdist
     from scipy.spatial import procrustes
     from scipy.stats import spearmanr, pearsonr
-    from sklearn.mixture import GaussianMixture
-    from sklearn.mixture import BayesianGaussianMixture
     from sklearn.metrics import silhouette_score
+    from sklearn.metrics import calinski_harabasz_score
+    from sklearn.metrics import davies_bouldin_score
+    from ls2d.metrics import gmm_scores
     from ls2d.metrics import gmm_ratio_score
     from ls2d.metrics import gmm_intersection_matrix
+    from ls2d.metrics import gmm_intersection_area
 
-    """
+    # Reduce computations which are expensive
+    N = 1000 if len(y_true) > 1000 else len(y_true)
+    #idx = np.random.choice(np.arange(len(y_true)), N, replace=False)
+    idx = np.random.choice(np.arange(len(y_true)), N, replace=False)
+    y_true_ = y_true.iloc[idx, :]
+    y_pred_ = y_pred[idx]
+
     # Compute distances
-    true_dist = cdist(y_true, y_true).flatten()
-    pred_dist = cdist(y_pred, y_pred).flatten()
+    true_dist = cdist(y_true_, y_true_).flatten()
+    pred_dist = cdist(y_pred_, y_pred_).flatten()
 
     # Compute scores
     pearson = pearsonr(true_dist, pred_dist)
     spearman = spearmanr(true_dist, pred_dist)
-    """
-    pearson = [-1]
-    spearman = [-1]
 
     # Compute procrustes
     """
@@ -192,27 +209,28 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
     except ValueError as e:
         mtx1, mtx2, disparity = None, None, -1
 
-    # Compute gmm scores for selected outcomes
-    gmm_scores = {}
+    # Compute scores for selected outcomes
+    d_gmm = {}
     for c in y.columns:
         try:
             idx = y[c].notna()
             y_true_, y_pred_, y_ = \
                 y_true[idx], y_pred[idx], y[c][idx]
-            gmm_scores['gmm_ratio_sum_%s' % c] = \
-                gmm_ratio_score(y_pred_, y_, 'sum')
-        except:
-            gmm_scores['gmm_ratio_sum_%s' % c] = -1
+            d_ = gmm_scores(y_pred_, y_)
+            d_['silhouette'] = silhouette_score(y_pred, y_)
+            d_['calinski'] = calinski_harabasz_score(y_pred, y_.ravel())
+            d_['davies_b'] = davies_bouldin_score(y_pred, y_.ravel())
+            d_ = {'%s_%s'%(k, c) : v for k,v in d_.items()}
+            d_gmm.update(d_)
+        except Exception as e:
+            print(e)
 
-    # Compute silhouette
-    #silhouette = silhouette_score(y_pred, y, metric="sqeuclidean")
-
-    # Create metrics dictioanry
+    # Create dictioanry
     d = {}
     d['pearson'] = pearson[0]
     d['spearman'] = spearman[0]
     d['procrustes'] = disparity
-    d.update(gmm_scores)
+    d.update(d_gmm)
 
     # Return
     return d
@@ -226,7 +244,7 @@ def predict(self, *args, **kwargs):
 compendium = pd.DataFrame()
 
 # For each estimator
-for i, est in enumerate(estimators):
+for i, est in enumerate(ESTIMATORS):
 
     # Get the estimator
     estimator = _DEFAULT_ESTIMATORS[est]
@@ -250,14 +268,15 @@ for i, est in enumerate(estimators):
         #def predict(self, *args, **kwargs):
         #    return self.transform(*args, **kwargs)
 
-        # Option I.5:
+        # Option II:
         def predict(self, *args, **kwargs):
             return self.transform(*args, **kwargs)
         setattr(estimator.__class__, 'predict', predict)
 
-
         """
-        # Option II:
+        # Option III:
+        # Problem because cass does not exist when
+        # reloading the instance from memory.
         # Dynamically create wrapper
         class Wrapper(estimator.__class__):
             def predict(self, *args, **kwargs):
@@ -270,7 +289,8 @@ for i, est in enumerate(estimators):
                                 #('simp', SimpleImputer()),
                                 #('iimp', IterativeImputer()),
                                 #('nrm', Normalizer()),
-                                ('std', StandardScaler()),
+                                #('std', StandardScaler()),
+                                ('minmax', MinMaxScaler()),
                                 (est, estimator)
                           ],
                           memory_path=pipeline_path,
@@ -285,7 +305,10 @@ for i, est in enumerate(estimators):
 
     # Create grid search (another option is RandomSearchCV)
     grid = GridSearchCV(pipe, param_grid=param_grid,
-                              cv=2, scoring=custom_metrics,
+                              #cv=2,
+                              #cv=(((range(X.shape[0]), []),)),
+                              cv=(((slice(None), slice(None)),)),
+                              scoring=custom_metrics,
                               return_train_score=True, verbose=2,
                               refit=False, n_jobs=1)
 
@@ -306,5 +329,7 @@ for i, est in enumerate(estimators):
     # Append to total results
     compendium = compendium.append(df)
 
-# Save all
+# Save
 compendium.to_csv(pipeline_path / 'results.csv', index=False)
+
+shutil.copyfile(PATH_YAML, pipeline_path / 'settings.yaml')

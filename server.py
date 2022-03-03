@@ -25,7 +25,7 @@ from sklearn.neighbors import KDTree
 from tableone import TableOne
 from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('../..'))
+#sys.path.insert(0, os.path.abspath('../..'))
 
 # Create the app.
 app = Flask(__name__,
@@ -70,7 +70,6 @@ def response_dataframe(df):
 def favicon():
     return app.send_static_file('custom/favicon.ico')
 
-
 @app.route('/settings')
 def settings():
     # Create response
@@ -100,8 +99,8 @@ def page_workbench_list():
     # Constants
     ROOT, depth = './outputs/', 1
     paths = sorted([str(Path(root))
-                    for root, dirs, files in os.walk(ROOT)
-                    if root.count(os.sep) == depth])
+        for root, dirs, files in os.walk(ROOT)
+            if root.count(os.sep) == depth])
     # Return
     return render_template('page_workbench_list.html', paths=paths)
 
@@ -120,7 +119,7 @@ def page_model_list():
     paths = sorted([str(p) for p in Path(path).rglob('*.p')])
     # Return
     return render_template('page_model_list.html',
-                           path=str(path), paths=paths)
+        path=str(path), paths=paths)
 
 
 @app.route('/pipeline/', methods=['GET'])
@@ -131,7 +130,7 @@ def page_pipeline():
     pipe = request.args.get('pipe', None)
     # Return
     return render_template('page_pipeline.html',
-                           path=str(path), pipe=pipe)
+        path=str(path), pipe=pipe)
 
 
 @app.route('/model/', methods=['GET'])
@@ -159,23 +158,29 @@ def page_model():
     from pathlib import Path
     # Get model path
     path = Path(request.args.get('path', None))
-    # Load model
+
+    # Global variables.
     global model
+    global data_w
+    global data_f
+
+    # Load model
     model = pickle.load(open(str(path.resolve()), "rb"))
 
-    print(FEATURES)
+    # Load data according to model path.
 
     # Include encodings
     data_w[['x', 'y']] = model.transform(data_w[FEATURES])
     # Include encodings (not needed)
     data_f[['x', 'y']] = model.transform(data_f[FEATURES])
+
     # Create KD-Tree
     global tree
     tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
 
     # Return
-    return render_template('page_model.html', model=model,
-                           path=path)
+    return render_template('page_model.html',
+        model=model, path=path)
 
 
 # -------------------------------------------------------
@@ -202,7 +207,7 @@ def api_dataframe_workbench():
     # Get model path
     path = Path(request.args.get('path', None)) / 'results.csv'
     # Read data and format it.
-    aux = format_workbench(pd.read_csv(path))
+    aux = format_workbench(pd.read_csv(path), config)
     aux = aux.reset_index()
     # Return
     return response_dataframe(aux)
@@ -329,18 +334,17 @@ def api_get_data():
     ids: list
         The id numbers used to plot the markers.
     """
-    # Get data
-    x = data_w.x.round(decimals=3).tolist()
-    y = data_w.y.round(decimals=3).tolist()
-    ids = data_w.index.tolist()
-    text = data_w[PID].tolist()
+    # Why embeddings here are weird?? maybe it was not initialised!
+    #x = data_w.x.round(decimals=3).tolist()
+    #y = data_w.y.round(decimals=3).tolist()
+    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
 
     # Create response
     resp = {
-        'x': x,
-        'y': y,
-        'ids': ids,
-        'text': text
+        'x': data_w.x.tolist(),
+        'y': data_w.y.tolist(),
+        'ids': data_w.index.tolist(),
+        'text': data_w[PID].tolist()
     }
     response = jsonify(resp)
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -589,20 +593,11 @@ if __name__ == "__main__":
     # Load configuration
     # ------------------
     # Set path
-    PATH_YAML = './datasets/dengue/settings.dengue.yaml'
+    PATH_YAML = Path('./datasets/iris/settings.iris.yaml')
 
     # Load configuration from file
     with open(PATH_YAML) as file:
         config = yaml.full_load(file)
-
-    """
-    # Folder
-    folder = Path('../datasets/iris')
-
-    # Load configuration from file
-    with open(folder / 'data.yaml') as file:
-        config = yaml.full_load(file)
-    """
 
     # Load data
     data = pd.read_csv(config['filepath'])
@@ -646,7 +641,8 @@ if __name__ == "__main__":
     DROP = config['drop']
 
     # Columns to map
-    MAPPINGS = config['mappings']
+    #MAPPINGS = config['mappings']
+    MAPPINGS = {}
 
     # Dtypes
     DTYPES = {}
@@ -655,18 +651,19 @@ if __name__ == "__main__":
     TITLES = config['titles']
 
     # Columns to aggregate
-    AGGREGATION = {}
+    AGGREGATION = config['aggregations']
 
     # Reorder some columns
     ORDER = config['order']
+
 
     # ----------------------------
     # Data
     # ----------------------------
     # Formatting
-    data = data.replace(MAPPINGS)  # Replace values
-    data = data.astype(DTYPES)  # Force some dtypes
-    data = data.drop_duplicates()  # Drop duplicates
+    #data = data.replace(MAPPINGS)  # Replace values
+    #data = data.astype(DTYPES)     # Force some dtypes
+    #data = data.drop_duplicates()  # Drop duplicates
 
     # Keep full
     data = data.dropna(subset=FEATURES, how='any')
@@ -749,7 +746,6 @@ if __name__ == "__main__":
     # Data complete (full)
     data_f = data.copy(deep=True) \
         .dropna(how='any', subset=FEATURES)
-
 
     # -----------------------------------------------------
     # Demographics
