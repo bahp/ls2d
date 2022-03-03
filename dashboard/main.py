@@ -105,7 +105,7 @@ def page_workbench_list():
              mac to 1 when using windows? Investigate.
     """
     # Constants
-    ROOT, depth = '../outputs/', 1
+    ROOT, depth = '../outputs/', 3
     paths = sorted([str(Path(root))
         for root, dirs, files in os.walk(ROOT)
             if root.count(os.sep) == depth])
