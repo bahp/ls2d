@@ -61,8 +61,8 @@ estimators:
   - pca
   - pcak
   - pcai
-  - icaf
-  - iso
+  #- icaf
+  #- iso
   #- lda
 
 # The parameters to create the ParameterGrid to create and
@@ -110,4 +110,13 @@ params:
       - [4, 4, 2]
       - [4, 10, 10, 2]
     sae__lr: [0.01, 0.001]
-    sae__max_epochs: [1500]
+    sae__max_epochs: [1500, 10000]
+
+
+server:
+    # This variable indicates that the train set and the test set
+    # are the same and therefore the metrics are identical. Thus,
+    # only one of them needs to be retrieved and the prefix (train,
+    # test) can be removed. This allows to have "cleaner" metric
+    # tables.
+    train_test_equal: True

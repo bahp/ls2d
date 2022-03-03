@@ -21,9 +21,9 @@ output: ./outputs/dengue/
 features:
   - age
   - weight
-  - body_temperature
   - plt
   - haematocrit_percent
+  - body_temperature
 
 # Columns that will be considered as targets. These are
 # used to compute metrics such as the GMM (Gaussian
@@ -51,15 +51,15 @@ targets:
 # DEFAULT_ESTIMATORS within the file ls2d.settings.py.
 estimators:
   - sae
-  - pca
+  #- pca
 
 # The parameters to create the ParameterGrid to create and
 # evaluate different hyperparameter configurations. Please
 # ensure that the hyperparameters ae specified, otherwise
 # a default empty dictionary will be returned.
 params:
-  #pca:
-  #  pca__n_components: [2]
+  pca:
+    pca__n_components: [2]
 
   sae:
     # Remember that the first layer should be equal to the
@@ -68,9 +68,9 @@ params:
     sae__module__layers:
       - [5, 2]
       - [5, 3, 2]
-      - [5, 5, 4, 2]
-    sae__lr: [0.01, 0.001]
-    sae__max_epochs: [2000]
+    sae__lr: [0.001, 0.00001]
+    #sae__batch_size: [16, 32]
+    sae__max_epochs: [10, 500]
 
 
 
@@ -104,10 +104,10 @@ outcomes:
 drop: []
 
 #
-mappings:
-  gender:
-    Female: 0
-    Male: 1
+#mappings:
+  #gender:
+  #  Female: 0
+  #  Male: 1
 
 # if no aggregation specified then the
 # agg function 'max' or 'first' will be
@@ -122,6 +122,7 @@ aggregations:
   gender: first
   date: last
   shock: max
+  study_no: first
 
 #
 titles:
