@@ -97,7 +97,7 @@ def page_workbench_list():
              mac to 1 when using windows? Investigate.
     """
     # Constants
-    ROOT, depth = './outputs/', 1
+    ROOT, depth = './outputs/', 3
     paths = sorted([str(Path(root))
         for root, dirs, files in os.walk(ROOT)
             if root.count(os.sep) == depth])
@@ -181,6 +181,11 @@ def page_model():
     # Return
     return render_template('page_model.html',
         model=model, path=path)
+
+
+
+
+
 
 
 # -------------------------------------------------------
@@ -718,8 +723,9 @@ if __name__ == "__main__":
     #          has a different idx associated to it. This
     #          idx will be used also to identify the numbers
     #          in the scatter plot.
+    # , dropna=False) \
     data_w = data[OUTCOMES].copy(deep=True) \
-        .groupby(by=PID, dropna=False) \
+        .groupby(by=PID) \
         .agg(AGGREGATION) \
         .dropna(how='any', subset=FEATURES)
 
@@ -833,4 +839,4 @@ if __name__ == "__main__":
     # ---------------------------------------------------
     # Run app
     # ---------------------------------------------------
-    app.run(debug=True, use_reloader=False)
+    app.run(host="0.0.0.0", debug=True, use_reloader=False)

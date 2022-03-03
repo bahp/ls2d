@@ -25,19 +25,12 @@ from sklearn.neighbors import KDTree
 from tableone import TableOne
 from pathlib import Path
 
-sys.path.insert(0, os.path.abspath('../..'))
+#sys.path.insert(0, os.path.abspath('../..'))
 
 # Create the app.
 app = Flask(__name__,
-    template_folder=Path('./') / 'templates',
-    static_folder=Path('./') / 'assets')
-
-# -------------------------------------------------------
-# Test
-# -------------------------------------------------------
-@app.route('/sample/dataframe/')
-def sample_dataframe():
-    return render_template('sample_dataframe.html')
+    template_folder=Path('./dashboard') / 'templates',
+    static_folder=Path('./dashboard') / 'assets')
 
 
 # -------------------------------------------------------
@@ -86,15 +79,14 @@ def settings():
     return response
 
 
-
 # ------------------------------------------------------
 # Render Pages
 # ------------------------------------------------------
 @app.route('/')
 def page_dashboard():
     return page_workbench_list()
-    #return redirect("/workbench/list/")
-    #return render_template('dashboard.html')
+    # return redirect("/workbench/list/")
+    # return render_template('dashboard.html')
 
 
 @app.route('/workbench/list/', methods=['GET'])
@@ -105,12 +97,13 @@ def page_workbench_list():
              mac to 1 when using windows? Investigate.
     """
     # Constants
-    ROOT, depth = '../outputs/', 1
+    ROOT, depth = './outputs/', 1
     paths = sorted([str(Path(root))
         for root, dirs, files in os.walk(ROOT)
             if root.count(os.sep) == depth])
     # Return
     return render_template('page_workbench_list.html', paths=paths)
+
 
 @app.route('/model/list/', methods=['GET'])
 def page_model_list():
@@ -128,6 +121,7 @@ def page_model_list():
     return render_template('page_model_list.html',
         path=str(path), paths=paths)
 
+
 @app.route('/pipeline/', methods=['GET'])
 def page_pipeline():
     """Returns the pipeline page"""
@@ -137,6 +131,7 @@ def page_pipeline():
     # Return
     return render_template('page_pipeline.html',
         path=str(path), pipe=pipe)
+
 
 @app.route('/model/', methods=['GET'])
 def page_model():
@@ -163,25 +158,29 @@ def page_model():
     from pathlib import Path
     # Get model path
     path = Path(request.args.get('path', None))
-    # Load model
+
+    # Global variables.
     global model
+    global data_w
+    global data_f
+
+    # Load model
     model = pickle.load(open(str(path.resolve()), "rb"))
 
-    print(FEATURES)
-
+    # Load data according to model path.
 
     # Include encodings
     data_w[['x', 'y']] = model.transform(data_w[FEATURES])
     # Include encodings (not needed)
     data_f[['x', 'y']] = model.transform(data_f[FEATURES])
+
     # Create KD-Tree
     global tree
     tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
 
     # Return
-    return render_template('page_model.html', model=model,
-        path=path)
-
+    return render_template('page_model.html',
+        model=model, path=path)
 
 
 # -------------------------------------------------------
@@ -208,10 +207,11 @@ def api_dataframe_workbench():
     # Get model path
     path = Path(request.args.get('path', None)) / 'results.csv'
     # Read data and format it.
-    aux = format_workbench(pd.read_csv(path))
+    aux = format_workbench(pd.read_csv(path), config)
     aux = aux.reset_index()
     # Return
     return response_dataframe(aux)
+
 
 @app.route('/api/dataframe/pipeline/', methods=['GET'])
 def api_dataframe_pipeline():
@@ -228,6 +228,7 @@ def api_dataframe_pipeline():
     aux = aux.reset_index()
     # Return
     return response_dataframe(aux)
+
 
 @app.route('/api/dataframe/demographics/', methods=['GET'])
 def api_dataframe_demographics():
@@ -260,9 +261,9 @@ def api_dataframe_demographics():
 
     # Create TableOne
     aux = TableOne(data, columns=COLUMNS,
-        categorical=CATEGORICAL, nonnormal=NONNORMAL,
-        groupby=['cluster'], rename={}, missing=True,
-        overall=True, pval=True, label_suffix=False)
+                   categorical=CATEGORICAL, nonnormal=NONNORMAL,
+                   groupby=['cluster'], rename={}, missing=True,
+                   overall=True, pval=True, label_suffix=False)
     aux = format_demographics(aux.tableone, TITLES=TITLES)
     # Return
     return response_dataframe(aux)
@@ -297,7 +298,7 @@ def api_get_dataframe_knearest_info():
     # Create retrieved table (for datatable)
     retrieved = data_w.iloc[idxs, :].copy(deep=True)
     # retrieved = retrieved.reset_index(drop=True)
-    #retrieved = retrieved.fillna('')
+    # retrieved = retrieved.fillna('')
     retrieved = retrieved.convert_dtypes()
     # retrieved.insert(loc=0, column='', value='')
 
@@ -321,6 +322,7 @@ def api_get_dataframe_knearest_info():
     # Return
     return response_dataframe(retrieved)
 
+
 @app.route('/api/data/', methods=['GET'])
 def api_get_data():
     """This method returns the aggregated dataset.
@@ -332,18 +334,17 @@ def api_get_data():
     ids: list
         The id numbers used to plot the markers.
     """
-    # Get data
-    x = data_w.x.round(decimals=3).tolist()
-    y = data_w.y.round(decimals=3).tolist()
-    ids = data_w.index.tolist()
-    text = data_w[PID].tolist()
+    # Why embeddings here are weird?? maybe it was not initialised!
+    #x = data_w.x.round(decimals=3).tolist()
+    #y = data_w.y.round(decimals=3).tolist()
+    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
 
     # Create response
     resp = {
-        'x': x,
-        'y': y,
-        'ids': ids,
-        'text': text
+        'x': data_w.x.tolist(),
+        'y': data_w.y.tolist(),
+        'ids': data_w.index.tolist(),
+        'text': data_w[PID].tolist()
     }
     response = jsonify(resp)
     response.headers.add('Access-Control-Allow-Origin', '*')
@@ -415,14 +416,14 @@ def api_trace():
     patient = data_f.loc[data_f[PID] == str(study_no)]
 
     # Sort values
-    if DATE in  patient.columns:
+    if DATE in patient.columns:
         # Rearrange values
         patient = patient.sort_values(DATE, ignore_index=True)
         # Compute day when empty and format date
         date = patient[DATE].dt.strftime('%Y-%m-%d').tolist()
         days = (patient[DATE] - patient[DATE].min()).dt.days
         patient['day'] = days
-        #if patient.day_from_admission.isna().all():
+        # if patient.day_from_admission.isna().all():
         #    patient.day_from_admission = days
     else:
         patient['day'] = range(patient.shape[0])
@@ -443,7 +444,6 @@ def api_trace():
 
     # Return
     return response
-
 
 
 @app.route('/api/query/', methods=['POST'])
@@ -509,357 +509,6 @@ def api_query_patient():
     return response
 
 
-
-
-
-
-
-
-
-
-
-
-
-"""
-@app.route('/')
-def dashboard():
-    return render_template('dashboard.html')
-
-@app.route('/evaluation')
-def evaluation():
-    return render_template('page_evaluation.html')
-
-@app.route('/similarity-retrieval')
-def similarity_retrieval():
-    return render_template('similarity_retrieval.html')
-
-
-@app.route('/trace')
-def trace():
-    return render_template('patient_trace.html')
-
-
-@app.route('/similarity-retrieval2')
-def similarity_retrieval2():
-
-    from pipeline import PipelineMemory
-    from imblearn.pipeline import Pipeline
-    # Load model.
-    path = '../outputs/iris/20211216-142942/nrm-pcak/pipeline8/pipeline8-split1.p'
-    model = pickle.load(open(str(path), "rb"))
-
-    print(model)
-    # Include encodings
-    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
-    # Include encodings (not needed)
-    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
-
-    # Create KD-Tree
-    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
-
-    return render_template('similarity_retrieval.html')
-"""
-
-
-"""
-@app.route('/get_data', methods=['GET'])
-def get_data():
-
-    # Get data
-    x = data_w.x.round(decimals=3).tolist()
-    y = data_w.y.round(decimals=3).tolist()
-    ids = data_w.index.tolist()
-    text = data_w[PID].tolist()
-
-    # Create response
-    resp = {
-        'x': x,
-        'y': y,
-        'ids': ids,
-        'text': text
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-
-@app.route('/get_k_nearest', methods=['GET'])
-def get_k_nearest():
-    # Extract information from request.
-    id = int(request.args.get('id'))
-    k = int(request.args.get('k'))
-
-    # Get query information
-    q = data_w.loc[id, ['x', 'y']].to_list()
-
-    # Retrieve similar observations
-    results = tree.query([q], k=k, return_distance=True)
-
-    # Create response
-    resp = {
-        'indexes': results[1][0].tolist(),
-        'distances': results[0][0].tolist()
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-
-@app.route('/get_demographics', methods=['GET'])
-def get_demographics():
-    # Libraries
-    import ast
-
-    # Extract information from request.
-    idxs = pd.Series(ast.literal_eval(request.args.get('idxs')))
-
-    # Copy data
-    data = data_w.copy(deep=True)
-
-    # Edit cluster column for demographics
-    data['cluster'] = 0
-    data.loc[idxs, 'cluster'] = 1
-
-    # Create TableOne
-    demographics = TableOne(data, columns=COLUMNS,
-                            categorical=CATEGORICAL, nonnormal=NONNORMAL,
-                            groupby=['cluster'], rename={}, missing=True,
-                            overall=True, pval=True, label_suffix=False)
-
-    # Format TableOne
-    demographics = demographics.tableone
-    demographics.columns = demographics.columns.droplevel(0)
-    demographics.index.set_names(['name', 'value'], inplace=True)
-    demographics = demographics.reset_index()
-
-    # Add title
-    demographics.insert(loc=1, column='title',
-                        value=demographics.name.map(TITLES))
-    demographics.title.fillna( \
-        demographics.name \
-            .str.title() \
-            .str.replace('_', ' '), inplace=True)
-
-    # Alternate column titles
-    idxfmt = demographics.name == demographics.name.shift(1)
-    demographics.iloc[idxfmt, 1] = ''
-
-    # Create response
-    resp = {
-        'columns': demographics.columns.tolist(),
-        'data': demographics.round(decimals=3) \
-            .astype(str) \
-            .values \
-            .tolist()
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-"""
-
-"""
-@app.route('/get_evaluation', methods=['GET'])
-def get_evaluation():
-
-    # File path
-    filepath = '../outputs/iris/20220211-142222/results.csv'
-    # Load data from file
-    df = pd.read_csv(filepath)
-    # Filter out those columns starting with param_
-    df = df.loc[:, ~df.columns.str.startswith('param_')]
-    # Filter out those columns starting with rank
-    df = df.loc[:, ~df.columns.str.startswith('rank_')]
-    # Reorder
-    cols = list(df.columns)
-    cols.insert(3, cols.pop(cols.index('params')))
-    cols.insert(4, cols.pop(cols.index('mean_test_pearson')))
-    cols.insert(5, cols.pop(cols.index('mean_test_spearman')))
-    df = df[cols]
-
-    # Create response
-    resp = {
-        'columns': df.columns.tolist(),
-        'data': df.round(decimals=3) \
-                 .astype(str)
-                 .replace('nan', '-')
-                 .values
-                 .tolist()
-    }
-
-    # Return
-    return jsonify(resp)
-"""
-
-
-
-
-
-
-
-
-
-
-
-@app.route('/api/pipeline/summary/', methods=['GET'])
-def api_get_pipeline_summary():
-    json = {
-        "data": [
-            [
-                "Tiger Nixon",
-                "System Architect",
-                "Edinburgh",
-                "5421",
-                "2011/04/25",
-                "$320,800"
-            ],
-            [
-                "Garrett Winters",
-                "Accountant",
-                "Tokyo",
-                "8422",
-                "2011/07/25",
-                "$170,750"
-            ],
-            [
-                "Garrett Winters",
-                "Accountant",
-                "Tokyo",
-                "8422",
-                "2011/07/25",
-                "$170,750"
-            ],
-            [
-                "Garrett Winters",
-                "Accountant",
-                "Tokyo",
-                "8422",
-                "2011/07/25",
-                "$170,750"
-            ]
-        ]
-    }
-
-    response = jsonify(json)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-
-
-
-"""
-@app.route('/get_data_columns', methods=['GET'])
-def get_data_columns():
-
-    # Create response
-    resp = {'columns': data_w.columns.tolist()}
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    # Return
-    return response
-"""
-"""
-@app.route('/get_demo_columns', methods=['GET'])
-def get_demo_columns():
-    # Create response
-    resp = {'columns': [
-        '',
-        '',
-        '',
-        'Missing',
-        'Overall',
-        'Not Selected',
-        'Selected',
-        'P-value'
-    ]}
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    # Return
-    return response
-
-@app.route('/get_retrieved', methods=['GET'])
-def get_retrieved():
-    # Libraries
-    import ast
-
-    # Extract information from request.
-    idxs = pd.Series(ast.literal_eval(request.args.get('idxs')))
-
-    # Create retrieved table (for datatable)
-    retrieved = data_w.iloc[idxs, :].copy(deep=True)
-    # retrieved = retrieved.reset_index(drop=True)
-    #retrieved = retrieved.fillna('')
-    retrieved = retrieved.convert_dtypes()
-    # retrieved.insert(loc=0, column='', value='')
-
-    # The first index is the query point
-    id = int(idxs[0])
-    k = int(idxs.size)
-
-    # Get query information
-    q = data_w.loc[id, ['x', 'y']].to_list()
-
-    # Query distances
-    results = tree.query([q], k=k, return_distance=True)
-
-    # Initialise distances
-    retrieved['distance'] = None
-    retrieved['distance'] = results[0][0]
-
-    print(retrieved)
-    print(type(retrieved))
-
-    # .round(decimals=3) \
-
-    # Create response
-    resp = {
-        'columns': retrieved.columns.tolist(),
-        'data': retrieved \
-            .astype(str) \
-            .values \
-            .tolist()
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-"""
-
-
-"""
-@app.route('/query/patient', methods=['POST'])
-def query_patient():
-    # Libraries
-    import json
-
-    # Load data
-    aux = pd.DataFrame(json.loads(request.form.get('table')))
-
-    # Include encodings (not needed)
-    aux[['x', 'y']] = model.transform(aux[FEATURES])
-
-    # Sort by first column (day)
-    aux = aux.sort_values(aux.columns[0])
-
-    # Create response
-    resp = {
-        'study_no': 'q',
-        'x': aux.x.round(decimals=3).tolist(),
-        'y': aux.y.round(decimals=3).tolist(),
-        'text': aux[aux.columns[0]].tolist()
-    }
-    response = jsonify(resp)
-    response.headers.add('Access-Control-Allow-Origin', '*')
-
-    # Return
-    return response
-"""
-
 @app.route('/query/column/boolean', methods=['GET'])
 def query_column_boolean():
     """Returns information to plot density backgrounds
@@ -888,7 +537,7 @@ def query_column_boolean():
     # It is a number (histogram mean)
     z = []
     if (DTYPES[c] == 'Float64') | \
-       (DTYPES[c] == 'Int64'):
+            (DTYPES[c] == 'Int64'):
         z = data_w[c].tolist()
 
     # It is a boolean (density count)
@@ -928,8 +577,6 @@ def query_column_boolean():
 
 
 
-
-
 if __name__ == "__main__":
 
     # --------------------------------------------------------
@@ -946,20 +593,11 @@ if __name__ == "__main__":
     # Load configuration
     # ------------------
     # Set path
-    PATH_YAML = '../datasets/iris/settings.iris.yaml'
+    PATH_YAML = Path('./datasets/iris/settings.iris.yaml')
 
     # Load configuration from file
     with open(PATH_YAML) as file:
         config = yaml.full_load(file)
-
-    """
-    # Folder
-    folder = Path('../datasets/iris')
-
-    # Load configuration from file
-    with open(folder / 'data.yaml') as file:
-        config = yaml.full_load(file)
-    """
 
     # Load data
     data = pd.read_csv(config['filepath'])
@@ -990,7 +628,10 @@ if __name__ == "__main__":
     # The features used for encodings (in order).
     FEATURES = config['features']
     if (FEATURES is None) | (len(FEATURES) == 0):
-        FEATURES = set(data.columns) - set([PID] + config['outcomes'])
+        FEATURES = set(data.columns)
+        FEATURES = FEATURES - set([PID])
+        FEATURES = FEATURES - set(config['outcomes'])
+        FEATURES = FEATURES - set(config['targets'])
         FEATURES = list(FEATURES)
 
     # The columns to include in demographics
@@ -1000,7 +641,8 @@ if __name__ == "__main__":
     DROP = config['drop']
 
     # Columns to map
-    MAPPINGS = config['mappings']
+    #MAPPINGS = config['mappings']
+    MAPPINGS = {}
 
     # Dtypes
     DTYPES = {}
@@ -1009,7 +651,7 @@ if __name__ == "__main__":
     TITLES = config['titles']
 
     # Columns to aggregate
-    AGGREGATION = {}
+    AGGREGATION = config['aggregations']
 
     # Reorder some columns
     ORDER = config['order']
@@ -1019,17 +661,17 @@ if __name__ == "__main__":
     # Data
     # ----------------------------
     # Formatting
-    data = data.replace(MAPPINGS) # Replace values
-    data = data.astype(DTYPES)    # Force some dtypes
-    data = data.drop_duplicates() # Drop duplicates
+    #data = data.replace(MAPPINGS)  # Replace values
+    #data = data.astype(DTYPES)     # Force some dtypes
+    #data = data.drop_duplicates()  # Drop duplicates
 
     # Keep full
     data = data.dropna(subset=FEATURES, how='any')
 
     # Convert dtypes
-    #data = data.convert_dtypes() # ISSUE: TableOne
+    # data = data.convert_dtypes() # ISSUE: TableOne
     data = data.reset_index()
-    data = data.dropna(axis=1, how='all')#
+    data = data.dropna(axis=1, how='all')  #
     data[PID] = data[PID].astype(str)
 
     # Store the dtypes
@@ -1086,9 +728,8 @@ if __name__ == "__main__":
         .dropna(how='any', subset=FEATURES) \
         .groupby(by=PID) \
         .size() \
-        .rename('n_days')
-
-    # Add information
+        .rename('n_days') \
+        # Add information
     data_w['distance'] = None
     data_w['n_days'] = nprofiles
 
@@ -1105,79 +746,6 @@ if __name__ == "__main__":
     # Data complete (full)
     data_f = data.copy(deep=True) \
         .dropna(how='any', subset=FEATURES)
-
-    # -----------------------------------------------------
-    # Adding encodings
-    # -----------------------------------------------------
-    """
-    # ----------------------------
-    # Model
-    # ----------------------------
-    # Libraries
-    from sklearn.pipeline import Pipeline
-    from sklearn.preprocessing import Normalizer
-    from sklearn.decomposition import PCA
-    from sklearn.decomposition import KernelPCA
-    from sklearn.decomposition import IncrementalPCA
-    from sklearn.decomposition import FastICA
-    from sklearn.decomposition import NMF
-    from sklearn.decomposition import LatentDirichletAllocation
-    from sklearn.experimental import enable_iterative_imputer
-    from sklearn.impute import IterativeImputer
-    from sklearn.manifold import TSNE
-    from sklearn.manifold import Isomap
-    from sklearn.manifold import LocallyLinearEmbedding
-
-    from ls2d import pipeline
-    from ls2d.pipeline import PipelineMemory
-    from ls2d.autoencoder import SkorchAE
-
-    # Models
-    pca = PCA(n_components=2)
-    nmf = NMF(n_components=2)
-    lda = LatentDirichletAllocation(
-        n_components=2,
-        max_iter=5,
-        learning_method="online",
-        learning_offset=50.0,
-        random_state=0)
-    pca_k = KernelPCA(n_components=2)
-    oca_i = IncrementalPCA(n_components=2)
-    ica = FastICA(n_components=2)
-    #tsne = TSNE(n_components=2)
-    iso = Isomap(n_components=2)
-    lle = LocallyLinearEmbedding(n_components=2)
-
-   
-    # Create pipeline
-    # model = Pipeline([
-    #    ('imp', IterativeImputer(random_state=0)),
-    #    ('scaler', Normalizer()),
-    #    ('model', lda)
-    #])
-
-    # Fit pipeline
-    #model = model.fit(data_w[FEATURES].to_numpy().astype(np.float32))
-
-    import pickle
-
-
-    path = '../outputs/iris/20220221-175047/nrm-sae/pipeline7/pipeline7-split1.p'
-    with open(path, 'rb') as f:
-        # The protocol version used is detected automatically, so we do not
-        # have to specify it.
-        model = pickle.load(f)
-
-
-    # Include encodings
-    data_w[['x', 'y']] = model.transform(data_w[FEATURES])
-
-    # Include encodings (not needed)
-    data_f[['x', 'y']] = model.transform(data_f[FEATURES])
-
-    # Create KD-Tree
-    tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
-    """
 
     # -----------------------------------------------------
     # Demographics
@@ -1205,8 +773,8 @@ if __name__ == "__main__":
         CATEGORICAL.remove('date')
     if 'n_days' in NONNORMAL:
         NONNORMAL.remove('n_days')
-    if 'dsource' in CATEGORICAL:
-        CATEGORICAL.remove('dsource')
+    #if 'dsource' in CATEGORICAL:
+    #    CATEGORICAL.remove('dsource')
 
     # All columns
     COLUMNS = sorted(NONNORMAL) + sorted(CATEGORICAL)
