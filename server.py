@@ -73,7 +73,9 @@ def favicon():
 @app.route('/settings')
 def settings():
     # Create response
-    response = jsonify(SETTINGS)
+    smry_json = summary.loc[FEATURES, :] \
+        .to_json(orient='records', default_handler=str)
+    response = jsonify({'features': smry_json})
     response.headers.add('Access-Control-Allow-Origin', '*')
     # Return
     return response
@@ -97,7 +99,7 @@ def page_workbench_list():
              mac to 1 when using windows? Investigate.
     """
     # Constants
-    ROOT, depth = './outputs/', 3
+    ROOT, depth = './outputs/', 1
     paths = sorted([str(Path(root))
         for root, dirs, files in os.walk(ROOT)
             if root.count(os.sep) == depth])
@@ -828,13 +830,13 @@ if __name__ == "__main__":
     print(summary)
 
     # settings
-    SETTINGS = {
-        'urls': {
-
-        },
-        'features': summary.loc[FEATURES, :] \
-            .to_json(orient='records'),
-    }
+    #SETTINGS = {
+    #    'urls': {
+    #
+    #    },
+    #    'features': summary.loc[FEATURES, :] \
+    #        .to_json(orient='records')
+    #}
 
     # ---------------------------------------------------
     # Run app
