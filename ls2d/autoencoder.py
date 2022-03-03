@@ -89,9 +89,26 @@ class AE(nn.Module):
         decoded = self.decoder(encoded)
         return decoded
 
+    def transform(self, X):
+        """Prepare data and compute embeddings."""
+        if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
+            X = X.to_numpy().astype(np.float32)
+        if isinstance(X, np.ndarray):
+            X = X.astype(np.float32)
+        return self.encode_inputs(X)
+
+    def fit(self, X, y):
+        """We are using skorch for compatibility with scikits
+           instead of using our own fit. However, we include
+           this empty method in case we want to manualy create
+           a pipeline with an AE as estimator. But this will
+           have to be pretrained.
+        """
+        return self
+
     @torch.no_grad()
     def encode_inputs(self, x):
-        #print(self.encoder(torch.tensor(x)))
+        """Compute the embeddings."""
         z = []
         for e in DataLoader(x, 16, shuffle=False):
             z.append(self.encoder(e))
