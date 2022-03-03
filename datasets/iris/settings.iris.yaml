@@ -1,27 +1,74 @@
-# IRIS dataset
-# If any datetime it should be called date
+# Configuration for Iris.
+#
+# .. note: At the moment, the column with dates should be
+#          called dates and ignores completely the time
+#          information.
 
-pid: None
+# The column that identifies the patient. If not
+# specified or set to null, the index will be used
+# as identifier.
+pid: null
 
-
+# Location of the data.
 filepath: ./datasets/iris/data.csv
+
+# Path to store the models.
 output: ./outputs/iris/
 
+# Features to be used for training. The features will
+# be automatically sorted alphabetically. Thus, the
+# order does not matter.
 features:
   - sepal length (cm)
   - sepal width (cm)
   - petal length (cm)
   - petal width (cm)
 
+# Columns that will be considered as targets. These are
+# used to compute metrics such as the GMM (Gaussian
+# Mixture Models).
+targets:
+  - target
+
+outcomes:
+  - target
+  - label
+
+
+drop: []
+
+mappings: []
+
+# if no aggregation specified then the
+# agg function 'max' will be used. Only
+# useful when pid is not null.
+aggregations: {}
+
+titles: {}
+
+order:
+  index: 0
+  distance: 1
+  n_days: 2
+
+
+
+# The models to use. For information about the models that
+# ara available (or to include more) please see the variable
+# DEFAULT_ESTIMATORS within the file ls2d.settings.py.
 estimators:
   - sae
   - pca
   - pcak
   - pcai
-  - icaf
-  - iso
-  - lda
+  #- icaf
+  #- iso
+  #- lda
 
+# The parameters to create the ParameterGrid to create and
+# evaluate different hyper-parameter configurations. Please
+# ensure that the hyper-parameters ae specified, otherwise
+# a default empty dictionary will be returned.
 params:
   pca:
     pca__n_components: [2]
@@ -43,6 +90,9 @@ params:
     iso__n_components: [2]
     iso__n_neighbors: [5, 10]
 
+  # The LatentDirichletAllocation does nto work with negative values;
+  # thus, it raises an error when used with the StandardScaler()
+  # preprocessing step.
   lda:
     lda__n_components: [2]
     lda__max_iter: [5]
@@ -51,8 +101,22 @@ params:
     lda__random_state: [0]
 
   sae:
+    # Remember that the first layer should be equal to the
+    # number of inputs and the last layer should be two so
+    # that the embeddings can be displayed in the 2D space.
     sae__module__layers:
       - [4, 2]
       - [4, 3, 2]
-    sae__lr: [0.01]
-    sae__max_epochs: [10]
+      - [4, 4, 2]
+      - [4, 10, 10, 2]
+    sae__lr: [0.01, 0.001]
+    sae__max_epochs: [1500, 10000]
+
+
+server:
+    # This variable indicates that the train set and the test set
+    # are the same and therefore the metrics are identical. Thus,
+    # only one of them needs to be retrieved and the prefix (train,
+    # test) can be removed. This allows to have "cleaner" metric
+    # tables.
+    train_test_equal: True

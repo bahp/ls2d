@@ -4,9 +4,18 @@ import numpy as np
 # Scipy
 from scipy import linalg
 
+def triu(M):
+    m = M.shape[0]
+    r = np.arange(m)
+    mask = r[:, None] < r
+    return M[mask]
 
-def gmm_intersection_matrix(y_pred, y, **params):
+def gmm_intersection_matrix(y_pred, y, include_all=False, **params):
     """Compute the GMM intersection area matrix.
+
+    .. note: At the moment all distributions ara approximated
+             using a BayesianGaussianMixture model with exactly
+             the same configuration.
 
     Parameters
     ----------
@@ -19,6 +28,12 @@ def gmm_intersection_matrix(y_pred, y, **params):
 
     Returns
     -------
+    matrix: np.array
+        The matrix with the intersection areas.
+    labels: np.array
+        The labels associated to each GMM.
+    gmm: np.array
+        The BayesianGaussianMixture for each label.
     """
     # Libraries
     from sklearn.mixture import BayesianGaussianMixture
@@ -30,6 +45,13 @@ def gmm_intersection_matrix(y_pred, y, **params):
                 .fit(y_pred[y == t])
                     for t in np.unique(y)
     ]
+
+    # Include a gmm for all data points
+    if include_all:
+        gmms.append( \
+            BayesianGaussianMixture(n_components=1,
+                covariance_type='full', **params) \
+                    .fit(y_pred))
 
     # Construct variables
     means = np.concatenate([
@@ -51,11 +73,64 @@ def gmm_intersection_matrix(y_pred, y, **params):
         for j, p2 in enumerate(ells_shp):
             matrix[i, j] = p1.intersection(p2).area
 
-    # Normalize (divide by matrix size?)
-    # Return sum of all
-
     # Return
     return matrix, np.unique(y), gmms
+
+def gmm_intersection_area(y_pred=None, y=None,
+        gmm_matrix=None, normalize=False, **params):
+    """Compute the intersection area.
+
+    The method can receive either the two input parameters
+    y_pred and y, or just the previously computed gmm_matrix.
+
+    .. todo: What about weighting giving more importance
+             to separating those ellipsoids in which the
+             classes have more samples?
+
+    Parameters
+    ----------
+    y_pred: np.ndarray
+        The projections in the embedded space.
+    y: np.ndarray
+        The labels to compute the GMMs.
+    gmm_matrix: np.ndarray
+        The gmm intersection area matrix.
+    normalize: boolean
+        If true the area will be normalised; that is, will be
+        divided by the total area of the ellipsoids (sum of
+        the gmm intersection matrix diagonal)
+
+    Returns
+    -------
+    area: float
+        The sum of all the intersection areas.
+    """
+    # Create matrix
+    if gmm_matrix is None:
+        gmm_matrix, label, gmms = \
+            gmm_intersection_matrix(y_pred, y, **params)
+    # Compute intersection
+    area = np.sum(triu(gmm_matrix))
+    # Normalize
+    if normalize:
+        area = area / np.trace(gmm_matrix)
+    # Return
+    return area
+
+
+def gmm_scores(y_pred, y,  **params):
+    """Compute all gmm scores."""
+    # Compute intersection matrix.
+    gmm_matrix, label, gmms = \
+        gmm_intersection_matrix(y_pred, y, **params)
+    # Create dictionary
+    d = {}
+    d['gmm_ia'] = np.sum(triu(gmm_matrix))
+    d['gmm_ian'] = d['gmm_ia'] / np.trace(gmm_matrix)
+    # Return
+    return d
+
+
 
 def gmm_ratio_score(y_pred, y, method='sum', **params):
     """Compute the GMM ratio score.
@@ -66,6 +141,11 @@ def gmm_ratio_score(y_pred, y, method='sum', **params):
         The projections in the embedded space.
     y: np.ndarray
         The labels to compute the GMMs.
+    method: str
+        The method to compute the score. The options are:
+          - sum
+          - mean
+          -
     **params:
         Parameters to pass to the XX function
 
@@ -113,7 +193,7 @@ def ellipse_params(means, covariances):
     return means, v, angle
 
 
-def create_ellipse_shapely(means, covariances, factor=1):
+def create_ellipse_shapely(means, covariances, factor=2):
     """Create an ellipse (Polygon object)
 
     Parameters
@@ -218,6 +298,7 @@ if __name__ == '__main__':
     # Intersection normalization
     ratio_sum = np.sum(gmm_ratios) - sum(gmm_ratios[np.diag_indices(3)])
     #ratio_avg = ratio_sum /
+    gmm_ratio_sum = gmm_ratio_score(y_pred, y, 'sum')
 
     # Show
     print("\nAreas:")
@@ -226,6 +307,8 @@ if __name__ == '__main__':
     print(gmm_ratios)
     print("\nRatio (sum):")
     print(ratio_sum)
+    print("\nRatio (sum):")
+    print(gmm_ratio_sum)
 
     # Compute silhouette
     silhouette = metrics.silhouette_score(y_pred, y, metric="sqeuclidean")

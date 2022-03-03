@@ -1,12 +1,23 @@
-# IRIS dataset
-# If any datetime it should be called date
+# Configuration for Diabetes (regression)
+#
+# .. note: At the moment, the column with dates should be
+#          called dates and ignores completely the time
+#          information.
 
-pid: None
+# The column that identifies the patient. If not
+# specified or set to None, the index will be used
+# as identifier.
+pid: null
 
-
+# Location of the data.
 filepath: ./datasets/diabetes/data.csv
+
+# Path to store the models.
 output: ./outputs/diabetes/
 
+# Features to be used for training. The features will
+# be automatically sorted alphabetically. Thus, the
+# order does not matter.
 features:
   - age
   - sex
@@ -19,12 +30,41 @@ features:
   - s5
   - s6
 
+# Columns that will be considered as targets. These are
+# used to compute metrics such as the GMM (Gaussian
+# Mixture Models).
+targets:
+  - target
+
+outcomes:
+  - target
+
+drop: []
+
+mappings: []
+
+# if no aggregation specified then the
+# agg function 'max' will be used. Only
+# useful when pid is not null.
+aggregations: {}
+
+titles: {}
+
+order:
+  index: 0
+  distance: 1
+  n_days: 2
+
+# Columns that will be considered as targets. These are
+# used to compute metrics such as the GMM (Gaussian
+# Mixture Models).
 estimators:
   - pca
   - pcak
   - pcai
   - icaf
   - iso
+  - sae
 
 params:
   pca:
@@ -46,3 +86,15 @@ params:
   iso:
     iso__n_components: [2]
     iso__n_neighbors: [5, 10]
+
+  sae:
+    # Remember that the first layer should be equal to the
+    # number of inputs and the last layer should be two so
+    # that the embeddings can be displayed in the 2D space.
+    sae__module__layers:
+      - [10, 2]
+      - [10, 3, 2]
+      - [10, 4, 2]
+      - [10, 10, 10, 2]
+    sae__lr: [0.01, 0.001]
+    sae__max_epochs: [1500]

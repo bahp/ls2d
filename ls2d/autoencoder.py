@@ -1,4 +1,9 @@
+"""
 
+
+https://stackoverflow.com/questions/67456368/pytorch-getting-runtimeerror-found-dtype-double-but-expected-float
+
+"""
 
 import pandas as pd
 import numpy as np
@@ -7,7 +12,6 @@ import numpy as np
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
 
 from sklearn.base import BaseEstimator
 
@@ -23,7 +27,8 @@ class SkorchAE(NeuralNet):
         return self.module_.encode_inputs(X, *args, **kwargs)
 
     def fit(self, X, y, *args, **kwargs):
-        super().fit(X, X)
+        X_ = torch.from_numpy(X).float()
+        super().fit(X_, X_)
 
     def get_params(self, deep=True, **kwargs):
         """Overwritten.
@@ -46,109 +51,6 @@ class SkorchAE(NeuralNet):
         to_exclude = {'_modules', '_criteria', '_optimizers', 'train_split'}
         return {key: val for key, val in params.items()
             if key not in to_exclude}
-
-
-class MyModule(nn.Module):
-    """Example 1"""
-    def __init__(self, num_units=10, nonlin=F.relu):
-        super(MyModule, self).__init__()
-
-        self.dense0 = nn.Linear(20, num_units)
-        self.nonlin = nonlin
-        self.dropout = nn.Dropout(0.5)
-        self.dense1 = nn.Linear(num_units, 10)
-        self.output = nn.Linear(10, 2)
-
-    def forward(self, X, **kwargs):
-        X = self.nonlin(self.dense0(X))
-        X = self.dropout(X)
-        X = F.relu(self.dense1(X))
-        X = F.softmax(self.output(X))
-        return X
-
-class MyModule2(nn.Module):
-    """Example 2"""
-    def __init__(self, num_units=10, dropout=0.1):
-        super(NeuralNet, self).__init__()
-        self.num_units = num_units
-        self.linear_1 = nn.Linear(13, num_units)
-        self.dropout = nn.Dropout(dropout)
-        self.linear_2 = nn.Linear(num_units, 10)
-        self.linear_3 = nn.Linear(10, 3)
-
-    def forward(self, x):
-        x = self.linear_1(x)
-        x = F.relu(x)
-        x = self.linear_2(x)
-        x = F.relu(x)
-        x = self.linear_3(x)
-        x = F.softmax(x, dim=-1)
-        return x
-
-
-
-# Creating a PyTorch class
-# 28*28 ==> 9 ==> 28*28
-class AEI(torch.nn.Module):
-    "Example 3"
-    def __init__(self):
-        super().__init__()
-
-        # Building an linear encoder with Linear
-        # layer followed by Relu activation function
-        # 784 ==> 9
-        self.encoder = torch.nn.Sequential(
-            torch.nn.Linear(28 * 28, 128),
-            torch.nn.ReLU(),
-            torch.nn.Linear(128, 64),
-            torch.nn.ReLU(),
-            torch.nn.Linear(64, 36),
-            torch.nn.ReLU(),
-            torch.nn.Linear(36, 18),
-            torch.nn.ReLU(),
-            torch.nn.Linear(18, 9)
-        )
-
-        # Building an linear decoder with Linear
-        # layer followed by Relu activation function
-        # The Sigmoid activation function
-        # outputs the value between 0 and 1
-        # 9 ==> 784
-        self.decoder = torch.nn.Sequential(
-            torch.nn.Linear(9, 18),
-            torch.nn.ReLU(),
-            torch.nn.Linear(18, 36),
-            torch.nn.ReLU(),
-            torch.nn.Linear(36, 64),
-            torch.nn.ReLU(),
-            torch.nn.Linear(64, 128),
-            torch.nn.ReLU(),
-            torch.nn.Linear(128, 28 * 28),
-            torch.nn.Sigmoid()
-        )
-
-    def forward(self, x):
-        encoded = self.encoder(x)
-        decoded = self.decoder(encoded)
-        return decoded
-
-
-class AET(nn.Module):
-    def __init__(self, num_units=10, nonlin=F.relu):
-        super(AET, self).__init__()
-
-        self.dense0 = nn.Linear(20, num_units)
-        self.nonlin = nonlin
-        self.dropout = nn.Dropout(0.5)
-        self.dense1 = nn.Linear(num_units, 10)
-        self.output = nn.Linear(10, 2)
-
-    def forward(self, X, **kwargs):
-        X = self.nonlin(self.dense0(X))
-        X = self.dropout(X)
-        X = F.relu(self.dense1(X))
-        X = F.softmax(self.output(X))
-        return X
 
 
 
@@ -187,9 +89,26 @@ class AE(nn.Module):
         decoded = self.decoder(encoded)
         return decoded
 
+    def transform(self, X):
+        """Prepare data and compute embeddings."""
+        if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
+            X = X.to_numpy().astype(np.float32)
+        if isinstance(X, np.ndarray):
+            X = X.astype(np.float32)
+        return self.encode_inputs(X)
+
+    def fit(self, X, y):
+        """We are using skorch for compatibility with scikits
+           instead of using our own fit. However, we include
+           this empty method in case we want to manualy create
+           a pipeline with an AE as estimator. But this will
+           have to be pretrained.
+        """
+        return self
+
     @torch.no_grad()
     def encode_inputs(self, x):
-        #print(self.encoder(torch.tensor(x)))
+        """Compute the embeddings."""
         z = []
         for e in DataLoader(x, 16, shuffle=False):
             z.append(self.encoder(e))

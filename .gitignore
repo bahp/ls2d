@@ -7,6 +7,9 @@ datasets/sepsis/*.csv
 # Outputs
 outputs/
 
+scripts/objects/
+tests/
+
 #
 */.DS_Store
 

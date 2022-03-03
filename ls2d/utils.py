@@ -2,6 +2,7 @@
 import json
 import pickle
 import pandas as pd
+import numpy as np
 
 # Specific
 from pathlib import Path
@@ -71,8 +72,14 @@ def _load_pandas(path, **kwargs):
 # ---------------------------------------------------------
 # Format cv_results_
 # ---------------------------------------------------------
-def format_workbench(df):
+def format_workbench(df, config):
     """This method...
+
+    .. note: Many things have been hardcoded to assume that
+             there is only one split where the train and the
+             test sets are equal. Based on that the test
+             information have been removed and the train
+             information renamed (train tag removed).
 
     Parameters
     ----------
@@ -80,13 +87,39 @@ def format_workbench(df):
     Returns
     -------
     """
+    # Number of splits
+    n_splits = len(set(
+        c.split('_')[0] for c in df.columns
+            if c.startswith('split')
+    ))
+
+    # Get info from config
+    train_test_equal = \
+        config.get('server', {}) \
+              .get('train_test_equal')
+
+    # Otherwise compute
+    if train_test_equal is None:
+        train = df[[c for c in df.columns
+            if c.startswith('mean_train')]].to_numpy()
+        test = df[[c for c in df.columns
+            if c.startswith('mean_test')]].to_numpy()
+        train_test_equal = np.array_equal(train, test)
+
+
     # --------------------
     # Create info
     # --------------------
     # Information
     info = df.copy(deep=True)
 
-    # Filter out those columns starting with param_
+    # --------------------
+    # Create info
+    # --------------------
+    # The aim is to keep only information such as estimator
+    # slug_short, slug_long, params, path, ... and others
+    # which have been set by the user.
+    # Filter out those columns starting with ...
     info = info.loc[:, ~info.columns.str.startswith('param_')]
     info = info.loc[:, ~info.columns.str.startswith('rank_')]
     info = info.loc[:, ~info.columns.str.startswith('mean_')]
@@ -96,18 +129,30 @@ def format_workbench(df):
     # --------------------
     # Create metrics
     # --------------------
+    # .. note: If the train and the test are the same set, then
+    #          we can just keep one of them (e.g. mean_train)
+    #          otherwise keep both by including just (e.g. mean_).
+    # Get metric names
+    names = set(["_".join(c.split("_")[1:]) for c in df.columns
+        if c.startswith('mean_') | c.startswith('std_')])
+
     # Metrics
     metrics = pd.DataFrame()
 
-    # Get std and mean columns
-    cols = set(["_".join(c.split("_")[1:]) for c in df.columns
-                if c.startswith('mean_') | c.startswith('std_')])
-
     # Create metrics
-    for c in cols:
+    for c in names:
         metrics['%s' % c] = \
             df['mean_%s' % c].round(3).astype(str) + ' ± ' + \
             df['std_%s' % c].round(3).astype(str)
+
+    # Equal train and test
+    if train_test_equal:
+        # Remove test columns
+        metrics = \
+            metrics.loc[:, ~metrics.columns.str.startswith('test_')]
+        # Rename train columns
+        metrics.columns = [c.replace('train_', '') \
+            for c in metrics.columns]
 
     # Sort
     metrics = metrics[sorted(metrics.columns)]
@@ -131,7 +176,8 @@ def format_pipeline(series):
     raw = series.copy(deep=True)
 
     # Keep columns starting with split
-    aux = raw[raw.index.str.startswith('split')]
+    #aux = raw[raw.index.str.startswith('split')]
+    aux = raw[raw.index.str.contains('^split[0-9]+_train')]
 
     # Keep other to concatenate later
     #raw = raw[~raw.index.isin(aux.index)]
