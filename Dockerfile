@@ -1,7 +1,9 @@
 # pull official base image
-#FROM python:3.9
-FROM python:3.9-buster
+FROM python:3.9
+#FROM python:3.9-buster
 #FROM python:3.9-slim
+
+#FROM python:3-buster
 
 # set work directory
 #WORKDIR /usr/src/app
@@ -15,8 +17,8 @@ ENV PYTHONUNBUFFERED 1
 RUN pip install --upgrade pip
 
 # Just because pyyaml breaks
-RUN apt-get update
-RUN apt-get -y install python3-dev
+#RUN apt-get update
+#RUN apt-get install python3-dev
 
 # install requirements
 COPY ./requirements.txt requirements.txt
