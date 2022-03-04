@@ -159,6 +159,7 @@ def page_model():
     path = Path(request.args.get('path', None))
 
     # Global variables.
+    global tree
     global model
     global data_w
     global data_f
@@ -174,7 +175,6 @@ def page_model():
     data_f[['x', 'y']] = model.transform(data_f[FEATURES])
 
     # Create KD-Tree
-    global tree
     tree = KDTree(data_w[['x', 'y']], leaf_size=LEAF_SIZE)
 
     # Return
@@ -417,7 +417,7 @@ def api_trace():
     study_no = request.args.get('study_no', None)
 
     # Get patient data (already encoded)
-    patient = data_f.loc[data_f[PID] == str(study_no)]
+    patient = data_f.loc[data_f[PID] == str(study_no)].copy(deep=True)
 
     # Sort values
     if DATE in patient.columns:
@@ -432,14 +432,17 @@ def api_trace():
     else:
         patient['day'] = range(patient.shape[0])
 
+    # Recompute just in case?
+    patient[['x', 'y']] = model.transform(patient[FEATURES])
+
     # Show information
     print("Trace for %s: %s" % (study_no, patient.shape))
 
     # Create response
     resp = {
         'study_no': study_no,
-        'x': patient.x.round(decimals=3).tolist(),
-        'y': patient.y.round(decimals=3).tolist(),
+        'x': patient.x.tolist(),
+        'y': patient.y.tolist(),
         'text': patient.day.tolist()
     }
     # 'text': patient.day_from_admission.tolist()
@@ -728,6 +731,8 @@ if __name__ == "__main__":
         .agg(AGGREGATION) \
         .dropna(how='any', subset=FEATURES)
 
+
+
     # Count the number of FULL daily profiles per patient
     nprofiles = data \
         .dropna(how='any', subset=FEATURES) \
@@ -751,6 +756,11 @@ if __name__ == "__main__":
     # Data complete (full)
     data_f = data.copy(deep=True) \
         .dropna(how='any', subset=FEATURES)
+
+    print(data_w.sort_values(by=['index']))
+    print(data_f.sort_values(by=['index']))
+
+
 
     # -----------------------------------------------------
     # Demographics
@@ -838,4 +848,6 @@ if __name__ == "__main__":
     # ---------------------------------------------------
     # Run app
     # ---------------------------------------------------
-    app.run(host="0.0.0.0", debug=True, use_reloader=False)
+    import os
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port, debug=True, use_reloader=False)
