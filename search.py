@@ -231,6 +231,8 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
         except Exception as e:
             print("Error: %s" % e)
 
+    # Include loss from AE models.
+
     # Create dictioanry
     d = {}
     d['pearson'] = pearson[0]

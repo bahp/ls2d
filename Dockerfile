@@ -28,8 +28,6 @@ RUN python -m pip install -r requirements.txt
 COPY ./entrypoint.sh entrypoint.sh
 RUN chmod +x entrypoint.sh
 
-
-
 #RUN apk add --no-cache --update \
 #    python3 python3-dev gcc \
 #    gfortran musl-dev linux-headers
@@ -44,6 +42,7 @@ RUN chmod +x entrypoint.sh
 EXPOSE 5000
 EXPOSE 8000
 COPY . .
+
 
 # install ls2d library
 RUN python -m pip install --editable .

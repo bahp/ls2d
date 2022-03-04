@@ -765,10 +765,6 @@ def setup(path_yaml):
     data_f = data.copy(deep=True) \
         .dropna(how='any', subset=FEATURES)
 
-    print(data_w.sort_values(by=['index']))
-    print(data_f.sort_values(by=['index']))
-
-
 
     # -----------------------------------------------------
     # Demographics
