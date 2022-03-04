@@ -69,6 +69,12 @@ ESTIMATORS = sorted(set(config['estimators']))
 uuid = time.strftime("%Y%m%d-%H%M%S")
 pipeline_path = Path(config['output']) / uuid
 
+# Create workbench folder
+pipeline_path.mkdir(parents=True, exist_ok=True)
+
+# Save settings file.
+shutil.copyfile(PATH_YAML, pipeline_path / 'settings.yaml')
+
 # ------------------
 # Load data
 # ------------------
@@ -331,5 +337,3 @@ for i, est in enumerate(ESTIMATORS):
 
 # Save
 compendium.to_csv(pipeline_path / 'results.csv', index=False)
-
-shutil.copyfile(PATH_YAML, pipeline_path / 'settings.yaml')
