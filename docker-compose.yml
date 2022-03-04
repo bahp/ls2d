@@ -7,11 +7,11 @@ services:
   # ---------------------------------
   web:
     build: .
-    command: python server.py
+    #docker-compose command: python server.py
     ports:
       - "8000:5000"
     #volumes:
-    #  - ./:./
+    #  - /:/
     environment:
       FLASK_ENV: development
   redis:

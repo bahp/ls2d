@@ -42,6 +42,7 @@ RUN chmod +x entrypoint.sh
 #RUN pip install -r requirements.txt
 
 EXPOSE 5000
+EXPOSE 8000
 COPY . .
 
 # install ls2d library
@@ -51,6 +52,12 @@ RUN python -m pip install --editable .
 #ENV FLASK_APP=server.py
 #ENV FLASK_RUN_HOST=0.0.0.0
 #CMD ["flask", "run"]
+
+# check no root user
+RUN useradd -m myuser
+USER myuser
+
+CMD ["python", "server.py"]
 
 # run entrypoint.sh
 #ENTRYPOINT ["./entrypoint.sh"]

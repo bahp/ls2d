@@ -79,6 +79,70 @@ Pending....
 
 Pending....
 
+
+### Docker
+
+$ docker-compose build
+
+$ docker-compose up
+
+### Heroku
+
+https://devcenter.heroku.com/categories/deploying-with-docker
+
+#### Building and pushing image(s)
+
+##### Build an image and push
+
+To build an image and push it to Container Registry, make sure that your directory 
+contains a Dockerfile. Note that this will not inspect the docker-compose.yml nor 
+the heroku.yml files and therefore the app should be run in the Docker file:
+ 
+Thus, in the Dockerfile include:
+ 
+```console
+CMD ["python", "server.py"]
+```
+ 
+Run the container to create the image:
+
+```console
+heroku container:push <process-type> 
+```
+
+For this example
+
+```console
+heroku container:push web 
+```
+
+##### Pushing an existing image
+
+To push an image to Heroku, such as one pulled from Docker Hub o create with your 
+your docker-compose instructions, tag it and push it according to this naming 
+template.
+
+```console
+docker tag <image> registry.heroku.com/<app>/<process-type>
+docker push registry.heroku.com/<app>/<process-type>
+```
+
+For this example
+
+```console
+docker tag main_web_1 registry.heroku.com/ls2d-demo/web
+docker push registry.heroku.com/ls2d-demo/web
+```
+
+By specifying the process type in the tag, you can release the image using the CLI. 
+
+```console
+heroku container:release web
+```
+
+## Other
+
+
 <!-- ----------------------- -->
 <!--     USAGE EXAMPLES      -->
 <!-- ----------------------- -->
