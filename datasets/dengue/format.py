@@ -9,6 +9,9 @@ path = './combined_tidy_v0.0.10.csv'
 # Read data ad model
 data = pd.read_csv(path, parse_dates=['date'])
 
+# Describe.
+data.describe().T.to_csv('data.describe.raw.csv')
+
 # ---------------------------------------------------
 # Data pre-processing and adding columns
 # ---------------------------------------------------
@@ -146,10 +149,25 @@ def IQR(values, q1=0.25, q3=0.75, replace=np.nan):
     return values.where(condition, replace)
 
 
+# Describe.
+data.describe().T.to_csv('data.describe.comb.csv')
+
 # Filter
 data = data[data.age.between(0.0, 18.0)]
 data = data[data.plt < 50000]
-data.plt = IQR(data.plt)
+
+from pkgname.utils.data_loader import IQR_rule
+from ls2d.preprocessing import IQRTransformer
+data = IQR_rule(data, ['plt'])
+#data.plt = IQR(data.plt)
+
+iqr = IQRTransformer(iqrrange=[25, 75], coefficient=1.5)
+data['plt2'] = iqr.fit_transform(data.plt)
+
+
+
+# Describe.
+data.describe().T.to_csv('data.describe.filt.csv')
 
 # Show
 print("\nData:")

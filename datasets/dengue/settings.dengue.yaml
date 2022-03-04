@@ -46,38 +46,9 @@ targets:
   - severe_bleed
   - severe_organ
 
-# The models to use. For information about the models that
-# ara available (or to include more) please see the variable
-# DEFAULT_ESTIMATORS within the file ls2d.settings.py.
-estimators:
-  - sae
-  #- pca
-
-# The parameters to create the ParameterGrid to create and
-# evaluate different hyperparameter configurations. Please
-# ensure that the hyperparameters ae specified, otherwise
-# a default empty dictionary will be returned.
-params:
-  pca:
-    pca__n_components: [2]
-
-  sae:
-    # Remember that the first layer should be equal to the
-    # number of inputs and the last layer should be two so
-    # that the embeddings can be displayed in the 2D space.
-    sae__module__layers:
-      - [5, 2]
-      - [5, 3, 2]
-    sae__lr: [0.001, 0.00001]
-    #sae__batch_size: [16, 32]
-    sae__max_epochs: [10, 500]
-
-
-
-# -------------------------
-# Configuring the interface
-# -------------------------
-#
+# Columns that will be considered as outcomes. These are
+# used that will be displayed in the demographics table
+# of the UI.
 outcomes:
   - severe
   - warning
@@ -103,7 +74,6 @@ outcomes:
 #
 drop: []
 
-#
 #mappings:
   #gender:
   #  Female: 0
@@ -140,3 +110,39 @@ order:
   haematocrit_percent: 6
   body_temperature: 7
   shock: 8
+
+
+# The models to use. For information about the models that
+# ara available (or to include more) please see the variable
+# DEFAULT_ESTIMATORS within the file ls2d.settings.py.
+estimators:
+  - sae
+  - pca
+
+# The parameters to create the ParameterGrid to create and
+# evaluate different hyperparameter configurations. Please
+# ensure that the hyperparameters ae specified, otherwise
+# a default empty dictionary will be returned.
+params:
+  pca:
+    pca__n_components: [2]
+
+  sae:
+    # Remember that the first layer should be equal to the
+    # number of inputs and the last layer should be two so
+    # that the embeddings can be displayed in the 2D space.
+    sae__module__layers:
+      - [5, 2]
+      - [5, 3, 2]
+      - [5, 10, 2]
+    sae__lr: [0.001, 0.00001]
+    #sae__batch_size: [16, 32]
+    sae__max_epochs: [10, 500]
+
+server:
+    # This variable indicates that the train set and the test set
+    # are the same and therefore the metrics are identical. Thus,
+    # only one of them needs to be retrieved and the prefix (train,
+    # test) can be removed. This allows to have "cleaner" metric
+    # tables.
+    train_test_equal: True
