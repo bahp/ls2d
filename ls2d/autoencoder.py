@@ -101,8 +101,8 @@ class AE(nn.Module):
         """We are using skorch for compatibility with scikits
            instead of using our own fit. However, we include
            this empty method in case we want to manualy create
-           a pipeline with an AE as estimator. But this will
-           have to be pretrained.
+           a pipeline with an AE as estimator. Note that this
+           will have to be pretrained.
         """
         return self
 

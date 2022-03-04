@@ -10,6 +10,7 @@ def triu(M):
     mask = r[:, None] < r
     return M[mask]
 
+
 def gmm_intersection_matrix(y_pred, y, include_all=False, **params):
     """Compute the GMM intersection area matrix.
 
@@ -76,6 +77,7 @@ def gmm_intersection_matrix(y_pred, y, include_all=False, **params):
     # Return
     return matrix, np.unique(y), gmms
 
+
 def gmm_intersection_area(y_pred=None, y=None,
         gmm_matrix=None, normalize=False, **params):
     """Compute the intersection area.
@@ -129,7 +131,6 @@ def gmm_scores(y_pred, y,  **params):
     d['gmm_ian'] = d['gmm_ia'] / np.trace(gmm_matrix)
     # Return
     return d
-
 
 
 def gmm_ratio_score(y_pred, y, method='sum', **params):
