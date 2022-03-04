@@ -93,16 +93,9 @@ def page_dashboard():
 
 @app.route('/workbench/list/', methods=['GET'])
 def page_workbench_list():
-    """Page to list all workbenches.
-
-    .. note: Why depth had to be changed from 3 when using
-             mac to 1 when using windows? Investigate.
-    """
-    # Constants
-    ROOT, depth = './outputs/', 1
-    paths = sorted([str(Path(root))
-        for root, dirs, files in os.walk(ROOT)
-            if root.count(os.sep) == depth])
+    """Page to list all workbenches."""
+    # List directories on second level
+    paths = sorted(list(Path('./outputs').glob('*/*')))
     # Return
     return render_template('page_workbench_list.html', paths=paths)
 
