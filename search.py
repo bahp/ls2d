@@ -53,7 +53,7 @@ def add_method(cls):
 # Load configuration
 # ------------------
 # Yaml path
-PATH_YAML = Path('./datasets/iris/settings.iris.yaml')
+PATH_YAML = Path('./datasets/dengue/settings.dengue.yaml')
 
 # Load configuration from file
 with open(PATH_YAML) as file:
@@ -223,13 +223,13 @@ def custom_metrics_(y_true, y_pred, y, n=1000):
             y_true_, y_pred_, y_ = \
                 y_true[idx], y_pred[idx], y[c][idx]
             d_ = gmm_scores(y_pred_, y_)
-            d_['silhouette'] = silhouette_score(y_pred, y_)
-            d_['calinski'] = calinski_harabasz_score(y_pred, y_.ravel())
-            d_['davies_b'] = davies_bouldin_score(y_pred, y_.ravel())
+            d_['silhouette'] = silhouette_score(y_pred_, y_)
+            d_['calinski'] = calinski_harabasz_score(y_pred_, y_.ravel())
+            d_['davies_b'] = davies_bouldin_score(y_pred_, y_.ravel())
             d_ = {'%s_%s'%(k, c) : v for k,v in d_.items()}
             d_gmm.update(d_)
         except Exception as e:
-            print(e)
+            print("Error: %s" % e)
 
     # Create dictioanry
     d = {}
