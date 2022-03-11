@@ -245,6 +245,7 @@ Distributed under the GNU v3.0 License. See `LICENSE` for more information.
 [ls2d-settings-file]: https://github.com/bahp/ls2d/blob/main/datasets/iris/settings.iris.yaml
 [ls2d-heroku-demo]: http://ls2d-demo.herokuapp.com/
 
-#### Contributors (optional)
-#### Support (optional)
-#### FAQ (optional)
+### Limitations
+
+At the moment, only one person can access it at the same time. This is
+because the database is just a global variable with the loaded csv file.
