@@ -1,4 +1,4 @@
-# Configuration for Iris.
+# Configuration for Fungal.
 #
 # .. note: At the moment, the column with dates should be
 #          called dates and ignores completely the time
@@ -10,30 +10,30 @@
 pid: null
 
 # Location of the data.
-filepath: ./datasets/iris/data.csv
+filepath: ./datasets/fungal/data.csv
 
 # Path to store the models.
-output: ./outputs/iris/
+output: ./outputs/fungal/
 
 # Features to be used for training. The features will
 # be automatically sorted alphabetically. Thus, the
 # order does not matter.
 features:
-  - sepal length (cm)
-  - sepal width (cm)
-  - petal length (cm)
-  - petal width (cm)
+  - Systemic inflammatory condition
+  - Age
+  - Band Intensity
+  - Asp GM Index Value
 
 # Columns that will be considered as targets. These are
 # used to compute metrics such as the GMM (Gaussian
 # Mixture Models).
 targets:
-  - target
+  - Probable IPA
+  - Possible IPA
 
 outcomes:
-  - target
-  - label
-
+  - Probable IPA
+  - Possible IPA
 
 drop: []
 
@@ -90,7 +90,7 @@ params:
     iso__n_components: [2]
     iso__n_neighbors: [5, 10]
 
-  # The LatentDirichletAllocation does not work with negative values;
+  # The LatentDirichletAllocation does nto work with negative values;
   # thus, it raises an error when used with the StandardScaler()
   # preprocessing step.
   lda:
@@ -105,12 +105,14 @@ params:
     # number of inputs and the last layer should be two so
     # that the embeddings can be displayed in the 2D space.
     sae__module__layers:
-      - [4, 2]
-      - [4, 3, 2]
-      - [4, 4, 2]
-      - [4, 10, 10, 2]
+      - [30, 2]
+      - [30, 5, 2]
+      - [30, 10, 2]
+      - [30, 15, 2]
+      - [30, 10, 10, 2]
+      - [30, 15, 15, 2]
     sae__lr: [0.01, 0.001]
-    sae__max_epochs: [1000]
+    sae__max_epochs: [1500, 10000]
 
 
 server:

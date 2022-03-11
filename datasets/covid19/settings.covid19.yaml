@@ -1,4 +1,4 @@
-# Configuration for Iris.
+# Configuration for Covid-19.
 #
 # .. note: At the moment, the column with dates should be
 #          called dates and ignores completely the time
@@ -10,19 +10,20 @@
 pid: null
 
 # Location of the data.
-filepath: ./datasets/iris/data.csv
+filepath: ./datasets/covid19/data.csv
 
 # Path to store the models.
-output: ./outputs/iris/
+output: ./outputs/covid19/
 
 # Features to be used for training. The features will
 # be automatically sorted alphabetically. Thus, the
 # order does not matter.
 features:
-  - sepal length (cm)
-  - sepal width (cm)
-  - petal length (cm)
-  - petal width (cm)
+  - RR
+  - HR
+  - SysBP
+  - DiaBP
+  - Temp
 
 # Columns that will be considered as targets. These are
 # used to compute metrics such as the GMM (Gaussian
@@ -31,9 +32,28 @@ targets:
   - target
 
 outcomes:
-  - target
-  - label
-
+  - FiO2
+  - PaO2
+  - Sats %
+  - Urea
+  - Neut
+  - Lymph
+  - CRP
+  - ICU
+  - Admitted
+  - Cough
+  - Confusion
+  - SOB
+  - Fever
+  - Chronic lung disease
+  - Cardiac disease
+  - DM
+  - HTN
+  - ESRD on HD
+  - Gender
+  - Age
+  - Weight kg
+  - 14 day mortality
 
 drop: []
 
@@ -44,7 +64,11 @@ mappings: []
 # useful when pid is not null.
 aggregations: {}
 
-titles: {}
+titles:
+  CRP: CRP
+  Temp: Temperature
+  Sats %: Saturation (%)
+  Weight kg: Weight (Kg)
 
 order:
   index: 0
@@ -90,7 +114,7 @@ params:
     iso__n_components: [2]
     iso__n_neighbors: [5, 10]
 
-  # The LatentDirichletAllocation does not work with negative values;
+  # The LatentDirichletAllocation does nto work with negative values;
   # thus, it raises an error when used with the StandardScaler()
   # preprocessing step.
   lda:
@@ -105,12 +129,14 @@ params:
     # number of inputs and the last layer should be two so
     # that the embeddings can be displayed in the 2D space.
     sae__module__layers:
-      - [4, 2]
-      - [4, 3, 2]
-      - [4, 4, 2]
-      - [4, 10, 10, 2]
+      - [30, 2]
+      - [30, 5, 2]
+      - [30, 10, 2]
+      - [30, 15, 2]
+      - [30, 10, 10, 2]
+      - [30, 15, 15, 2]
     sae__lr: [0.01, 0.001]
-    sae__max_epochs: [1000]
+    sae__max_epochs: [1500, 10000]
 
 
 server:
