@@ -28,9 +28,16 @@
 
 Community | Documentation | Resources | Contributors | Release Notes
 
-Lightweight tool that allows to create embeddings from complex data into 2D
-and facilitates the visualisation of the produced latent space. In addition,
-it allows to query data and visualise demographics.
+LS2D is a lightweight tool to create embeddings from complex data into two
+dimensions. In addition, it has a web app that (i) facilitates performance 
+comparison among the pipelines created, (ii) enables visualisation of the
+observations and the distribution of the features/outcomes and (iii) allows
+to query patients based on distance and displays a demographic table. 
+
+<video controls>
+    <source src="https://video.wixstatic.com/video/3ebd95_98af57c386864f03b7aed6f9b99ae29a/1080p/mp4/file.mp4" type="video/mp4">
+</video>
+
 
 <!-- > Subtitle or Short Description Goes Here -->
 
