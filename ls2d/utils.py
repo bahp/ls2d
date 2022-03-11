@@ -113,7 +113,7 @@ class AttrDict(dict):
 # ---------------------------------------------------------
 # Format cv_results_
 # ---------------------------------------------------------
-def format_workbench(df, config):
+def format_workbench(df, config={}):
     """This method...
 
     .. note: Many things have been hardcoded to assume that
