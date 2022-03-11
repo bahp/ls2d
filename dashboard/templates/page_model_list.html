@@ -2,6 +2,14 @@
 
 {% block page_head %}
 
+    <!--
+    <link rel="stylesheet" href="https://cdn.datatables.net/fixedcolumns/4.0.2/css/fixedColumns.dataTables.min.css">
+    <script src="https://cdn.datatables.net/fixedcolumns/4.0.2/js/dataTables.fixedColumns.min.js"></script>
+    -->
+ <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+
+
+
 {% endblock %}
 
 {% block page_title %}
@@ -93,6 +101,11 @@
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://cdn.datatables.net/1.11.4/js/jquery.dataTables.min.js"></script>
 
+    <!-- Fixed columns -->
+    <link href="https:/cdn.datatables.net/fixedcolumns/4.0.2/css/fixedColumns.dataTables.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.datatables.net/fixedcolumns/4.0.2/js/dataTables.fixedColumns.js"></script>
+
+
     <!-- Vendor CSS -->
     <!--
     <link rel="stylesheet" href="/assets/vendor/bootstrap/css/bootstrap.css" />
@@ -126,6 +139,10 @@
                  search: {
                     return: true
                  },
+                 fixedColumns:   {
+                    left: 1,
+                    right: 1
+                 }
               });
         });
     </script>
@@ -168,21 +185,30 @@
                     scrollCollapse: true,
                     paging:         false,
                     fixedColumns:   {
-                        left: 1
+                        left: 3,
                     },
                     search: {
                         return: true
                     },
                     columnDefs: [
                         {
-                            "targets": [ 0 ],
+                            "targets": [1, 2, 5],
                             "visible": false,
                             "searchable": false
                         },
                         {
-                            "targets": 1,
+                            "targets": 0,
                             "render": function (data, type, row) {
                                 var url = "/pipeline?path=" + path + "&pipe=" + row[0];
+                                return '<a href="' + url + '">' + data + '</a>'
+                            },
+                        },
+                        {
+                            "targets": 3,
+                            "render": function (data, type, row) {
+                                var url = "/model?path=" + path + "/" + row[2];
+                                url += "/pipeline" + row[0] + "/pipeline" + row[0];
+                                url += "-split0.p";
                                 return '<a href="' + url + '">' + data + '</a>'
                             },
                         }
