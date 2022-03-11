@@ -1,13 +1,13 @@
 # Latent Space 2D (LS2D)
 
 
-<img src="docs/logos/logo-ls2d-v1.png" align="right" width="150">
+<img src="docs/logos/logo-ls2d-v1.png" align="right" width="250">
 
 <!-- ----------------------- -->
 <!--     PROJECT SHIELDS     -->
 <!-- ----------------------- -->
-[![Build][build-shield]][none-url]
 <!--
+[![Build][build-shield]][none-url]
 [![Coverage][coverage-shield]][none-url]
 [![Documentation][documentation-shield]][none-url]
 [![Website][website-shield]][none-url]
