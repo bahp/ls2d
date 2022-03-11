@@ -97,13 +97,13 @@ When using any of this project's source code, please cite:
 First, install all the requireed libraries
 
 ```console
-python -m pip install -r requirements.txt   # Install al the requirements
+$ python -m pip install -r requirements.txt   # Install al the requirements
 ```
 
 Then, install the LS2D library (for example in editable mode)
 
 ```console
-python -m pip install --editable  .         # Install in editable mode
+$ python -m pip install --editable  .         # Install in editable mode
 ```
 
 ### Training
