@@ -131,25 +131,22 @@ configuration.
 
 #### Using the script
 
-To browse through all the workbenches run the ls2d flask app:
+Run the ls2d flask app 
+([https://localhost:5000](https://localhost:5000)):
 
 ```console
 $ python server.py
 ```
 
-Access the app at [https://localhost:5000](https://localhost:5000)
-
-
 #### Using Docker
 
-First build and run the docker container:
+Build and run the docker container
+([https://localhost:8000](https://localhost:8000)):
 
 ```console
 $ docker-compose build # Build
 $ docker-compose up    # Run
 ```
-
-Access the app at [https://localhost:5000](https://localhost:5000)
 
 ### Deploy to Heroku
 
