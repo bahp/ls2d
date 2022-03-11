@@ -153,9 +153,8 @@ Access the app at [https://localhost:5000](https://localhost:5000)
 
 ### Deploy to Heroku
 
-#### Building and pushing image(s)
 
-##### Build an image and push
+#### Build an image and push
 
 To build an image and push it to Container Registry, make sure that your directory 
 contains a Dockerfile. Note that this will not inspect the docker-compose.yml nor 
@@ -179,7 +178,7 @@ For this example
 $ heroku container:push web 
 ```
 
-##### Pushing an existing image
+#### Pushing an existing image
 
 To push an image to Heroku, such as one pulled from Docker Hub o create with your 
 your docker-compose instructions, tag it and push it according to this naming 
