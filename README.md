@@ -1,4 +1,7 @@
-# LS2D
+# Latent Space 2D (LS2D)
+
+
+<img src="docs/logos/logo-ls2d-v1.png" align="right" width="150">
 
 <!-- ----------------------- -->
 <!--     PROJECT SHIELDS     -->
@@ -75,7 +78,7 @@ reduce data complexity to a 2D space so that the information can be relayed to t
 through accessible graphical representations. In addition to traditional technices such as 
 PCA, autoencoders, a type of neural network, have been used in the included examples.
 
-Live demo (Heroku)**: [Link](http://ls2d-demo.herokuapp.com/)
+Live demo (Heroku)**: <a href="http://ls2d-demo.herokuapp.com/" target="_blank"> Link</a>
 
 When using any of this project's source code, please cite:
 
@@ -96,6 +99,29 @@ When using any of this project's source code, please cite:
 <!--     GETTING STARTED     -->
 <!-- ----------------------- -->
 ## Getting Started
+
+## Training models
+
+First, create a yaml configuration file (see [settings.iris.yaml](ls2d-settings-file)) to define
+the data and output location, the features for training, the targets to compute performance metrics,
+and the estimators and/or hyperparameters to consider during the grid search. 
+
+Once the configuration is completed, run the search script
+
+```console
+$ python search.py --yaml_file
+```
+  
+A new workbench will be created in the output folder containing (i) the generated models 
+saved as pickle (.p) files, (ii) the metrics obtained aggregated in the 'results.csv' 
+file and the (iii) settings configuration.
+
+To browse through all these results run the ls2d flask app:
+
+```console
+$ python server.py
+```
+
 
 ### Local
 
@@ -179,91 +205,22 @@ See the [documentation]() for a list of examples.
 
 #### Training models
 
-First, create a yaml configuration file (see 
-[settings.iris.yaml](https://github.com/bahp/ls2d/blob/main/datasets/iris/settings.iris.yaml)).
+First, create a yaml configuration file (see [settings.iris.yaml](ls2d-settings-file)).
 
-```python
+Run the search script
 
-# The column that identifies the patient. If not
-# specified or set to null, the index will be used
-# as identifier.
-pid: null
-
-# Location of the data.
-filepath: ./datasets/iris/data.csv
-
-# Path to store the models.
-output: ./outputs/iris/
-
-# Features to be used for training. The features will
-# be automatically sorted alphabetically. Thus, the
-# order does not matter.
-features:
-  - sepal length (cm)
-  - sepal width (cm)
-  - petal length (cm)
-  - petal width (cm)
-
-# Columns that will be considered as targets. These are
-# used to compute metrics such as the GMM (Gaussian
-# Mixture Models).
-targets:
-  - target
-
-outcomes:
-  - target
-  - label
-
-# The models to use. For information about the models that
-# ara available (or to include more) please see the variable
-# DEFAULT_ESTIMATORS within the file ls2d.settings.py.
-estimators:
-  - sae
-  - pca
-  - pcak
-  - pcai
-  #- icaf
-  #- iso
-  #- lda
-
-# The parameters to create the ParameterGrid to create and
-# evaluate different hyper-parameter configurations. Please
-# ensure that the hyper-parameters ae specified, otherwise
-# a default empty dictionary will be returned.
-params:
-  pca:
-    pca__n_components: [2]
-
-  pcak:
-    pcak__n_components: [2]
-
-  sae:
-    # Remember that the first layer should be equal to the
-    # number of inputs and the last layer should be two so
-    # that the embeddings can be displayed in the 2D space.
-    sae__module__layers:
-      - [4, 2]
-      - [4, 3, 2]
-      - [4, 4, 2]
-      - [4, 10, 10, 2]
-    sae__lr: [0.01, 0.001]
-    sae__max_epochs: [1500, 10000]
-
-server:
-    # This variable indicates that the train set and the test set
-    # are the same and therefore the metrics are identical. Thus,
-    # only one of them needs to be retrieved and the prefix (train,
-    # test) can be removed. This allows to have "cleaner" metric
-    # tables.
-    train_test_equal: True
+```console
+$ python search.py
 ```
+  
+A new workbench will be created in the output folder containing (i) the generated models 
+saved as pickle (.p) files, (ii) the metrics obtained aggregated in the 'results.csv' 
+file and the (iii) settings configuration.
 
+To browse through all these results run the ls2d flask app:
 
-The worbench includes all the information including models, dataset and performance metrics.
-
-```py
-// Example!
-
+```console
+$ python server.py
 ```
 
 <!-- ----------------------- -->
@@ -337,6 +294,8 @@ Bernard Hernandez -
 [badges-shield]: http://img.shields.io/:badges-9/9-ff6799.svg?
 
 [none-url]: https://www.imperial.ac.uk/bio-inspired-technology/research/infection-technology/epic-impoc/
+
+[ls2d-settings-file]: https://github.com/bahp/ls2d/blob/main/datasets/iris/settings.iris.yaml
 
 #### Contributors (optional)
 #### Support (optional)
