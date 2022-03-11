@@ -182,6 +182,83 @@ See the [documentation]() for a list of examples.
 First, create a yaml configuration file (see 
 [settings.iris.yaml](https://github.com/bahp/ls2d/blob/main/datasets/iris/settings.iris.yaml)).
 
+```python
+
+# The column that identifies the patient. If not
+# specified or set to null, the index will be used
+# as identifier.
+pid: null
+
+# Location of the data.
+filepath: ./datasets/iris/data.csv
+
+# Path to store the models.
+output: ./outputs/iris/
+
+# Features to be used for training. The features will
+# be automatically sorted alphabetically. Thus, the
+# order does not matter.
+features:
+  - sepal length (cm)
+  - sepal width (cm)
+  - petal length (cm)
+  - petal width (cm)
+
+# Columns that will be considered as targets. These are
+# used to compute metrics such as the GMM (Gaussian
+# Mixture Models).
+targets:
+  - target
+
+outcomes:
+  - target
+  - label
+
+# The models to use. For information about the models that
+# ara available (or to include more) please see the variable
+# DEFAULT_ESTIMATORS within the file ls2d.settings.py.
+estimators:
+  - sae
+  - pca
+  - pcak
+  - pcai
+  #- icaf
+  #- iso
+  #- lda
+
+# The parameters to create the ParameterGrid to create and
+# evaluate different hyper-parameter configurations. Please
+# ensure that the hyper-parameters ae specified, otherwise
+# a default empty dictionary will be returned.
+params:
+  pca:
+    pca__n_components: [2]
+
+  pcak:
+    pcak__n_components: [2]
+
+  sae:
+    # Remember that the first layer should be equal to the
+    # number of inputs and the last layer should be two so
+    # that the embeddings can be displayed in the 2D space.
+    sae__module__layers:
+      - [4, 2]
+      - [4, 3, 2]
+      - [4, 4, 2]
+      - [4, 10, 10, 2]
+    sae__lr: [0.01, 0.001]
+    sae__max_epochs: [1500, 10000]
+
+server:
+    # This variable indicates that the train set and the test set
+    # are the same and therefore the metrics are identical. Thus,
+    # only one of them needs to be retrieved and the prefix (train,
+    # test) can be removed. This allows to have "cleaner" metric
+    # tables.
+    train_test_equal: True
+```
+
+
 The worbench includes all the information including models, dataset and performance metrics.
 
 ```py
