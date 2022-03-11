@@ -15,12 +15,10 @@
 [![Python][python-shield]][none-url]
 [![Issues][issues-shield]][none-url]
 [![MIT License][license-shield]][none-url]
+[![Heroku][heroku-demo-v2]][ls2d-heroku-demo]
 
 <!--
 [![Contributors][contributors-shield]][none-url]
--->
-
-<!--
 [![Forks][forks-shield]][none-url]
 [![Stargazers][stars-shield]][none-url]
 [![MIT License][license-shield]][none-url]
@@ -29,32 +27,21 @@
 Community | Documentation | Resources | Contributors | Release Notes
 
 LS2D is a lightweight tool to create embeddings from complex data into two
-dimensions. In addition, it has a web app that (i) facilitates performance 
+dimensions. In addition, it includes a web app that (i) facilitates performance 
 comparison among the pipelines created, (ii) enables visualisation of the
 observations and the distribution of the features/outcomes and (iii) allows
 to query patients based on distance and displays a demographic table. 
 
 https://video.wixstatic.com/video/3ebd95_98af57c386864f03b7aed6f9b99ae29a/1080p/mp4/file.mp4
 
-
+** Heroku puts processes to sleep after certain period of inactivity. Thus, it might take around 
+5-7 seconds to load.
 
 <!-- > Subtitle or Short Description Goes Here -->
 
 <!-- > ideally one sentence -->
 
 <!-- > include terms/tags that can be searched -->
-
-
-<!-- PROJECT LOGO -->
-<!--
-<br />
-<p align="center">
-  <a href="">
-    <img src="" alt="Logo" width="150" height="80">
-  </a>
-</p>
--->
-
 
 <!-- ----------------------- -->
 <!--    TABLE OF CONTENTS    -->
@@ -103,7 +90,7 @@ When using any of this project's source code, please cite:
 }
 ```
 
-** Heroku puts processes to sleep after certain period of inactivity. Thus, it might take some 
+** Heroku puts processes to sleep after certain period of inactivity. Thus, it might take around 
 5-7 seconds to load.
 
 <!-- ----------------------- -->
@@ -113,21 +100,26 @@ When using any of this project's source code, please cite:
 
 ## Training models
 
-First, create a yaml configuration file (see [settings.iris.yaml](ls2d-settings-file)) to define
-the data and output location, the features for training, the targets to compute performance metrics,
-and the estimators and/or hyperparameters to consider during the grid search. 
+First, create a yaml configuration file according to your needs, for more
+information see the example [settings.iris.yaml](ls2d-settings-file)). 
+This files allows you to define the path where the data is stored, the path 
+where the workbench should be saved, to select which features should be used 
+for training, which targets should be used to compute the performance metrics 
+and last but not least, the methods to create the embeddings and the 
+hyperparameters to consider  during the grid search. 
 
-Once the configuration is completed, run the search script
+Once the configuration is completed, run the search script.
 
 ```console
-$ python search.py --yaml_file
+$ python search.py --yaml <yaml_file>
 ```
   
-A new workbench will be created in the output folder containing (i) the generated models 
-saved as pickle (.p) files, (ii) the metrics obtained aggregated in the 'results.csv' 
-file and the (iii) settings configuration.
+This script will create a new workbench in the output folder containing (i) 
+the generated pipelines saved as pickle (.p) files, (ii) all the metrics 
+obtained aggregated in the 'results.csv' file and the (iii) settings 
+configuration.
 
-To browse through all these results run the ls2d flask app:
+To browse through all the workbenches run the ls2d flask app:
 
 ```console
 $ python server.py
@@ -288,6 +280,9 @@ Bernard Hernandez -
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat-square&logo=linkedin&colorB=555
 [product-screenshot]: images/screenshot.png
 
+[heroku-demo]: https://img.shields.io/badge/heroku%20demo-purple.svg
+[heroku-demo-v2]: https://img.shields.io/badge/heroku-live%20demo-purple.svg
+
 [build-shield]: https://img.shields.io/badge/build-none-yellow.svg
 [coverage-shield]: https://img.shields.io/badge/coverage-none-yellow.svg
 [documentation-shield]: https://img.shields.io/badge/docs-none-yellow.svg
@@ -307,6 +302,7 @@ Bernard Hernandez -
 [none-url]: https://www.imperial.ac.uk/bio-inspired-technology/research/infection-technology/epic-impoc/
 
 [ls2d-settings-file]: https://github.com/bahp/ls2d/blob/main/datasets/iris/settings.iris.yaml
+[ls2d-heroku-demo]: http://ls2d-demo.herokuapp.com/
 
 #### Contributors (optional)
 #### Support (optional)
