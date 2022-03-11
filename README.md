@@ -34,9 +34,9 @@ comparison among the pipelines created, (ii) enables visualisation of the
 observations and the distribution of the features/outcomes and (iii) allows
 to query patients based on distance and displays a demographic table. 
 
-https://video.wixstatic.com/video/3ebd95_98af57c386864f03b7aed6f9b99ae29a/1080p/mp4/file.mp4
 
-
+<!-- Demonstration video -->
+https://user-images.githubusercontent.com/1579887/157911761-e74bdc2e-7fe6-4b37-8b34-e260b733e410.mp4
 
 <!-- > Subtitle or Short Description Goes Here -->
 
