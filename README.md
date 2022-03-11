@@ -7,13 +7,18 @@
 <!--     PROJECT SHIELDS     -->
 <!-- ----------------------- -->
 [![Build][build-shield]][none-url]
+<!--
 [![Coverage][coverage-shield]][none-url]
 [![Documentation][documentation-shield]][none-url]
 [![Website][website-shield]][none-url]
+-->
 [![Python][python-shield]][none-url]
 [![Issues][issues-shield]][none-url]
 [![MIT License][license-shield]][none-url]
+
+<!--
 [![Contributors][contributors-shield]][none-url]
+-->
 
 <!--
 [![Forks][forks-shield]][none-url]
