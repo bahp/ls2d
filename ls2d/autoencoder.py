@@ -13,22 +13,35 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-from sklearn.base import BaseEstimator
-
-from torch.utils.data import DataLoader
 from skorch import NeuralNet
+from torch.utils.data import DataLoader
+from sklearn.base import BaseEstimator
 
 class SkorchAE(NeuralNet):
     def transform(self, X, *args, **kwargs):
-        if isinstance(X, pd.DataFrame) or isinstance(X, pd.Series):
-            X = X.to_numpy().astype(np.float32)
-        if isinstance(X, np.ndarray):
-            X = X.astype(np.float32)
-        return self.module_.encode_inputs(X, *args, **kwargs)
+        return self.module_.transform(X, *args, **kwargs)
 
     def fit(self, X, y, *args, **kwargs):
+        """Overwritten.
+
+        .. note: Fitting to X_ rather than y.
+        """
         X_ = torch.from_numpy(X).float()
-        super().fit(X_, X_)
+        return super().fit(X_, X_)
+
+    def score(self, X, y):
+        """Overwritten.
+
+        This method contains the mean accuracy for classification
+        problems and the coefficient of determination R^2 for a
+        regression problem. For NeuralNet, needs to be implemented.
+
+        X_ = torch.from_numpy(X).float()
+        y_ = torch.from_numpy(y).float()
+        loss2 = super().get_loss(X_, y_)
+        """
+        from skorch.scoring import loss_scoring
+        return loss_scoring(self, X, X)
 
     def get_params(self, deep=True, **kwargs):
         """Overwritten.

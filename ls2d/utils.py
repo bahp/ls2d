@@ -69,6 +69,47 @@ def _load_pandas(path, **kwargs):
         return pd.read_csv(str(path))
     return None
 
+
+
+# ----------------------------------------
+# Doesn't work add method dynamically.
+# ----------------------------------------
+# Librarie
+from functools import wraps
+
+def add_method(cls):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(self, *args, **kwargs):
+            return func(*args, **kwargs)
+        setattr(cls, func.__name__, wrapper)
+        # Note we are not binding func, but wrapper
+        # which accepts self but does exactly the same
+        # as func. Returning func means func can still be used
+        # normally
+        return func
+    return decorator
+
+
+
+class AttrDict(dict):
+    """Dictionary subclass whose entries can be accessed by attributes"""
+    def __init__(self, *args, **kwargs):
+        def from_nested_dict(data):
+            """ Construct nested AttrDicts from nested dictionaries. """
+            if not isinstance(data, dict):
+                return data
+            else:
+                return AttrDict({key: from_nested_dict(data[key])
+                                    for key in data})
+
+        super(AttrDict, self).__init__(*args, **kwargs)
+        self.__dict__ = self
+
+        for key in self.keys():
+            self[key] = from_nested_dict(self[key])
+
+
 # ---------------------------------------------------------
 # Format cv_results_
 # ---------------------------------------------------------
