@@ -48,14 +48,11 @@ https://user-images.githubusercontent.com/1579887/157911761-e74bdc2e-7fe6-4b37-8
 
 * [About the project](#about-the-project)
 * [Getting Started](#getting-started)
-  * [Prerequisites](#prerequisites)
   * [Installation](#installation)
-  * [Usage](#usage)
-  * [Tests](#tests)
-* [Roadmap](#roadmap)
+  * [Training](#training)
+  * [Running the app](#running-the-app)
 * [License](#license)
-* [Contact](#contact)
-* [Utils](#utils)
+
 
 <!--* [Contributing](#contributing)-->
 <!--* [Versioning](#versioning)-->
@@ -95,7 +92,7 @@ When using any of this project's source code, please cite:
 <!-- ----------------------- -->
 ## Getting Started
 
-### Prerequisites
+### Installation
 
 First, install all the requireed libraries
 
@@ -132,6 +129,8 @@ configuration.
 
 ### Running the app
 
+#### Using the script
+
 To browse through all the workbenches run the ls2d flask app:
 
 ```console
@@ -141,7 +140,7 @@ $ python server.py
 Access the app at [https://localhost:5000](https://localhost:5000)
 
 
-### Running the app using Docker
+#### Using Docker
 
 First build and run the docker container:
 
@@ -206,34 +205,6 @@ $ heroku container:release web
 
 For more information, check the heroku official page 
 [here](https://devcenter.heroku.com/categories/deploying-with-docker).
-
-
-## Other
-
-
-<!-- ----------------------- -->
-<!--         EXAMPLES        -->
-<!-- ----------------------- -->
-### Usage
-
-See the [documentation]() for a list of examples.
-
-
-<!-- ----------------------- -->
-<!--          TESTS          -->
-<!-- ----------------------- -->
-### Tests
-
-This section is empty.
-
-
-<!-- ----------------------- -->
-<!--        ROADMAP          -->
-<!-- ----------------------- -->
-## Roadmap
-
-See the [open issues]() for a list of proposed features (and known issues).
-
 
 <!-- ----------------------- -->
 <!--         LICENSE         -->
