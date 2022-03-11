@@ -35,10 +35,6 @@ to query patients based on distance and displays a demographic table.
 <!-- Demonstration video -->
 https://user-images.githubusercontent.com/1579887/157911761-e74bdc2e-7fe6-4b37-8b34-e260b733e410.mp4
 
-** Heroku puts processes to sleep after certain period of inactivity. Thus, it might take around 
-5-7 seconds to load.
-
-
 <!-- > Subtitle or Short Description Goes Here -->
 
 <!-- > ideally one sentence -->
@@ -51,7 +47,6 @@ https://user-images.githubusercontent.com/1579887/157911761-e74bdc2e-7fe6-4b37-8
 ## Table of Contents
 
 * [About the project](#about-the-project)
-  * [Built With](#built-with)
 * [Getting Started](#getting-started)
   * [Prerequisites](#prerequisites)
   * [Installation](#installation)
@@ -100,11 +95,25 @@ When using any of this project's source code, please cite:
 <!-- ----------------------- -->
 ## Getting Started
 
-## Training models
+### Prerequisites
 
-First, create a yaml configuration file according to your needs, for more
-information see the example [settings.iris.yaml](ls2d-settings-file)). 
-This files allows you to define the path where the data is stored, the path 
+First, install all the requireed libraries
+
+```console
+python -m pip install -r requirements.txt   # Install al the requirements
+```
+
+Then, install the LS2D library (for example in editable mode)
+
+```console
+python -m pip install --editable  .         # Install in editable mode
+```
+
+### Training
+
+Lets create a yaml configuration file according to your needs, for more
+information see the example [settings.iris.yaml](ls2d-settings-file). 
+This file allows you to define the path where the data is stored, the path 
 where the workbench should be saved, to select which features should be used 
 for training, which targets should be used to compute the performance metrics 
 and last but not least, the methods to create the embeddings and the 
@@ -116,10 +125,12 @@ Once the configuration is completed, run the search script.
 $ python search.py --yaml <yaml_file>
 ```
   
-This script will create a new workbench in the output folder containing (i) 
-the generated pipelines saved as pickle (.p) files, (ii) all the metrics 
+This script will create a new workbench within the output folder containing 
+(i) the generated pipelines saved as pickle (.p) files, (ii) all the metrics 
 obtained aggregated in the 'results.csv' file and the (iii) settings 
 configuration.
+
+### Running the app
 
 To browse through all the workbenches run the ls2d flask app:
 
@@ -127,10 +138,10 @@ To browse through all the workbenches run the ls2d flask app:
 $ python server.py
 ```
 
+Access the app at [https://localhost:5000](https://localhost:5000)
 
-### Local
 
-### Using Docker
+### Running the app using Docker
 
 First build and run the docker container:
 
@@ -201,32 +212,12 @@ For more information, check the heroku official page
 
 
 <!-- ----------------------- -->
-<!--     USAGE EXAMPLES      -->
+<!--         EXAMPLES        -->
 <!-- ----------------------- -->
 ### Usage
 
 See the [documentation]() for a list of examples.
 
-
-#### Training models
-
-First, create a yaml configuration file (see [settings.iris.yaml](ls2d-settings-file)).
-
-Run the search script
-
-```console
-$ python search.py
-```
-  
-A new workbench will be created in the output folder containing (i) the generated models 
-saved as pickle (.p) files, (ii) the metrics obtained aggregated in the 'results.csv' 
-file and the (iii) settings configuration.
-
-To browse through all these results run the ls2d flask app:
-
-```console
-$ python server.py
-```
 
 <!-- ----------------------- -->
 <!--          TESTS          -->
@@ -250,25 +241,6 @@ See the [open issues]() for a list of proposed features (and known issues).
 ## License
 
 Distributed under the GNU v3.0 License. See `LICENSE` for more information.
-
-<!-- ----------------------- -->
-<!--         CONTACT         -->
-<!-- ----------------------- -->
-## Contact
-
-Bernard Hernandez - 
-   - add twitter
-   - add email
-   - add linkedin
-   - add anything
-
-[Project Link](https://github.com/bahp/ls2d)
-
-
-<!-- ----------------------- -->
-<!--     ACKNOWLEDGEMENTS    -->
-<!-- ----------------------- -->
-## Acknowledgements
 
 <!-- ----------------------- -->
 <!-- MARKDOWN LINKS & IMAGES -->
