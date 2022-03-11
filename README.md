@@ -70,25 +70,47 @@ it allows to query data and visualise demographics.
 <!-- ----------------------- -->
 ## About the project
 
-Pending....
+This work aims to facilitate the development and validation of unsupervised techniques to
+reduce data complexity to a 2D space so that the information can be relayed to the end user 
+through accessible graphical representations. In addition to traditional technices such as 
+PCA, autoencoders, a type of neural network, have been used in the included examples.
+
+Live demo (Heroku)**: [Link](http://ls2d-demo.herokuapp.com/)
+
+When using any of this project's source code, please cite:
+
+```console
+@article{xxx,
+  title = {xxx},
+  author = {xxx},
+  doi = {xxx},
+  journal = {xxx},
+  year = {xxx}
+}
+```
+
+** Heroku puts processes to sleep after certain period of inactivity. Thus, it might take some 
+5-7 seconds to load.
 
 <!-- ----------------------- -->
 <!--     GETTING STARTED     -->
 <!-- ----------------------- -->
 ## Getting Started
 
-Pending....
+### Local
 
+### Using Docker
 
-### Docker
+First build and run the docker container:
 
-$ docker-compose build
+```console
+$ docker-compose build # Build
+$ docker-compose up    # Run
+```
 
-$ docker-compose up
+Access the app at [https://localhost:5000](https://localhost:5000)
 
-### Heroku
-
-https://devcenter.heroku.com/categories/deploying-with-docker
+### Deploy to Heroku
 
 #### Building and pushing image(s)
 
@@ -101,19 +123,19 @@ the heroku.yml files and therefore the app should be run in the Docker file:
 Thus, in the Dockerfile include:
  
 ```console
-CMD ["python", "server.py"]
+$ CMD ["python", "server.py"]
 ```
  
 Run the container to create the image:
 
 ```console
-heroku container:push <process-type> 
+$ heroku container:push <process-type> 
 ```
 
 For this example
 
 ```console
-heroku container:push web 
+$ heroku container:push web 
 ```
 
 ##### Pushing an existing image
@@ -123,22 +145,26 @@ your docker-compose instructions, tag it and push it according to this naming
 template.
 
 ```console
-docker tag <image> registry.heroku.com/<app>/<process-type>
-docker push registry.heroku.com/<app>/<process-type>
+$ docker tag <image> registry.heroku.com/<app>/<process-type>
+$ docker push registry.heroku.com/<app>/<process-type>
 ```
 
 For this example
 
 ```console
-docker tag main_web_1 registry.heroku.com/ls2d-demo/web
-docker push registry.heroku.com/ls2d-demo/web
+$ docker tag main_web_1 registry.heroku.com/ls2d-demo/web
+$ docker push registry.heroku.com/ls2d-demo/web
 ```
 
 By specifying the process type in the tag, you can release the image using the CLI. 
 
 ```console
-heroku container:release web
+$ heroku container:release web
 ```
+
+For more information, check the heroku official page 
+[here](https://devcenter.heroku.com/categories/deploying-with-docker).
+
 
 ## Other
 
@@ -149,6 +175,14 @@ heroku container:release web
 ### Usage
 
 See the [documentation]() for a list of examples.
+
+
+#### Training models
+
+First, create a yaml configuration file (see 
+[settings.iris.yaml](https://github.com/bahp/ls2d/blob/main/datasets/iris/settings.iris.yaml)).
+
+The worbench includes all the information including models, dataset and performance metrics.
 
 ```py
 // Example!
