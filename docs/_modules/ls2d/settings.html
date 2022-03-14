@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ls2d.settings &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_examples/index.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_apidoc/ls2d.html">ls2d package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>ls2d.settings</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ls2d.settings</h1><div class="highlight"><pre>
+<span></span><span class="c1">###############################################################################</span>
+<span class="c1"># Author: Bernard Hernandez</span>
+<span class="c1"># Filename:</span>
+<span class="c1"># Date:</span>
+<span class="c1"># Description:</span>
+<span class="c1">#</span>
+<span class="c1">###############################################################################</span>
+
+
+<span class="c1"># Import scikits preprocessing</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">RobustScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">Normalizer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">QuantileTransformer</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">KBinsDiscretizer</span>
+
+<span class="c1"># Import outlier detection</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">IsolationForest</span>
+
+<span class="c1"># Import imputers</span>
+<span class="kn">from</span> <span class="nn">sklearn.impute</span> <span class="kn">import</span> <span class="n">SimpleImputer</span>
+
+<span class="c1"># Import default samplers from imblearn</span>
+<span class="c1">#from imblearn.over_sampling import SMOTE</span>
+<span class="c1">#from imblearn.under_sampling import RandomUnderSampler</span>
+<span class="c1">#from imblearn.over_sampling import RandomOverSampler</span>
+
+<span class="c1"># Import model selection</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">StratifiedKFold</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+
+<span class="c1"># Import cross validation method</span>
+<span class="kn">from</span> <span class="nn">sklearn.calibration</span> <span class="kn">import</span> <span class="n">CalibratedClassifierCV</span>
+
+<span class="c1"># Import classifiers</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">GaussianNB</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">ExtraTreesClassifier</span>
+
+<span class="c1"># Import dimensionality reduction algorithms</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">KernelPCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">IncrementalPCA</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">FastICA</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">NMF</span>
+<span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">LatentDirichletAllocation</span>
+<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">Isomap</span>
+<span class="kn">from</span> <span class="nn">sklearn.manifold</span> <span class="kn">import</span> <span class="n">LocallyLinearEmbedding</span>
+
+<span class="c1"># Import scikits metrics</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">make_scorer</span>
+
+<span class="c1"># XGboost</span>
+<span class="c1">#import xgboost as xgb</span>
+
+<span class="c1"># Lightbm</span>
+<span class="c1">#import lightgbm as lgbm</span>
+
+<span class="c1"># Torch</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+
+<span class="c1"># Skorch</span>
+<span class="kn">import</span> <span class="nn">skorch</span>
+
+<span class="c1"># Keras</span>
+<span class="c1"># from keras.models import Sequential</span>
+<span class="c1"># from keras.layers import Dense</span>
+<span class="c1"># from keras.layers import Dropout</span>
+<span class="c1"># from keras.constraints import maxnorm</span>
+<span class="c1"># from keras.optimizers import SGD</span>
+<span class="c1"># from keras.wrappers.scikit_learn import KerasClassifier</span>
+
+<span class="c1"># Own libraries</span>
+<span class="c1">#from pySML2 import metrics</span>
+<span class="c1">#from pySML2.preprocessing import outliers</span>
+
+<span class="kn">from</span> <span class="nn">ls2d.autoencoder</span> <span class="kn">import</span> <span class="n">AE</span>
+<span class="kn">from</span> <span class="nn">ls2d.autoencoder</span> <span class="kn">import</span> <span class="n">SkorchAE</span>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1">#                          Deault Keras NN</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<div class="viewcode-block" id="build_keras_cnn"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.settings.build_keras_cnn">[docs]</a><span class="k">def</span> <span class="nf">build_keras_cnn</span><span class="p">(</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span>
+                    <span class="n">dropout_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+                    <span class="n">optimizer</span><span class="o">=</span><span class="s1">&#39;Adam&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method....</span>
+
+<span class="sd">    .. note: The first layer should be same number as input features.</span>
+<span class="sd">    .. note: The last layer should be same number as output features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># Create model</span>
+    <span class="c1"># model = Sequential()</span>
+    <span class="c1"># model.add(Dense(21, activation=&#39;relu&#39;))</span>
+    <span class="c1"># model.add(Dropout(0.2))</span>
+    <span class="c1"># model.add(Dense(30, activation=&#39;relu&#39;, kernel_constraint=maxnorm(3)))</span>
+    <span class="c1"># model.add(Dropout(0.2))</span>
+    <span class="c1"># model.add(Dense(1, activation=&#39;sigmoid&#39;))</span>
+
+    <span class="c1"># Compile</span>
+    <span class="c1"># model.compile(</span>
+    <span class="c1">#    loss=&#39;binary_crossentropy&#39;,</span>
+    <span class="c1">#    optimizer=optimizer,</span>
+    <span class="c1">#    metrics=[&#39;accuracy&#39;]</span>
+    <span class="c1"># )</span>
+
+    <span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">model</span></div>
+
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1">#                     Pipeline Acronyms Definitions</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1"># This are some acronyms that can be used by default. The acronym will be</span>
+<span class="c1"># directly translated to the corresponding instance during the construction</span>
+<span class="c1"># of the Pipeline object. Note that there is no need to use the acronyms</span>
+<span class="c1"># since object instances can be passed directly.</span>
+
+<span class="c1"># Default list of filters.</span>
+<span class="n">_DEFAULT_FILTERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;iso15&#39;</span><span class="p">:</span> <span class="n">IsolationForest</span><span class="p">(</span><span class="n">contamination</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">),</span>
+    <span class="c1">#&#39;iqr15&#39;: outliers.IQRTransformer()</span>
+<span class="p">}</span>
+
+<span class="n">_DEFAULT_TRANSFORMERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;kbins10&#39;</span><span class="p">:</span> <span class="n">KBinsDiscretizer</span><span class="p">(</span><span class="n">n_bins</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">encode</span><span class="o">=</span><span class="s1">&#39;ordinal&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Default list of imputers.</span>
+<span class="n">_DEFAULT_IMPUTERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;median&#39;</span><span class="p">:</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;median&#39;</span><span class="p">),</span>
+    <span class="s1">&#39;mean&#39;</span><span class="p">:</span> <span class="n">SimpleImputer</span><span class="p">(</span><span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Default list of samplers.</span>
+<span class="n">_DEFAULT_SAMPLERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="c1">#&#39;randomu&#39;: RandomUnderSampler(random_state=42),</span>
+    <span class="c1">#&#39;randomo&#39;: RandomOverSampler(random_state=42),</span>
+    <span class="c1">#&#39;smote&#39;: SMOTE(k_neighbors=3),</span>
+<span class="p">}</span>
+
+<span class="c1"># Default list of scalers.</span>
+<span class="n">_DEFAULT_SCALERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;minmax&#39;</span><span class="p">:</span> <span class="n">MinMaxScaler</span><span class="p">(),</span>
+    <span class="s1">&#39;norm&#39;</span><span class="p">:</span> <span class="n">Normalizer</span><span class="p">(),</span>
+    <span class="s1">&#39;robust&#39;</span><span class="p">:</span> <span class="n">RobustScaler</span><span class="p">(),</span>
+    <span class="s1">&#39;std&#39;</span><span class="p">:</span> <span class="n">StandardScaler</span><span class="p">(),</span>
+    <span class="s1">&#39;quant&#39;</span><span class="p">:</span> <span class="n">QuantileTransformer</span><span class="p">(),</span>
+<span class="p">}</span>
+
+<span class="c1"># Default list of splitters.</span>
+<span class="n">_DEFAULT_SPLITTERS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;skfold&#39;</span><span class="p">:</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;skfold5&#39;</span><span class="p">:</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;skfold2&#39;</span><span class="p">:</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span>
+    <span class="s1">&#39;kfold5&#39;</span><span class="p">:</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">5</span><span class="p">),</span>
+    <span class="s1">&#39;kfold2&#39;</span><span class="p">:</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Default list of estimators.</span>
+<span class="n">_DEFAULT_ESTIMATORS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gnb&#39;</span><span class="p">:</span> <span class="n">GaussianNB</span><span class="p">(),</span>
+    <span class="s1">&#39;dtc&#39;</span><span class="p">:</span> <span class="n">DecisionTreeClassifier</span><span class="p">(),</span>
+    <span class="s1">&#39;rfc&#39;</span><span class="p">:</span> <span class="n">RandomForestClassifier</span><span class="p">(),</span>
+    <span class="s1">&#39;svm&#39;</span><span class="p">:</span> <span class="n">SVC</span><span class="p">(),</span>
+    <span class="s1">&#39;ann&#39;</span><span class="p">:</span> <span class="n">MLPClassifier</span><span class="p">(),</span>
+    <span class="s1">&#39;llr&#39;</span><span class="p">:</span> <span class="n">LogisticRegression</span><span class="p">(),</span>
+    <span class="s1">&#39;etc&#39;</span><span class="p">:</span> <span class="n">ExtraTreesClassifier</span><span class="p">(),</span>
+    <span class="c1">#&#39;xgb&#39;: xgb.XGBClassifier(),</span>
+    <span class="c1">#&#39;lgbm&#39;: lgbm.LGBMClassifier(),</span>
+    <span class="c1">#&#39;keras&#39;: KerasClassifier(build_fn=build_keras_cnn)</span>
+
+    <span class="s1">&#39;pca&#39;</span><span class="p">:</span> <span class="n">PCA</span><span class="p">(),</span>
+    <span class="s1">&#39;nmf&#39;</span><span class="p">:</span> <span class="n">NMF</span><span class="p">(),</span>
+    <span class="s1">&#39;lda&#39;</span><span class="p">:</span> <span class="n">LatentDirichletAllocation</span><span class="p">(),</span>
+    <span class="s1">&#39;pcak&#39;</span><span class="p">:</span> <span class="n">KernelPCA</span><span class="p">(),</span>
+    <span class="s1">&#39;pcai&#39;</span><span class="p">:</span> <span class="n">IncrementalPCA</span><span class="p">(),</span>
+    <span class="s1">&#39;icaf&#39;</span><span class="p">:</span> <span class="n">FastICA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s1">&#39;iso&#39;</span><span class="p">:</span> <span class="n">Isomap</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s1">&#39;lle&#39;</span><span class="p">:</span> <span class="n">LocallyLinearEmbedding</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+    <span class="s1">&#39;sae&#39;</span><span class="p">:</span> <span class="n">SkorchAE</span><span class="p">(</span><span class="n">AE</span><span class="p">,</span> <span class="n">criterion</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1"># Add calibrated estimators</span>
+<span class="k">def</span> <span class="nf">_calibrated_estimator</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span><span class="n">base_estimator</span><span class="o">=</span><span class="n">e</span><span class="p">)</span>
+
+<span class="n">_DEFAULT_ESTIMATORS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;c</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">):</span><span class="n">_calibrated_estimator</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">_DEFAULT_ESTIMATORS</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+<span class="c1"># Create the final list of acronyms.</span>
+<span class="n">_DEFAULT_ACRONYMS</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;none&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+<span class="n">_DEFAULT_ACRONYMS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_DEFAULT_FILTERS</span><span class="p">)</span>
+<span class="n">_DEFAULT_ACRONYMS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_DEFAULT_SAMPLERS</span><span class="p">)</span>
+<span class="n">_DEFAULT_ACRONYMS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_DEFAULT_IMPUTERS</span><span class="p">)</span>
+<span class="n">_DEFAULT_ACRONYMS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_DEFAULT_SCALERS</span><span class="p">)</span>
+<span class="n">_DEFAULT_ACRONYMS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_DEFAULT_SPLITTERS</span><span class="p">)</span>
+<span class="n">_DEFAULT_ACRONYMS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_DEFAULT_ESTIMATORS</span><span class="p">)</span>
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1">#                Pipeline Estimators Grid Search</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="n">param_grid_gnb</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gnb__var_smoothing&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-2</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">],</span>
+    <span class="c1"># &#39;gnb__priors&#39;: [None]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_cgnb</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gnb__base_estimator__var_smoothing&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-1</span><span class="p">,</span> <span class="mf">1e-3</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_llr</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;llr__penalty&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;l2&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;llr__C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>
+    <span class="s1">&#39;llr__fit_intercept&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">],</span>
+    <span class="s1">&#39;llr__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;balanced&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;llr__max_iter&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">500</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_dtc</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;dtc__criterion&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gini&#39;</span><span class="p">,</span> <span class="s1">&#39;entropy&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;dtc__max_features&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="s1">&#39;dtc__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="s1">&#39;dtc__min_samples_leaf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;dtc__min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_rfc</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;rfc__n_estimators&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;rfc__criterion&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gini&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;rfc__max_features&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="s1">&#39;rfc__class_weight&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">None</span><span class="p">],</span>
+    <span class="s1">&#39;rfc__min_samples_leaf&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+    <span class="s1">&#39;rfc__min_samples_split&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">50</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_svm</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;svm__C&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s1">&#39;svm__gamma&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s1">&#39;svm__probability&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">True</span><span class="p">],</span>
+    <span class="s1">&#39;svm__max_iter&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">500</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_ann</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;ann__hidden_layer_sizes&#39;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span>
+                                <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+                                <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">)],</span>
+    <span class="s1">&#39;ann__activation&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;relu&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;ann__solver&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;adam&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;ann__alpha&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s1">&#39;ann__batch_size&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auto&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;ann__learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;constant&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;ann__learning_rate_init&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">],</span>
+    <span class="s1">&#39;ann__power_t&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>
+    <span class="s1">&#39;ann__max_iter&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1000</span><span class="p">],</span>
+    <span class="s1">&#39;ann__tol&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1e-4</span><span class="p">],</span>
+    <span class="s1">&#39;ann__warm_start&#39;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">],</span>
+    <span class="s1">&#39;ann__momentum&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.9</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_xgb</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;xgb__use_label_encoder&quot;</span><span class="p">:</span> <span class="p">[</span><span class="kc">False</span><span class="p">],</span>
+    <span class="s2">&quot;xgb__colsample_bytree&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">],</span>
+    <span class="s2">&quot;xgb__gamma&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.001</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s2">&quot;xgb__learning_rate&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">],</span>    <span class="c1"># default 0.1</span>
+    <span class="s2">&quot;xgb__max_depth&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>       <span class="c1"># default 3</span>
+    <span class="s2">&quot;xgb__n_estimators&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>  <span class="c1"># default 100</span>
+    <span class="s2">&quot;xgb__subsample&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_lgbm</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;lgbm__application&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__objective&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;binary&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__metric&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;auc&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__is_unbalance&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;true&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__boosting&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;gbdt&#39;</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__num_leaves&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">31</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__feature_fraction&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__bagging_fraction&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__bagging_freq&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__learning_rate&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">],</span>
+    <span class="s1">&#39;lgbm__verbose&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+    <span class="c1"># &#39;lgbm__n_estimators&#39;: [10, 50, 100] ??</span>
+<span class="p">}</span>
+
+<span class="n">param_grid_keras</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;keras__epochs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s1">&#39;keras__batch_size&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">128</span><span class="p">]</span>
+    <span class="c1"># &#39;keras__epochs&#39; :              [100,150,200],</span>
+    <span class="c1"># &#39;keras__batch_size&#39; :          [32, 128],</span>
+    <span class="c1"># &#39;keras__optimizer&#39; :           [&#39;Adam&#39;, &#39;Nadam&#39;],</span>
+    <span class="c1"># &#39;keras__dropout_rate&#39; :        [0.2, 0.3],</span>
+    <span class="c1"># &#39;keras__activation&#39; :          [&#39;relu&#39;, &#39;elu&#39;]</span>
+<span class="p">}</span>
+
+<span class="n">_DEFAULT_PARAM_GRIDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;gnb&#39;</span><span class="p">:</span> <span class="n">param_grid_gnb</span><span class="p">,</span>
+    <span class="s1">&#39;llr&#39;</span><span class="p">:</span> <span class="n">param_grid_llr</span><span class="p">,</span>
+    <span class="s1">&#39;dtc&#39;</span><span class="p">:</span> <span class="n">param_grid_dtc</span><span class="p">,</span>
+    <span class="s1">&#39;rfc&#39;</span><span class="p">:</span> <span class="n">param_grid_rfc</span><span class="p">,</span>
+    <span class="s1">&#39;svm&#39;</span><span class="p">:</span> <span class="n">param_grid_svm</span><span class="p">,</span>
+    <span class="s1">&#39;ann&#39;</span><span class="p">:</span> <span class="n">param_grid_ann</span><span class="p">,</span>
+    <span class="s1">&#39;xgb&#39;</span><span class="p">:</span> <span class="n">param_grid_xgb</span><span class="p">,</span>
+    <span class="s1">&#39;lgbm&#39;</span><span class="p">:</span> <span class="n">param_grid_lgbm</span><span class="p">,</span>
+    <span class="s1">&#39;keras&#39;</span><span class="p">:</span> <span class="n">param_grid_keras</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># Add calibrated param grids</span>
+<span class="c1"># .. note: It is also possible to select the calibration</span>
+<span class="c1">#          method by including the following attribute in</span>
+<span class="c1">#          the dictionary:</span>
+<span class="c1">#          {{0}__method: [&#39;sigmoid&#39;, &#39;isotonic&#39;]}</span>
+<span class="c1"># .. example: csvm__base_estimator__C</span>
+<span class="k">def</span> <span class="nf">_calibrated_param_grids</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">grid</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">__base_estimator__</span><span class="si">{1}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;__&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]):</span><span class="n">v</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">grid</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+
+<span class="n">_DEFAULT_PARAM_GRIDS</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+    <span class="p">{</span><span class="s1">&#39;c</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">):</span><span class="n">_calibrated_param_grids</span><span class="p">(</span><span class="s1">&#39;c</span><span class="si">{0}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="n">v</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">_DEFAULT_PARAM_GRIDS</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+
+
+
+<span class="c1"># ----------------------------------------------------------------------------</span>
+<span class="c1">#                           Performance Scores</span>
+<span class="c1"># ----------------------------------------------------------------------------</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">_DEFAULT_METRICS = {</span>
+<span class="sd">    &#39;roc_auc&#39;: &#39;roc_auc&#39;,  # Usually larger</span>
+<span class="sd">    &#39;aucroc&#39;: make_scorer(metrics._auc),  # Usually lower</span>
+<span class="sd">    &#39;aucpr&#39;: make_scorer(metrics._auc_pr),</span>
+<span class="sd">    &#39;sens&#39;: make_scorer(metrics._sens),</span>
+<span class="sd">    &#39;spec&#39;: make_scorer(metrics._spec),</span>
+<span class="sd">    &#39;gmean&#39;: make_scorer(metrics._gmean),</span>
+<span class="sd">    &#39;tp&#39;: make_scorer(metrics._confusion_matrix, group=&#39;tp&#39;),</span>
+<span class="sd">    &#39;fp&#39;: make_scorer(metrics._confusion_matrix, group=&#39;fp&#39;),</span>
+<span class="sd">    &#39;tn&#39;: make_scorer(metrics._confusion_matrix, group=&#39;tn&#39;),</span>
+<span class="sd">    &#39;fn&#39;: make_scorer(metrics._confusion_matrix, group=&#39;fn&#39;),</span>
+<span class="sd">    #&#39;mcc&#39;: make_scorer(metrics._mcc),</span>
+<span class="sd">    #&#39;plike&#39;: make_scorer(metrics._plike),</span>
+<span class="sd">    #&#39;nlike&#39;: make_scorer(metrics._nlike),</span>
+<span class="sd">    #&#39;bcr&#39;: make_scorer(metrics._bcr),</span>
+<span class="sd">    #&#39;ber&#39;: make_scorer(metrics._ber),</span>
+<span class="sd">    # &#39;f1_micro&#39;: &#39;f1_micro&#39;,</span>
+<span class="sd">    # &#39;f1-score&#39;: &#39;f1&#39;,</span>
+<span class="sd">    # &#39;accuracy&#39;: &#39;accuracy&#39;,</span>
+<span class="sd">    # &#39;precision&#39;: make_scorer(metrics.precision),</span>
+<span class="sd">    # &#39;recall&#39;: make_scorer(metrics.recall),</span>
+<span class="sd">    # &#39;f-score&#39;: make_scorer(metrics.fscore),</span>
+<span class="sd">    # &#39;samples&#39;: make_scorer(metrics.samples)</span>
+<span class="sd">}</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

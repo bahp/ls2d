@@ -1,0 +1,7 @@
+ls2d
+====
+
+.. toctree::
+   :maxdepth: 4
+
+   ls2d

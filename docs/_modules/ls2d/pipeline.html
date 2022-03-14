@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ls2d.pipeline &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_examples/index.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_apidoc/ls2d.html">ls2d package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>ls2d.pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ls2d.pipeline</h1><div class="highlight"><pre>
+<span></span><span class="c1">###############################################################################</span>
+<span class="c1"># Author: Bernard Hernandez</span>
+<span class="c1"># Filename:</span>
+<span class="c1"># Date:</span>
+<span class="c1"># Description:</span>
+<span class="c1">#</span>
+<span class="c1">###############################################################################</span>
+
+<span class="c1"># Generic</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+
+
+<span class="c1"># Specific</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="c1">#from imblearn.pipeline import Pipeline</span>
+
+<span class="c1"># Specific</span>
+<span class="kn">import</span> <span class="nn">jsonpickle</span>
+<span class="kn">import</span> <span class="nn">jsonpickle.ext.numpy</span> <span class="k">as</span> <span class="nn">jsonpickle_numpy</span>
+
+<span class="c1"># Configure json-pickle</span>
+<span class="n">jsonpickle</span><span class="o">.</span><span class="n">set_preferred_backend</span><span class="p">(</span><span class="s1">&#39;json&#39;</span><span class="p">)</span>
+<span class="n">jsonpickle_numpy</span><span class="o">.</span><span class="n">register_handlers</span><span class="p">()</span>
+
+<span class="c1"># PySML libraries</span>
+<span class="kn">from</span> <span class="nn">ls2d.utils</span> <span class="kn">import</span> <span class="n">_dump_pickle</span>
+<span class="kn">from</span> <span class="nn">ls2d.utils</span> <span class="kn">import</span> <span class="n">_dump_jsonpickle</span>
+
+<div class="viewcode-block" id="PipelineMemory"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.pipeline.PipelineMemory">[docs]</a><span class="k">class</span> <span class="nc">PipelineMemory</span><span class="p">(</span><span class="n">Pipeline</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This is an extension of the scikits pipeline.</span>
+
+<span class="sd">    The only aim of this extension is to allow to save each</span>
+<span class="sd">    of the models in memory just after they have been fit. To</span>
+<span class="sd">    do that it uses a global variable to track what algorithm</span>
+<span class="sd">    is being tested and what split is in.</span>
+
+<span class="sd">    .. note: It can save the models in either json-pickle or</span>
+<span class="sd">             pickle. Pickle might have some issues when running</span>
+<span class="sd">             different numpy versions.</span>
+
+<span class="sd">    .. note: Add option to chose whether to save as pickle.</span>
+<span class="sd">             There are issues with the imputers...</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">steps</span><span class="p">,</span> <span class="n">memory_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                              <span class="n">memory_mode</span><span class="o">=</span><span class="s1">&#39;pickle&#39;</span><span class="p">,</span>
+                              <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;The constructor</span>
+
+<span class="sd">        .. note: It could be done with named_steps.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        memory_path: str</span>
+<span class="sd">            The path to store all the pipelines. Note that pipelines are</span>
+<span class="sd">            all saved using the memory_mode specified. If the path does</span>
+<span class="sd">            not exist it will be created.</span>
+
+<span class="sd">        memory_mode: str (default: pickle)</span>
+<span class="sd">            The format to store all the pipelines. The possible values</span>
+<span class="sd">            are pickle or json-pickle.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Check memory mode</span>
+        <span class="n">_supported_memory_modes</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pickle&#39;</span><span class="p">,</span> <span class="s1">&#39;jsonpickle&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">memory_mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_supported_memory_modes</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;The value &lt;</span><span class="si">%s</span><span class="s2">&gt; for memory mode is not supported.</span>
+<span class="s2">                                Please choose from: </span><span class="si">%s</span><span class="s2">&quot;&quot;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">memory_mode</span><span class="p">,</span>
+                                <span class="nb">str</span><span class="p">(</span><span class="n">_supported_memory_modes</span><span class="p">)))</span>
+
+        <span class="c1"># Set basic information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">memory_path</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_mode</span> <span class="o">=</span> <span class="n">memory_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">uuid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="c1">#uuid.uuid1().int &gt;&gt; 64</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">timestamp</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">utcnow</span><span class="p">())</span>
+
+        <span class="c1"># Show id and timestamp</span>
+        <span class="c1">#print(self.uuid, self.timestamp)</span>
+
+        <span class="c1"># Set additional information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slug_short</span> <span class="o">=</span> \
+            <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">slug_long</span> <span class="o">=</span> \
+            <span class="s1">&#39;-&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">l</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span><span class="n">l</span> <span class="ow">in</span> <span class="n">steps</span><span class="p">])</span>
+
+        <span class="c1"># Super constructor</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PipelineMemory</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">filepath</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method creates the filepath.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">/</span><span class="si">{1}</span><span class="s1">/pipeline</span><span class="si">{2}</span><span class="s1">/pipeline</span><span class="si">{2}</span><span class="s1">-split</span><span class="si">{3}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span> \
+            <span class="bp">self</span><span class="o">.</span><span class="n">memory_path</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">slug_short</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PipelineMemory.memory_dump"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.pipeline.PipelineMemory.memory_dump">[docs]</a>    <span class="k">def</span> <span class="nf">memory_dump</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method saves the pipeline.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_mode</span> <span class="o">==</span> <span class="s1">&#39;jsonpickle&#39;</span><span class="p">:</span>
+            <span class="n">_dump_jsonpickle</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.json&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">memory_mode</span> <span class="o">==</span> <span class="s1">&#39;pickle&#39;</span><span class="p">:</span>
+            <span class="n">_dump_pickle</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{0}</span><span class="s1">.p&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">filepath</span><span class="p">),</span> <span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PipelineMemory.fit"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.pipeline.PipelineMemory.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method fits the model.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        --------</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">def</span> <span class="nf">__get_signature_hash</span><span class="p">(</span><span class="n">signature</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot;This method adds a signature to globals</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+            <span class="c1"># Create global hash of signatures</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;signatures&#39;</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">():</span>
+                <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;signatures&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="c1"># Add signature</span>
+            <span class="k">if</span> <span class="n">signature</span> <span class="ow">not</span> <span class="ow">in</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;signatures&#39;</span><span class="p">]:</span>
+                <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;signatures&#39;</span><span class="p">][</span><span class="n">signature</span><span class="p">]</span> <span class="o">=</span> \
+                    <span class="p">[</span><span class="nb">len</span><span class="p">(</span><span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;signatures&#39;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;signatures&#39;</span><span class="p">][</span><span class="n">signature</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="c1"># Return</span>
+            <span class="k">return</span> <span class="nb">globals</span><span class="p">()[</span><span class="s1">&#39;signatures&#39;</span><span class="p">][</span><span class="n">signature</span><span class="p">]</span>
+
+        <span class="c1"># Fit</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Find signature information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">split</span> <span class="o">=</span> \
+            <span class="n">__get_signature_hash</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_params</span><span class="p">()))</span>
+
+        <span class="c1"># Create folder</span>
+        <span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1">#self.named_steps[&#39;keras&#39;][1].model = None</span>
+
+        <span class="c1"># Dump pipeline in memory</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">memory_dump</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="p">)</span>
+
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">r</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

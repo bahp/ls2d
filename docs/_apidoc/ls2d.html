@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ls2d package &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Guide 02" href="../_examples/plot_guide_03.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_examples/index.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">ls2d package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.autoencoder">ls2d.autoencoder module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.autoencoder_classes">ls2d.autoencoder_classes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.metrics">ls2d.metrics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.pipeline">ls2d.pipeline module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.preprocessing">ls2d.preprocessing module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#iqr-transformer">IQR Transformer</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.settings">ls2d.settings module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d.utils">ls2d.utils module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-ls2d">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>ls2d package</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_apidoc/ls2d.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="ls2d-package">
+<h1>ls2d package<a class="headerlink" href="#ls2d-package" title="Permalink to this headline"></a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline"></a></h2>
+</section>
+<section id="module-ls2d.autoencoder">
+<span id="ls2d-autoencoder-module"></span><h2>ls2d.autoencoder module<a class="headerlink" href="#module-ls2d.autoencoder" title="Permalink to this headline"></a></h2>
+<p><a class="reference external" href="https://stackoverflow.com/questions/67456368/pytorch-getting-runtimeerror-found-dtype-double-but-expected-float">https://stackoverflow.com/questions/67456368/pytorch-getting-runtimeerror-found-dtype-double-but-expected-float</a></p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.autoencoder.AE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.autoencoder.</span></span><span class="sig-name descname"><span class="pre">AE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">layers</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#AE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.AE" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Symmetric Autoencoder (SAE)</p>
+<p>It only allows to choose the layers. It would be nice to
+extend this class so that we can choose also the activation
+functions (Sigmoid, ReLu, Softmax), additional dropouts, …</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.AE.encode_inputs">
+<span class="sig-name descname"><span class="pre">encode_inputs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#AE.encode_inputs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.AE.encode_inputs" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the embeddings.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.AE.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#AE.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.AE.fit" title="Permalink to this definition"></a></dt>
+<dd><p>We are using skorch for compatibility with scikits
+instead of using our own fit. However, we include
+this empty method in case we want to manualy create
+a pipeline with an AE as estimator. Note that this
+will have to be pretrained.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.AE.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#AE.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.AE.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ls2d.autoencoder.AE.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ls2d.autoencoder.AE.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.AE.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#AE.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.AE.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Prepare data and compute embeddings.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.autoencoder.SkorchAE">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.autoencoder.</span></span><span class="sig-name descname"><span class="pre">SkorchAE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">criterion</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer=&lt;class</span> <span class="pre">'torch.optim.sgd.SGD'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr=0.01</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_epochs=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_size=128</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterator_train=&lt;class</span> <span class="pre">'torch.utils.data.dataloader.DataLoader'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">iterator_valid=&lt;class</span> <span class="pre">'torch.utils.data.dataloader.DataLoader'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dataset=&lt;class</span> <span class="pre">'skorch.dataset.Dataset'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_split=&lt;skorch.dataset.ValidSplit</span> <span class="pre">object&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">predict_nonlinearity='auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">warm_start=False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose=1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device='cpu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">**kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#SkorchAE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.SkorchAE" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">skorch.net.NeuralNet</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.SkorchAE.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#SkorchAE.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.SkorchAE.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Overwritten.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.SkorchAE.get_params">
+<span class="sig-name descname"><span class="pre">get_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#SkorchAE.get_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.SkorchAE.get_params" title="Permalink to this definition"></a></dt>
+<dd><p>Overwritten.</p>
+<p>In order to get unique signatures when creating the pipelines,
+it is necessary to remove those parameters from NeuralNet that
+are created dynamically. Thus, in addition to avoid including
+the callbacks, we have to remove also the valid split as these
+are not part of the model hyperparameter configuration.</p>
+<dl class="simple">
+<dt>‘train_split’:</dt><dd><p>&lt;skorch.dataset.ValidSplit object at 0x1544ffcd0&gt;</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.SkorchAE.score">
+<span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#SkorchAE.score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.SkorchAE.score" title="Permalink to this definition"></a></dt>
+<dd><p>Overwritten.</p>
+<p>This method contains the mean accuracy for classification
+problems and the coefficient of determination R^2 for a
+regression problem. For NeuralNet, needs to be implemented.</p>
+<p><a href="#id1"><span class="problematic" id="id2">X_</span></a> = torch.from_numpy(X).float()
+<a href="#id3"><span class="problematic" id="id4">y_</span></a> = torch.from_numpy(y).float()
+loss2 = super().get_loss(<a href="#id5"><span class="problematic" id="id6">X_</span></a>, <a href="#id7"><span class="problematic" id="id8">y_</span></a>)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder.SkorchAE.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder.html#SkorchAE.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder.SkorchAE.transform" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ls2d.autoencoder_classes">
+<span id="ls2d-autoencoder-classes-module"></span><h2>ls2d.autoencoder_classes module<a class="headerlink" href="#module-ls2d.autoencoder_classes" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.AEI">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.autoencoder_classes.</span></span><span class="sig-name descname"><span class="pre">AEI</span></span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#AEI"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.AEI" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Example 3</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.AEI.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#AEI.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.AEI.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.AEI.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ls2d.autoencoder_classes.AEI.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.AET">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.autoencoder_classes.</span></span><span class="sig-name descname"><span class="pre">AET</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_units=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlin=&lt;function</span> <span class="pre">relu&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#AET"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.AET" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.AET.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#AET.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.AET.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.AET.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ls2d.autoencoder_classes.AET.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.MyModule">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.autoencoder_classes.</span></span><span class="sig-name descname"><span class="pre">MyModule</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_units=10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nonlin=&lt;function</span> <span class="pre">relu&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#MyModule"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.MyModule" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Example 1</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.MyModule.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#MyModule.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.MyModule.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.MyModule.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ls2d.autoencoder_classes.MyModule.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.MyModule2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.autoencoder_classes.</span></span><span class="sig-name descname"><span class="pre">MyModule2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_units</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#MyModule2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.MyModule2" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">torch.nn.modules.module.Module</span></code></p>
+<p>Example 2</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.MyModule2.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/autoencoder_classes.html#MyModule2.forward"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.autoencoder_classes.MyModule2.forward" title="Permalink to this definition"></a></dt>
+<dd><p>Defines the computation performed at every call.</p>
+<p>Should be overridden by all subclasses.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although the recipe for forward pass needs to be defined within
+this function, one should call the <code class="xref py py-class docutils literal notranslate"><span class="pre">Module</span></code> instance afterwards
+instead of this since the former takes care of running the
+registered hooks while the latter silently ignores them.</p>
+</div>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ls2d.autoencoder_classes.MyModule2.training">
+<span class="sig-name descname"><span class="pre">training</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#ls2d.autoencoder_classes.MyModule2.training" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ls2d.metrics">
+<span id="ls2d-metrics-module"></span><h2>ls2d.metrics module<a class="headerlink" href="#module-ls2d.metrics" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.create_ellipse_mpl">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">create_ellipse_mpl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">means</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#create_ellipse_mpl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.create_ellipse_mpl" title="Permalink to this definition"></a></dt>
+<dd><p>Create an ellipse (Ellipse object).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray</em>) – The means.</p></li>
+<li><p><strong>covariances</strong> (<em>np.ndarray</em>) – The covariances.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.create_ellipse_shapely">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">create_ellipse_shapely</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">means</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#create_ellipse_shapely"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.create_ellipse_shapely" title="Permalink to this definition"></a></dt>
+<dd><p>Create an ellipse (Polygon object)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray</em>) – The means.</p></li>
+<li><p><strong>covariances</strong> (<em>np.ndarray</em>) – The covariances.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.ellipse_params">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">ellipse_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">means</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">covariances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#ellipse_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.ellipse_params" title="Permalink to this definition"></a></dt>
+<dd><p>Compute ellipse parameters from mean and covariances.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>means</strong> (<em>np.ndarray</em>) – The means.</p></li>
+<li><p><strong>covariances</strong> (<em>np.ndarray</em>) – The covariances.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>center, variance, angle</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.gmm_intersection_area">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">gmm_intersection_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gmm_matrix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#gmm_intersection_area"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.gmm_intersection_area" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the intersection area.</p>
+<p>The method can receive either the two input parameters
+y_pred and y, or just the previously computed gmm_matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_pred</strong> (<em>np.ndarray</em>) – The projections in the embedded space.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – The labels to compute the GMMs.</p></li>
+<li><p><strong>gmm_matrix</strong> (<em>np.ndarray</em>) – The gmm intersection area matrix.</p></li>
+<li><p><strong>normalize</strong> (<em>boolean</em>) – If true the area will be normalised; that is, will be
+divided by the total area of the ellipsoids (sum of
+the gmm intersection matrix diagonal)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><strong>area</strong> – The sum of all the intersection areas.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.gmm_intersection_matrix">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">gmm_intersection_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">include_all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#gmm_intersection_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.gmm_intersection_matrix" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the GMM intersection area matrix.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>y_pred</strong> (<em>np.ndarray</em>) – The projections in the embedded space.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – The labels to compute the GMMs.</p></li>
+<li><p><strong>**params</strong> – Parameters to pass to the XX function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><strong>matrix</strong> (<em>np.array</em>) – The matrix with the intersection areas.</p></li>
+<li><p><strong>labels</strong> (<em>np.array</em>) – The labels associated to each GMM.</p></li>
+<li><p><strong>gmm</strong> (<em>np.array</em>) – The BayesianGaussianMixture for each label.</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.gmm_ratio_score">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">gmm_ratio_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sum'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#gmm_ratio_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.gmm_ratio_score" title="Permalink to this definition"></a></dt>
+<dd><p>Compute the GMM ratio score.</p>
+<dl class="field-list">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul>
+<li><p><strong>y_pred</strong> (<em>np.ndarray</em>) – The projections in the embedded space.</p></li>
+<li><p><strong>y</strong> (<em>np.ndarray</em>) – The labels to compute the GMMs.</p></li>
+<li><p><strong>method</strong> (<em>str</em>) –</p>
+<dl class="simple">
+<dt>The method to compute the score. The options are:</dt><dd><ul class="simple">
+<li><p>sum</p></li>
+<li><p>mean</p></li>
+<li></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p><strong>**params</strong> – Parameters to pass to the XX function</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.gmm_scores">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">gmm_scores</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#gmm_scores"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.gmm_scores" title="Permalink to this definition"></a></dt>
+<dd><p>Compute all gmm scores.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.metrics.triu">
+<span class="sig-prename descclassname"><span class="pre">ls2d.metrics.</span></span><span class="sig-name descname"><span class="pre">triu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/metrics.html#triu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.metrics.triu" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-ls2d.pipeline">
+<span id="ls2d-pipeline-module"></span><h2>ls2d.pipeline module<a class="headerlink" href="#module-ls2d.pipeline" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.pipeline.PipelineMemory">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.pipeline.</span></span><span class="sig-name descname"><span class="pre">PipelineMemory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">steps</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">memory_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'pickle'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/pipeline.html#PipelineMemory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.pipeline.PipelineMemory" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.pipeline.Pipeline</span></code></p>
+<p>This is an extension of the scikits pipeline.</p>
+<p>The only aim of this extension is to allow to save each
+of the models in memory just after they have been fit. To
+do that it uses a global variable to track what algorithm
+is being tested and what split is in.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="ls2d.pipeline.PipelineMemory.filepath">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filepath</span></span><a class="headerlink" href="#ls2d.pipeline.PipelineMemory.filepath" title="Permalink to this definition"></a></dt>
+<dd><p>This method creates the filepath.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.pipeline.PipelineMemory.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/pipeline.html#PipelineMemory.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.pipeline.PipelineMemory.fit" title="Permalink to this definition"></a></dt>
+<dd><p>This method fits the model.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.pipeline.PipelineMemory.memory_dump">
+<span class="sig-name descname"><span class="pre">memory_dump</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/pipeline.html#PipelineMemory.memory_dump"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.pipeline.PipelineMemory.memory_dump" title="Permalink to this definition"></a></dt>
+<dd><p>This method saves the pipeline.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="ls2d.pipeline.PipelineMemory.steps">
+<span class="sig-name descname"><span class="pre">steps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#ls2d.pipeline.PipelineMemory.steps" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-ls2d.preprocessing">
+<span id="ls2d-preprocessing-module"></span><h2>ls2d.preprocessing module<a class="headerlink" href="#module-ls2d.preprocessing" title="Permalink to this headline"></a></h2>
+<section id="iqr-transformer">
+<h3>IQR Transformer<a class="headerlink" href="#iqr-transformer" title="Permalink to this headline"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.preprocessing.AggregateTransformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.preprocessing.</span></span><span class="sig-name descname"><span class="pre">AggregateTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">aggmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">by</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/preprocessing.html#AggregateTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.preprocessing.AggregateTransformer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.preprocessing.AggregateTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/preprocessing.html#AggregateTransformer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.preprocessing.AggregateTransformer.fit" title="Permalink to this definition"></a></dt>
+<dd><p>Fit the transformer.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.preprocessing.AggregateTransformer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/preprocessing.html#AggregateTransformer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.preprocessing.AggregateTransformer.transform" title="Permalink to this definition"></a></dt>
+<dd><p>Apply transformation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.preprocessing.IQRTransformer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.preprocessing.</span></span><span class="sig-name descname"><span class="pre">IQRTransformer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">iqrrange</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[25,</span> <span class="pre">75]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coefficient</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/preprocessing.html#IQRTransformer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.preprocessing.IQRTransformer" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.BaseEstimator</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">sklearn.base.TransformerMixin</span></code></p>
+<p>Description…</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.preprocessing.IQRTransformer.fit">
+<span class="sig-name descname"><span class="pre">fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/preprocessing.html#IQRTransformer.fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.preprocessing.IQRTransformer.fit" title="Permalink to this definition"></a></dt>
+<dd><p>This method fits single category.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>X</strong></p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>IQRFIlter instance</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ls2d.preprocessing.IQRTransformer.transform">
+<span class="sig-name descname"><span class="pre">transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/preprocessing.html#IQRTransformer.transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.preprocessing.IQRTransformer.transform" title="Permalink to this definition"></a></dt>
+<dd><p>This method…</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="module-ls2d.settings">
+<span id="ls2d-settings-module"></span><h2>ls2d.settings module<a class="headerlink" href="#module-ls2d.settings" title="Permalink to this headline"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.settings.build_keras_cnn">
+<span class="sig-prename descclassname"><span class="pre">ls2d.settings.</span></span><span class="sig-name descname"><span class="pre">build_keras_cnn</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">activation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'relu'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropout_rate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Adam'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/settings.html#build_keras_cnn"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.settings.build_keras_cnn" title="Permalink to this definition"></a></dt>
+<dd><p>This method….</p>
+</dd></dl>
+
+</section>
+<section id="module-ls2d.utils">
+<span id="ls2d-utils-module"></span><h2>ls2d.utils module<a class="headerlink" href="#module-ls2d.utils" title="Permalink to this headline"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="ls2d.utils.AttrDict">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ls2d.utils.</span></span><span class="sig-name descname"><span class="pre">AttrDict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/utils.html#AttrDict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.utils.AttrDict" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></p>
+<p>Dictionary subclass whose entries can be accessed by attributes</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.utils.add_method">
+<span class="sig-prename descclassname"><span class="pre">ls2d.utils.</span></span><span class="sig-name descname"><span class="pre">add_method</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/utils.html#add_method"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.utils.add_method" title="Permalink to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.utils.format_demographics">
+<span class="sig-prename descclassname"><span class="pre">ls2d.utils.</span></span><span class="sig-name descname"><span class="pre">format_demographics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">TITLES</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/utils.html#format_demographics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.utils.format_demographics" title="Permalink to this definition"></a></dt>
+<dd><p>This method…</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.utils.format_pipeline">
+<span class="sig-prename descclassname"><span class="pre">ls2d.utils.</span></span><span class="sig-name descname"><span class="pre">format_pipeline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">series</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/utils.html#format_pipeline"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.utils.format_pipeline" title="Permalink to this definition"></a></dt>
+<dd><p>This method…</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ls2d.utils.format_workbench">
+<span class="sig-prename descclassname"><span class="pre">ls2d.utils.</span></span><span class="sig-name descname"><span class="pre">format_workbench</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/ls2d/utils.html#format_workbench"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ls2d.utils.format_workbench" title="Permalink to this definition"></a></dt>
+<dd><p>This method…</p>
+</dd></dl>
+
+</section>
+<section id="module-ls2d">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-ls2d" title="Permalink to this headline"></a></h2>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../_examples/plot_guide_03.html" class="btn btn-neutral float-left" title="Guide 02" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ls2d.autoencoder &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_examples/index.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_apidoc/ls2d.html">ls2d package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>ls2d.autoencoder</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ls2d.autoencoder</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">https://stackoverflow.com/questions/67456368/pytorch-getting-runtimeerror-found-dtype-double-but-expected-float</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Libraries</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="nn">nn</span>
+<span class="kn">import</span> <span class="nn">torch.nn.functional</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="kn">from</span> <span class="nn">skorch</span> <span class="kn">import</span> <span class="n">NeuralNet</span>
+<span class="kn">from</span> <span class="nn">torch.utils.data</span> <span class="kn">import</span> <span class="n">DataLoader</span>
+<span class="kn">from</span> <span class="nn">sklearn.base</span> <span class="kn">import</span> <span class="n">BaseEstimator</span>
+
+<div class="viewcode-block" id="SkorchAE"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.SkorchAE">[docs]</a><span class="k">class</span> <span class="nc">SkorchAE</span><span class="p">(</span><span class="n">NeuralNet</span><span class="p">):</span>
+<div class="viewcode-block" id="SkorchAE.transform"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.SkorchAE.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">module_</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SkorchAE.fit"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.SkorchAE.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwritten.</span>
+
+<span class="sd">        .. note: Fitting to X_ rather than y.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_</span><span class="p">,</span> <span class="n">X_</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SkorchAE.score"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.SkorchAE.score">[docs]</a>    <span class="k">def</span> <span class="nf">score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwritten.</span>
+
+<span class="sd">        This method contains the mean accuracy for classification</span>
+<span class="sd">        problems and the coefficient of determination R^2 for a</span>
+<span class="sd">        regression problem. For NeuralNet, needs to be implemented.</span>
+
+<span class="sd">        X_ = torch.from_numpy(X).float()</span>
+<span class="sd">        y_ = torch.from_numpy(y).float()</span>
+<span class="sd">        loss2 = super().get_loss(X_, y_)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">skorch.scoring</span> <span class="kn">import</span> <span class="n">loss_scoring</span>
+        <span class="k">return</span> <span class="n">loss_scoring</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SkorchAE.get_params"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.SkorchAE.get_params">[docs]</a>    <span class="k">def</span> <span class="nf">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Overwritten.</span>
+
+<span class="sd">        In order to get unique signatures when creating the pipelines,</span>
+<span class="sd">        it is necessary to remove those parameters from NeuralNet that</span>
+<span class="sd">        are created dynamically. Thus, in addition to avoid including</span>
+<span class="sd">        the callbacks, we have to remove also the valid split as these</span>
+<span class="sd">        are not part of the model hyperparameter configuration.</span>
+
+<span class="sd">        &#39;train_split&#39;:</span>
+<span class="sd">            &lt;skorch.dataset.ValidSplit object at 0x1544ffcd0&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="n">BaseEstimator</span><span class="o">.</span><span class="n">get_params</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="n">deep</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># Callback parameters are not returned by .get_params, needs</span>
+        <span class="c1"># special treatment.</span>
+        <span class="c1">#params_cb = self._get_params_callbacks(deep=deep)</span>
+        <span class="c1">#params.update(params_cb)</span>
+        <span class="c1"># don&#39;t include the following attributes</span>
+        <span class="n">to_exclude</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;_modules&#39;</span><span class="p">,</span> <span class="s1">&#39;_criteria&#39;</span><span class="p">,</span> <span class="s1">&#39;_optimizers&#39;</span><span class="p">,</span> <span class="s1">&#39;train_split&#39;</span><span class="p">}</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">to_exclude</span><span class="p">}</span></div></div>
+
+
+
+<div class="viewcode-block" id="AE"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.AE">[docs]</a><span class="k">class</span> <span class="nc">AE</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Symmetric Autoencoder (SAE)</span>
+
+<span class="sd">    It only allows to choose the layers. It would be nice to</span>
+<span class="sd">    extend this class so that we can choose also the activation</span>
+<span class="sd">    functions (Sigmoid, ReLu, Softmax), additional dropouts, ...</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layers</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">AE</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+
+        <span class="c1"># Set layers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layers</span> <span class="o">=</span> <span class="n">layers</span>
+
+        <span class="c1"># Create encoder</span>
+        <span class="n">enc</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">prev</span><span class="p">,</span> <span class="n">curr</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">layers</span><span class="p">,</span> <span class="n">layers</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">enc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">curr</span><span class="p">))</span>
+            <span class="n">enc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">enc</span><span class="p">)</span>
+
+        <span class="c1"># Reversed layers</span>
+        <span class="n">rev</span> <span class="o">=</span> <span class="n">layers</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1"># Create decoder</span>
+        <span class="n">dec</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">prev</span><span class="p">,</span> <span class="n">curr</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rev</span><span class="p">,</span> <span class="n">rev</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">dec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">curr</span><span class="p">))</span>
+            <span class="n">dec</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nn</span><span class="o">.</span><span class="n">Sigmoid</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">dec</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AE.forward"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.AE.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="n">encoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+        <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoder</span><span class="p">(</span><span class="n">encoded</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">decoded</span></div>
+
+<div class="viewcode-block" id="AE.transform"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.AE.transform">[docs]</a>    <span class="k">def</span> <span class="nf">transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Prepare data and compute embeddings.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encode_inputs</span><span class="p">(</span><span class="n">X</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AE.fit"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.AE.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;We are using skorch for compatibility with scikits</span>
+<span class="sd">           instead of using our own fit. However, we include</span>
+<span class="sd">           this empty method in case we want to manualy create</span>
+<span class="sd">           a pipeline with an AE as estimator. Note that this</span>
+<span class="sd">           will have to be pretrained.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+<div class="viewcode-block" id="AE.encode_inputs"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.autoencoder.AE.encode_inputs">[docs]</a>    <span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">encode_inputs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute the embeddings.&quot;&quot;&quot;</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">DataLoader</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+            <span class="n">z</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">encoder</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span></div></div>
+
+
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="c1"># Libraries</span>
+    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+    <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+    <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+    <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+    <span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span>
+    <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_classification</span>
+    <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+    <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+
+    <span class="kn">from</span> <span class="nn">skorch</span> <span class="kn">import</span> <span class="n">NeuralNet</span>
+    <span class="kn">from</span> <span class="nn">skorch</span> <span class="kn">import</span> <span class="n">NeuralNetClassifier</span>
+    <span class="kn">from</span> <span class="nn">skorch</span> <span class="kn">import</span> <span class="n">NeuralNetRegressor</span>
+
+    <span class="c1"># -----------</span>
+    <span class="c1"># Create data</span>
+    <span class="c1"># -----------</span>
+    <span class="c1"># Load data</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="c1">#X, y = make_classification(1000, 20, n_informative=10, random_state=0)</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+
+    <span class="c1"># Sample</span>
+    <span class="n">top</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:</span><span class="mi">2</span><span class="p">,</span> <span class="p">:]</span>
+
+    <span class="c1"># Show</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+    <span class="c1"># --------------------------------------</span>
+    <span class="c1"># Create Autoencoder</span>
+    <span class="c1"># --------------------------------------</span>
+    <span class="n">ae1</span> <span class="o">=</span> <span class="n">NeuralNet</span><span class="p">(</span><span class="n">AE</span><span class="p">,</span>
+          <span class="n">max_epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span>
+          <span class="n">train_split</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+          <span class="c1">#criterion=torch.nn.NLLLoss,</span>
+          <span class="n">criterion</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">,</span>
+          <span class="n">iterator_train__shuffle</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+          <span class="n">module__layers</span><span class="o">=</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>
+          <span class="c1">#optimizer=torch.optim.Adam,</span>
+          <span class="c1">#optimizer=torch.optim.RMSprop</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Show NeuralNet</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">NeuralNet: </span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">ae1</span><span class="p">)</span>
+
+    <span class="c1"># Fit skorch</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Fit:&quot;</span><span class="p">)</span>
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">ae1</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Autoencoder: </span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">aux</span><span class="o">.</span><span class="n">module_</span><span class="p">)</span>
+
+
+
+    <span class="c1"># Prediction and encoding</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+    <span class="n">e1</span> <span class="o">=</span> <span class="n">aux</span><span class="o">.</span><span class="n">module_</span><span class="o">.</span><span class="n">encode_inputs</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+
+    <span class="c1"># Errors</span>
+    <span class="n">l1</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span> \
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">p1</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">top</span><span class="p">),</span>
+            <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)</span>
+
+    <span class="n">l2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">(</span><span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;mean&#39;</span><span class="p">)(</span> \
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">p1</span><span class="p">),</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">top</span><span class="p">))</span>
+
+    <span class="n">l3</span> <span class="o">=</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">top</span><span class="p">)</span>
+
+    <span class="c1"># Show</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">top</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pred 0:  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pred 1:  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encode:  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss 1: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">l1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss 2: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">l2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Loss 2: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">l3</span><span class="p">)</span>
+
+
+
+    <span class="c1"># -------------------------------------------------</span>
+    <span class="c1"># Create pipeline</span>
+    <span class="c1"># -------------------------------------------------</span>
+    <span class="c1"># Create pipeline</span>
+    <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">,</span> <span class="n">aux</span><span class="p">),</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Fit pipeline</span>
+    <span class="n">pipe</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Prediction and encoding</span>
+    <span class="n">p0</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+    <span class="n">p1</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+    <span class="n">e1</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">module_</span><span class="o">.</span><span class="n">encode_inputs</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+
+    <span class="c1"># Show</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Top: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">top</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pred 0:  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p0</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Pred 1:  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">p1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Encode:  </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">e1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+
+    <span class="c1"># -------------------------------------------------</span>
+    <span class="c1"># Grid Search</span>
+    <span class="c1"># -------------------------------------------------</span>
+
+    <span class="c1"># Create pipeline</span>
+    <span class="n">pipe</span> <span class="o">=</span> <span class="n">Pipeline</span><span class="p">([</span>
+        <span class="p">(</span><span class="s1">&#39;scale&#39;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">()),</span>
+        <span class="p">(</span><span class="s1">&#39;net&#39;</span><span class="p">,</span> <span class="n">ae1</span><span class="p">),</span>
+    <span class="p">])</span>
+
+    <span class="c1"># Parameters</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s1">&#39;net__lr&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">],</span>
+        <span class="s1">&#39;net__max_epochs&#39;</span><span class="p">:</span> <span class="p">[</span><span class="mi">20</span><span class="p">],</span>
+        <span class="s1">&#39;net__module__layers&#39;</span><span class="p">:</span> <span class="p">[[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">loss_fn</span><span class="p">(</span><span class="n">recon_x</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">mse_loss</span><span class="p">(</span><span class="n">recon_x</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">reduction</span><span class="o">=</span><span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+
+
+    <span class="k">def</span> <span class="nf">custom_metrics</span><span class="p">(</span><span class="n">est</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This method computes the metrics.&quot;&quot;&quot;</span>
+        <span class="c1"># Transform</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">est</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="c1"># Return</span>
+        <span class="k">return</span> <span class="n">mean_squared_error</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+
+
+    <span class="c1"># Create grid search</span>
+    <span class="c1"># Since we are not really classification accuracy might be a</span>
+    <span class="c1"># bad metric, since we are using the encoder/decoder the loss</span>
+    <span class="c1"># would be the best? But not for usability.</span>
+    <span class="n">gs</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">pipe</span><span class="p">,</span> <span class="n">params</span><span class="p">,</span> <span class="n">refit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="n">cv</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;neg_mean_squared_error&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Fit</span>
+    <span class="n">gs</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">X</span><span class="p">)</span>
+
+    <span class="c1"># Predictions</span>
+    <span class="n">p3</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_estimator_</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">top</span><span class="p">)</span>
+
+    <span class="c1"># Show</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best score: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_score_</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best param: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_params_</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Best model: </span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">gs</span><span class="o">.</span><span class="n">best_estimator_</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;DataFrame:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">gs</span><span class="o">.</span><span class="n">cv_results_</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Predictions:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">p3</span><span class="p">)</span>
+
+
+
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span>
+
+    <span class="c1"># --------------------------</span>
+    <span class="c1"># Create Autoencoder (image)</span>
+    <span class="c1"># --------------------------</span>
+    <span class="c1"># Create model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">AE</span><span class="p">()</span>
+
+    <span class="c1"># Validation using MSE Loss function</span>
+    <span class="n">loss_function</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">()</span>
+
+    <span class="c1"># Using an Adam Optimizer with lr = 0.1</span>
+    <span class="n">optimizer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span>
+        <span class="n">lr</span><span class="o">=</span><span class="mf">1e-1</span><span class="p">,</span> <span class="n">weight_decay</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span> <span class="c1"># optim.RMSprop</span>
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+ls2d package
+============
+
+Submodules
+----------
+
+ls2d.autoencoder module
+-----------------------
+
+.. automodule:: ls2d.autoencoder
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ls2d.autoencoder\_classes module
+--------------------------------
+
+.. automodule:: ls2d.autoencoder_classes
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ls2d.metrics module
+-------------------
+
+.. automodule:: ls2d.metrics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ls2d.pipeline module
+--------------------
+
+.. automodule:: ls2d.pipeline
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ls2d.preprocessing module
+-------------------------
+
+.. automodule:: ls2d.preprocessing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ls2d.settings module
+--------------------
+
+.. automodule:: ls2d.settings
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+ls2d.utils module
+-----------------
+
+.. automodule:: ls2d.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: ls2d
+   :members:
+   :undoc-members:
+   :show-inheritance:

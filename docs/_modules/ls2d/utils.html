@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ls2d.utils &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_examples/index.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../_apidoc/ls2d.html">ls2d package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+      <li>ls2d.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for ls2d.utils</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Generic</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Specific</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">PurePosixPath</span>
+
+<span class="c1"># Import json pickle</span>
+<span class="kn">import</span> <span class="nn">jsonpickle</span>
+<span class="kn">import</span> <span class="nn">jsonpickle.ext.numpy</span> <span class="k">as</span> <span class="nn">jsonpickle_numpy</span>
+
+<span class="c1"># Configure json pickle</span>
+<span class="n">jsonpickle_numpy</span><span class="o">.</span><span class="n">register_handlers</span><span class="p">()</span>
+
+<span class="c1"># ---------------------------------------------------</span>
+<span class="c1"># Dump pipelines to memory</span>
+<span class="c1"># ---------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">_dump_pickle</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method dumps a pickle&quot;&quot;&quot;</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;wb&quot;</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_dump_jsonpickle</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method dumps a pickle&quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+        <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">jsonpickle</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">outfile</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+
+<span class="c1"># ---------------------------------------------------</span>
+<span class="c1"># Load pipelines from memory</span>
+<span class="c1"># ---------------------------------------------------</span>
+<span class="k">def</span> <span class="nf">_load_pipeline</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method loads the pipeline&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_load_jsonpickle</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">suffix</span> <span class="o">==</span> <span class="s1">&#39;.p&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">_load_pickle</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_load_jsonpickle</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method loads a jsonpickle file&quot;&quot;&quot;</span>
+    <span class="c1"># Load json</span>
+    <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+        <span class="n">json_txt</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">json_file</span><span class="p">))</span>
+    <span class="c1"># Return pipeline</span>
+    <span class="k">return</span> <span class="n">jsonpickle</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">json_txt</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_load_pickle</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method loads a pickle file&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pickle</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="s2">&quot;rb&quot;</span><span class="p">))</span>
+
+
+<span class="k">def</span> <span class="nf">_load_json</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method loads a json file&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span> <span class="k">as</span> <span class="n">json_file</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">json_file</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+<span class="k">def</span> <span class="nf">_load_pandas</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method loads a csv file as dataframe&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+    <span class="k">return</span> <span class="kc">None</span>
+
+
+
+<span class="c1"># ----------------------------------------</span>
+<span class="c1"># Doesn&#39;t work add method dynamically.</span>
+<span class="c1"># ----------------------------------------</span>
+<span class="c1"># Librarie</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+
+<div class="viewcode-block" id="add_method"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.utils.add_method">[docs]</a><span class="k">def</span> <span class="nf">add_method</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+        <span class="nd">@wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">wrapper</span><span class="p">)</span>
+        <span class="c1"># Note we are not binding func, but wrapper</span>
+        <span class="c1"># which accepts self but does exactly the same</span>
+        <span class="c1"># as func. Returning func means func can still be used</span>
+        <span class="c1"># normally</span>
+        <span class="k">return</span> <span class="n">func</span>
+    <span class="k">return</span> <span class="n">decorator</span></div>
+
+
+
+<div class="viewcode-block" id="AttrDict"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.utils.AttrDict">[docs]</a><span class="k">class</span> <span class="nc">AttrDict</span><span class="p">(</span><span class="nb">dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Dictionary subclass whose entries can be accessed by attributes&quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">def</span> <span class="nf">from_nested_dict</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+            <span class="sd">&quot;&quot;&quot; Construct nested AttrDicts from nested dictionaries. &quot;&quot;&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">data</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">AttrDict</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">from_nested_dict</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+                                    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">data</span><span class="p">})</span>
+
+        <span class="nb">super</span><span class="p">(</span><span class="n">AttrDict</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">=</span> <span class="bp">self</span>
+
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">from_nested_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">[</span><span class="n">key</span><span class="p">])</span></div>
+
+
+<span class="c1"># ---------------------------------------------------------</span>
+<span class="c1"># Format cv_results_</span>
+<span class="c1"># ---------------------------------------------------------</span>
+<div class="viewcode-block" id="format_workbench"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.utils.format_workbench">[docs]</a><span class="k">def</span> <span class="nf">format_workbench</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{}):</span>
+    <span class="sd">&quot;&quot;&quot;This method...</span>
+
+<span class="sd">    .. note: Many things have been hardcoded to assume that</span>
+<span class="sd">             there is only one split where the train and the</span>
+<span class="sd">             test sets are equal. Based on that the test</span>
+<span class="sd">             information have been removed and the train</span>
+<span class="sd">             information renamed (train tag removed).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Number of splits</span>
+    <span class="n">n_splits</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span>
+        <span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;split&#39;</span><span class="p">)</span>
+    <span class="p">))</span>
+
+    <span class="c1"># Get info from config</span>
+    <span class="n">train_test_equal</span> <span class="o">=</span> \
+        <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;server&#39;</span><span class="p">,</span> <span class="p">{})</span> \
+              <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;train_test_equal&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Otherwise compute</span>
+    <span class="k">if</span> <span class="n">train_test_equal</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">train</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mean_train&#39;</span><span class="p">)]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+            <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mean_test&#39;</span><span class="p">)]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+        <span class="n">train_test_equal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">)</span>
+
+
+    <span class="c1"># --------------------</span>
+    <span class="c1"># Create info</span>
+    <span class="c1"># --------------------</span>
+    <span class="c1"># Information</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># --------------------</span>
+    <span class="c1"># Create info</span>
+    <span class="c1"># --------------------</span>
+    <span class="c1"># The aim is to keep only information such as estimator</span>
+    <span class="c1"># slug_short, slug_long, params, path, ... and others</span>
+    <span class="c1"># which have been set by the user.</span>
+    <span class="c1"># Filter out those columns starting with ...</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;param_&#39;</span><span class="p">)]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;rank_&#39;</span><span class="p">)]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mean_&#39;</span><span class="p">)]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;std_&#39;</span><span class="p">)]</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;split&#39;</span><span class="p">)]</span>
+
+    <span class="c1"># --------------------</span>
+    <span class="c1"># Create metrics</span>
+    <span class="c1"># --------------------</span>
+    <span class="c1"># .. note: If the train and the test are the same set, then</span>
+    <span class="c1">#          we can just keep one of them (e.g. mean_train)</span>
+    <span class="c1">#          otherwise keep both by including just (e.g. mean_).</span>
+    <span class="c1"># Get metric names</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span>
+        <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;mean_&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;std_&#39;</span><span class="p">)])</span>
+
+    <span class="c1"># Metrics</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+
+    <span class="c1"># Create metrics</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> \
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;mean_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39; ± &#39;</span> <span class="o">+</span> \
+            <span class="n">df</span><span class="p">[</span><span class="s1">&#39;std_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+    <span class="c1"># Equal train and test</span>
+    <span class="k">if</span> <span class="n">train_test_equal</span><span class="p">:</span>
+        <span class="c1"># Remove test columns</span>
+        <span class="n">metrics</span> <span class="o">=</span> \
+            <span class="n">metrics</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">metrics</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;test_&#39;</span><span class="p">)]</span>
+        <span class="c1"># Rename train columns</span>
+        <span class="n">metrics</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;train_&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span> \
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+
+    <span class="c1"># Sort</span>
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+
+    <span class="c1"># Format</span>
+    <span class="n">metrics</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">info</span><span class="p">,</span> <span class="n">metrics</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="format_pipeline"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.utils.format_pipeline">[docs]</a><span class="k">def</span> <span class="nf">format_pipeline</span><span class="p">(</span><span class="n">series</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method...</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Copy</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">series</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Keep columns starting with split</span>
+    <span class="c1">#aux = raw[raw.index.str.startswith(&#39;split&#39;)]</span>
+    <span class="n">aux</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="n">raw</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">&#39;^split[0-9]+_train&#39;</span><span class="p">)]</span>
+
+    <span class="c1"># Keep other to concatenate later</span>
+    <span class="c1">#raw = raw[~raw.index.isin(aux.index)]</span>
+
+    <span class="c1"># Columns and rows</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">aux</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
+    <span class="n">cols</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">aux</span><span class="o">.</span><span class="n">index</span><span class="p">])</span>
+
+    <span class="c1"># Create metrics</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">_</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">c</span><span class="p">)]</span>
+
+    <span class="c1"># Sort</span>
+    <span class="n">table</span><span class="p">[</span><span class="s1">&#39;slug_short&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">raw</span><span class="p">[</span><span class="s1">&#39;slug_short&#39;</span><span class="p">]</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="nb">sorted</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)]</span>
+
+    <span class="c1"># Format</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">table</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="format_demographics"><a class="viewcode-back" href="../../_apidoc/ls2d.html#ls2d.utils.format_demographics">[docs]</a><span class="k">def</span> <span class="nf">format_demographics</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">TITLES</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;This method...</span>
+
+<span class="sd">    Params</span>
+<span class="sd">    ------</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Copy</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Modify</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">set_names</span><span class="p">([</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;value&#39;</span><span class="p">],</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+    <span class="c1"># Add title</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">column</span><span class="o">=</span><span class="s1">&#39;title&#39;</span><span class="p">,</span>
+        <span class="n">value</span><span class="o">=</span><span class="n">info</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">TITLES</span><span class="p">))</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">title</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span> \
+        <span class="n">info</span><span class="o">.</span><span class="n">name</span> \
+            <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">title</span><span class="p">()</span> \
+            <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">),</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Alternate column titles</span>
+    <span class="n">idxfmt</span> <span class="o">=</span> <span class="n">info</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">info</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">idxfmt</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+
+    <span class="c1"># Set column names</span>
+    <span class="n">info</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Missing&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Overall&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Not Selected&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;Selected&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;P-value&#39;</span>
+    <span class="p">]</span>
+    <span class="c1"># Return</span>
+    <span class="k">return</span> <span class="n">info</span></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
