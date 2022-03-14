@@ -8,3 +8,4 @@ tableone
 jsonpickle
 torch
 skorch
+shapely

@@ -7,11 +7,6 @@
 ###############################################################################
 
 
-# Import default samplers from imblearn
-from imblearn.over_sampling import SMOTE
-from imblearn.under_sampling import RandomUnderSampler
-from imblearn.over_sampling import RandomOverSampler
-
 # Import scikits preprocessing
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.preprocessing import StandardScaler
@@ -25,6 +20,11 @@ from sklearn.ensemble import IsolationForest
 
 # Import imputers
 from sklearn.impute import SimpleImputer
+
+# Import default samplers from imblearn
+#from imblearn.over_sampling import SMOTE
+#from imblearn.under_sampling import RandomUnderSampler
+#from imblearn.over_sampling import RandomOverSampler
 
 # Import model selection
 from sklearn.model_selection import StratifiedKFold
@@ -57,10 +57,10 @@ from sklearn.manifold import LocallyLinearEmbedding
 from sklearn.metrics import make_scorer
 
 # XGboost
-import xgboost as xgb
+#import xgboost as xgb
 
 # Lightbm
-import lightgbm as lgbm
+#import lightgbm as lgbm
 
 # Torch
 import torch
@@ -142,9 +142,9 @@ _DEFAULT_IMPUTERS = {
 
 # Default list of samplers.
 _DEFAULT_SAMPLERS = {
-    'randomu': RandomUnderSampler(random_state=42),
-    'randomo': RandomOverSampler(random_state=42),
-    'smote': SMOTE(k_neighbors=3),
+    #'randomu': RandomUnderSampler(random_state=42),
+    #'randomo': RandomOverSampler(random_state=42),
+    #'smote': SMOTE(k_neighbors=3),
 }
 
 # Default list of scalers.
@@ -174,9 +174,9 @@ _DEFAULT_ESTIMATORS = {
     'ann': MLPClassifier(),
     'llr': LogisticRegression(),
     'etc': ExtraTreesClassifier(),
-    'xgb': xgb.XGBClassifier(),
-    'lgbm': lgbm.LGBMClassifier(),
-    # 'keras': KerasClassifier(build_fn=build_keras_cnn)
+    #'xgb': xgb.XGBClassifier(),
+    #'lgbm': lgbm.LGBMClassifier(),
+    #'keras': KerasClassifier(build_fn=build_keras_cnn)
 
     'pca': PCA(),
     'nmf': NMF(),

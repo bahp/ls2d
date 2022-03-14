@@ -1,17 +1,41 @@
-# Datasets
+# -------------------------------------------------
+# Own ammendments
+# -------------------------------------------------
+# MAC hidden files
+**/*.DS_Store
+
+# Temporal files
+**/~*
+
+# Log files
+**/*.log
+
+# Any data files
+**/.csv
+**/.xlsx
+**/.xls
+
+# Exclude certain datasets
 datasets/dengue/*.csv
 datasets/covid19/*.csv
 datasets/fungal/*.csv
 datasets/sepsis/*.csv
 
-# Outputs
+# Exclude other elements
 outputs/
 scripts/objects/
 tests/
 docs/videos/
 
-#
-*/.DS_Store
+
+# Sphinx documentation
+docs/build
+docs/source/_examples/*
+docs/source/_apidoc/*
+
+# PyCharm folder
+.idea
+# -------------------------------------------------
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
