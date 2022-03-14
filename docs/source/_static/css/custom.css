@@ -1,0 +1,139 @@
+/**
+	Define global variables
+ */
+body {
+	/*
+	--light: #B3CDA7; /*c9d8c2
+	--dark: #7BB072; /* 7bb062
+	*/
+	/*
+	--light: #C9D8C2;
+	--dark: #7BB062;
+	--medium: #C1E1C1;
+	 */
+	--c1: #e8f4ea; /* Light */
+	--c2: #e0f0e3;
+	--c3: #d2e7d6;
+	--c4: #c8e1cc;
+	--c5: #b8d8be; /* Dark */
+	--c6: #7bb062;
+}
+
+/**
+    Basic RTD color edits
+ */
+.wy-side-nav-search {
+    background-color: var(--c5);
+}
+.wy-side-nav-search input[type=text] {
+    border-color: var(--c6);
+}
+.wy-nav-top {
+    background: var(--c1);
+}
+.caption-text {
+    color: var(--c5);
+}
+.wy-alert-title {
+	background: var(--c1);
+	color: var(--c5);
+}
+.rst-content .note {
+	background: var(--c1);
+}
+.rst-content .note .admonition-title {
+	background: var(--c5);
+	color: #fff;
+}
+a {
+    color: var(--c6);
+}
+
+/**
+    Other basic edits
+ */
+p {
+	text-align: justify;
+  	text-justify: inter-word;
+}
+
+
+/**
+  Responsive video
+ */
+.video_wrapper {
+    position: relative;
+    padding-bottom: 56.25%;
+    /* 56.25% for an aspect ratio of 16:9;
+       100% for an aspect ratio of 1:1;*/
+}
+iframe{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+/**
+    Code changes
+ */
+/**
+code.literal {
+    color: #404040 !important;
+    background-color: #fbfbfb !important;
+}**/
+
+/**
+  Buttons
+ */
+.btn-github {
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+	background-color:#ffffff;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#666666;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffffff;
+}
+.btn-github:hover {
+	background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+	background-color:#f6f6f6
+}
+.btn-github:active {
+	position:relative;
+	/*top:1px;*/
+}
+
+.btn-heroku {
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:linear-gradient(to bottom, #ffffff 5%, #f6f6f6 100%);
+	background-color:#ffffff;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	cursor:pointer;
+	color:#7057C2;
+	font-family:Arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffffff;
+}
+.btn-heroku:hover {
+	background:linear-gradient(to bottom, #f6f6f6 5%, #ffffff 100%);
+	background-color:#f6f6f6;
+}
+.btn-heroku:active {
+	position:relative;
+	top:1px;
+}
+

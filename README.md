@@ -202,6 +202,15 @@ $ heroku container:release web
 For more information, check the heroku official page 
 [here](https://devcenter.heroku.com/categories/deploying-with-docker).
 
+### Generate docs
+
+Go to the docs folder and run
+
+$ make github
+
+This will clean the folder and thengenerate the documentation and copy it into gh-pages folder
+
+
 <!-- ----------------------- -->
 <!--         LICENSE         -->
 <!-- ----------------------- -->
