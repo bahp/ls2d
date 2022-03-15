@@ -1,6 +1,6 @@
 """
-Compute GMM metrics
-=========================
+Compute metrics
+===============
 
 Sample file to test metrics.
 
