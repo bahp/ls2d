@@ -55,6 +55,13 @@ napoleon_use_param = False
 napoleon_use_ivar = True
 
 # ------------------
+# Plotly outcomes
+# ------------------
+# Include plotly
+import plotly.io as pio
+pio.renderers.default = 'sphinx_gallery'
+
+# ------------------
 # Sphinx gallery
 # ------------------
 # Information about the sphinx gallery configuration
@@ -104,8 +111,6 @@ html_static_path = ['_static']
 
 # Add custom css file.
 html_css_files = ['css/custom.css']
-
-
 
 # Substitute project name into .rst files when |project_name| is used
 rst_epilog = '.. |project_name| replace:: %s' % project
