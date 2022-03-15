@@ -1,6 +1,6 @@
 """
-Create pipeline manually
-========================
+Create pipeline
+===============
 
 Sample file to create a pipeline.
 

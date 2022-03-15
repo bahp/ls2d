@@ -38,7 +38,7 @@ Step by step tutorial.
 .. only:: html
 
  .. figure:: /_examples/images/thumb/sphx_glr_plot_create_pipeline_v1_thumb.png
-     :alt: Create pipeline manually
+     :alt: Create pipeline
 
      :ref:`sphx_glr__examples_plot_create_pipeline_v1.py`
 

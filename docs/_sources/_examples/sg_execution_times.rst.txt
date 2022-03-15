@@ -5,12 +5,12 @@
 
 Computation times
 =================
-**00:01.023** total execution time for **_examples** files:
+**00:01.504** total execution time for **_examples** files:
 
 +---------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_plot_check_metrics.py` (``plot_check_metrics.py``)           | 00:01.023 | 0.0 MB |
+| :ref:`sphx_glr__examples_plot_create_pipeline_v1.py` (``plot_create_pipeline_v1.py``) | 00:01.504 | 0.0 MB |
 +---------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr__examples_plot_create_pipeline_v1.py` (``plot_create_pipeline_v1.py``) | 00:00.000 | 0.0 MB |
+| :ref:`sphx_glr__examples_plot_check_metrics.py` (``plot_check_metrics.py``)           | 00:00.000 | 0.0 MB |
 +---------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr__examples_plot_guide_01.py` (``plot_guide_01.py``)                     | 00:00.000 | 0.0 MB |
 +---------------------------------------------------------------------------------------+-----------+--------+
