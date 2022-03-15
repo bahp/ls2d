@@ -12,6 +12,48 @@ Step by step tutorial.
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="Sample file to test metrics.">
+
+.. only:: html
+
+ .. figure:: /_examples/images/thumb/sphx_glr_plot_check_metrics_thumb.png
+     :alt: Compute GMM metrics
+
+     :ref:`sphx_glr__examples_plot_check_metrics.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/plot_check_metrics
+
+.. raw:: html
+
+    <div class="sphx-glr-thumbcontainer" tooltip="Sample file to create a pipeline.">
+
+.. only:: html
+
+ .. figure:: /_examples/images/thumb/sphx_glr_plot_create_pipeline_v1_thumb.png
+     :alt: Create pipeline manually
+
+     :ref:`sphx_glr__examples_plot_create_pipeline_v1.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /_examples/plot_create_pipeline_v1
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="Example with basic functionality.">
 
 .. only:: html

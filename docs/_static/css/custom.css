@@ -2,21 +2,12 @@
 	Define global variables
  */
 body {
-	/*
-	--light: #B3CDA7; /*c9d8c2
-	--dark: #7BB072; /* 7bb062
-	*/
-	/*
-	--light: #C9D8C2;
-	--dark: #7BB062;
-	--medium: #C1E1C1;
-	 */
 	--c1: #e8f4ea; /* Light */
 	--c2: #e0f0e3;
 	--c3: #d2e7d6;
 	--c4: #c8e1cc;
-	--c5: #b8d8be; /* Dark */
-	--c6: #7bb062;
+	--c5: #b8d8be;
+	--c6: #7bb062; /* Dark */
 }
 
 /**
@@ -49,6 +40,9 @@ a {
     color: var(--c6);
 }
 
+/**
+    Other basic edits
+ */
 p {
 	text-align: justify;
   	text-justify: inter-word;

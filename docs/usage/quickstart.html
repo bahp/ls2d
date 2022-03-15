@@ -46,7 +46,11 @@
               <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#perform-training">Perform training</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-the-app">Running the app</a></li>
+</ul>
+</li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
 <ul>
@@ -83,6 +87,34 @@
              
   <section id="quickstart">
 <h1>Quickstart<a class="headerlink" href="#quickstart" title="Permalink to this headline"></a></h1>
+<section id="perform-training">
+<h2>Perform training<a class="headerlink" href="#perform-training" title="Permalink to this headline"></a></h2>
+<p>Lets create a yaml configuration file according to your needs, for more information see the
+example settings.iris.yaml. This file allows you to define the path where the data is stored,
+the path where the workbench should be saved, to select which features should be used for
+training, which targets should be used to compute the performance metrics and last but not
+least, the methods to create the embeddings and the hyperparameters to consider during the
+grid search.</p>
+<p>Once the configuration is completed, run the search script.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python search.py --yaml &lt;yaml_file&gt;
+</pre></div>
+</div>
+<p>This script will create a new workbench within the output folder containing (i) the generated
+pipelines saved as pickle (.p) files, (ii) all the metrics obtained aggregated in the ‘results.csv’
+file and the (iii) settings configuration.</p>
+</section>
+<section id="running-the-app">
+<h2>Running the app<a class="headerlink" href="#running-the-app" title="Permalink to this headline"></a></h2>
+<p>Run the app using the script at <a class="reference external" href="https://localhost:5000">https://localhost:5000</a> :</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python server
+</pre></div>
+</div>
+<p>Run the app using docker at <a class="reference external" href="https://localhost:8000">https://localhost:8000</a> :</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>docker-compose build <span class="c1"># Build</span>
+<span class="gp">$ </span>docker-compose up    <span class="c1"># Run</span>
+</pre></div>
+</div>
+</section>
 </section>
 
 

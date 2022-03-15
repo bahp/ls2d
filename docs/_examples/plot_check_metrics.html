@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compute GMM metrics &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Create pipeline manually" href="plot_create_pipeline_v1.html" />
+    <link rel="prev" title="Tutorial" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Tutorial</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Compute GMM metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_create_pipeline_v1.html">Create pipeline manually</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_guide_01.html">Guide 01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_guide_02.html">Guide 02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="plot_guide_03.html">Guide 02</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_apidoc/ls2d.html">ls2d package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="index.html">Tutorial</a> &raquo;</li>
+      <li>Compute GMM metrics</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_examples/plot_check_metrics.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-plot-check-metrics-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="compute-gmm-metrics">
+<span id="sphx-glr-examples-plot-check-metrics-py"></span><h1>Compute GMM metrics<a class="headerlink" href="#compute-gmm-metrics" title="Permalink to this headline"></a></h1>
+<p>Sample file to test metrics.</p>
+<img src="../_images/sphx_glr_plot_check_metrics_001.png" srcset="../_images/sphx_glr_plot_check_metrics_001.png" alt="plot check metrics" class = "sphx-glr-single-img"/><p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>--------------------------------------------------
+Scores
+--------------------------------------------------
+
+Areas:
+[[25.05799756  0.          0.          0.          0.        ]
+ [ 0.         27.02559942  0.          0.          0.        ]
+ [ 0.          0.         23.44618116  0.          0.        ]
+ [ 0.          0.          0.         23.10878097  0.        ]
+ [ 0.          0.          0.          0.         21.71335598]]
+
+Ratios:
+[[1. 0. 0. 0. 0.]
+ [0. 1. 0. 0. 0.]
+ [0. 0. 1. 0. 0.]
+ [0. 0. 0. 1. 0.]
+ [0. 0. 0. 0. 1.]]
+
+Ratio (sum v1):
+0.0
+
+Ratio (sum v2):
+0.0
+
+Scores:
+gmm_intersection_area           0.000000
+gmm_intersection_area_norm      0.000000
+silhouette                      0.659055
+calinski_h                    914.697587
+davies_bouldin                  0.699378
+homogeneity                     1.000000
+completeness                    1.000000
+v_measure                       1.000000
+adj_rs                          1.000000
+adj_mis                         1.000000
+dtype: float64
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 13</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos"> 14</span>
+<span class="linenos"> 15</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 16</span>     <span class="c1"># Libraries</span>
+<span class="linenos"> 17</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 18</span>     <span class="c1"># Generic libraries</span>
+<span class="linenos"> 19</span>     <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 20</span>     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 21</span>     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos"> 22</span>
+<span class="linenos"> 23</span>     <span class="c1"># Basic functions in sklearn</span>
+<span class="linenos"> 24</span>     <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">datasets</span>
+<span class="linenos"> 25</span>     <span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">metrics</span>
+<span class="linenos"> 26</span>     <span class="kn">from</span> <span class="nn">sklearn.datasets</span> <span class="kn">import</span> <span class="n">make_blobs</span>
+<span class="linenos"> 27</span>     <span class="kn">from</span> <span class="nn">sklearn.decomposition</span> <span class="kn">import</span> <span class="n">PCA</span>
+<span class="linenos"> 28</span>
+<span class="linenos"> 29</span>     <span class="c1"># Own functions</span>
+<span class="linenos"> 30</span>     <span class="kn">from</span> <span class="nn">ls2d.utils</span> <span class="kn">import</span> <span class="n">_load_pickle</span>
+<span class="linenos"> 31</span>     <span class="kn">from</span> <span class="nn">ls2d.metrics</span> <span class="kn">import</span> <span class="n">gmm_intersection_matrix</span>
+<span class="linenos"> 32</span>     <span class="kn">from</span> <span class="nn">ls2d.metrics</span> <span class="kn">import</span> <span class="n">gmm_ratio_score</span>
+<span class="linenos"> 33</span>     <span class="kn">from</span> <span class="nn">ls2d.metrics</span> <span class="kn">import</span> <span class="n">gmm_intersection_area</span>
+<span class="linenos"> 34</span>     <span class="kn">from</span> <span class="nn">ls2d.metrics</span> <span class="kn">import</span> <span class="n">create_ellipse_shapely</span>
+<span class="linenos"> 35</span>     <span class="kn">from</span> <span class="nn">ls2d.metrics</span> <span class="kn">import</span> <span class="n">create_ellipse_mpl</span>
+<span class="linenos"> 36</span>
+<span class="linenos"> 37</span>
+<span class="linenos"> 38</span>     <span class="k">def</span> <span class="nf">load_iris_embeddings_pca</span><span class="p">():</span>
+<span class="linenos"> 39</span>         <span class="sd">&quot;&quot;&quot;Compute iris PCA embeddings&quot;&quot;&quot;</span>
+<span class="linenos"> 40</span>         <span class="c1"># Load iris dataset</span>
+<span class="linenos"> 41</span>         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">iris</span> <span class="o">=</span> <span class="n">datasets</span><span class="o">.</span><span class="n">load_iris</span><span class="p">(</span><span class="n">return_X_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos"> 42</span>         <span class="n">X</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos"> 43</span>         <span class="n">y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="linenos"> 44</span>
+<span class="linenos"> 45</span>         <span class="c1"># Compute transform</span>
+<span class="linenos"> 46</span>         <span class="n">y_pred</span> <span class="o">=</span> <span class="n">PCA</span><span class="p">(</span><span class="n">n_components</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="linenos"> 47</span>
+<span class="linenos"> 48</span>         <span class="c1"># Train pca and transform</span>
+<span class="linenos"> 49</span>         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span>
+<span class="linenos"> 50</span>
+<span class="linenos"> 51</span>
+<span class="linenos"> 52</span>     <span class="k">def</span> <span class="nf">load_blob_embeddings</span><span class="p">():</span>
+<span class="linenos"> 53</span>         <span class="sd">&quot;&quot;&quot;Create 2D embeddings&quot;&quot;&quot;</span>
+<span class="linenos"> 54</span>         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">make_blobs</span><span class="p">(</span><span class="n">n_samples</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">centers</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="linenos"> 55</span>                           <span class="n">cluster_std</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+<span class="linenos"> 56</span>                           <span class="c1"># centers=[[2,2], [1, 10], [10, 1]],</span>
+<span class="linenos"> 57</span>                           <span class="c1"># cluster_std=[[1,1], [2,2], [0.5,0.5]],</span>
+<span class="linenos"> 58</span>                           <span class="n">n_features</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">170</span><span class="p">)</span>
+<span class="linenos"> 59</span>         <span class="k">return</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">X</span>
+<span class="linenos"> 60</span>
+<span class="linenos"> 61</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 62</span>     <span class="c1"># Data</span>
+<span class="linenos"> 63</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 64</span>     <span class="c1"># Create iris samle</span>
+<span class="linenos"> 65</span>     <span class="c1">#X, y, y_pred = load_iris_embeddings_pca()</span>
+<span class="linenos"> 66</span>     <span class="c1"># Create blob sample</span>
+<span class="linenos"> 67</span>     <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span> <span class="o">=</span> <span class="n">load_blob_embeddings</span><span class="p">()</span>
+<span class="linenos"> 68</span>
+<span class="linenos"> 69</span>     <span class="c1"># Number of clusters</span>
+<span class="linenos"> 70</span>     <span class="n">n_clusters</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">))</span>
+<span class="linenos"> 71</span>
+<span class="linenos"> 72</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 73</span>     <span class="c1"># Metrics</span>
+<span class="linenos"> 74</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 75</span>     <span class="sd">&quot;&quot;&quot;</span>
+<span class="linenos"> 76</span><span class="sd">     .. note: Overall it seems that the gmm_ratio_score is not very useful.</span>
+<span class="linenos"> 77</span><span class="sd">              Note that minimising the ratios is the same as minimising the</span>
+<span class="linenos"> 78</span><span class="sd">              intersection areas. The gmm_ratios matrix might be useful if</span>
+<span class="linenos"> 79</span><span class="sd">              some classes are more important than others.</span>
+<span class="linenos"> 80</span><span class="sd">     &quot;&quot;&quot;</span>
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span>     <span class="c1"># Intersection are matrix</span>
+<span class="linenos"> 83</span>     <span class="n">gmm_matrix</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">gmms</span> <span class="o">=</span> \
+<span class="linenos"> 84</span>         <span class="n">gmm_intersection_matrix</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">include_all</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos"> 85</span>     <span class="c1"># Intersection ratios</span>
+<span class="linenos"> 86</span>     <span class="n">gmm_ratios</span> <span class="o">=</span> <span class="n">gmm_matrix</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">gmm_matrix</span><span class="p">)</span>
+<span class="linenos"> 87</span>     <span class="c1"># Intersection normalization</span>
+<span class="linenos"> 88</span>     <span class="n">ratio_sum_v1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">gmm_ratios</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">trace</span><span class="p">(</span><span class="n">gmm_ratios</span><span class="p">))</span>
+<span class="linenos"> 89</span>     <span class="c1"># ratio_avg = ratio_sum /</span>
+<span class="linenos"> 90</span>     <span class="n">ratio_sum_v2</span> <span class="o">=</span> <span class="n">gmm_ratio_score</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;sum&#39;</span><span class="p">)</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span>     <span class="c1"># Show</span>
+<span class="linenos"> 93</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="se">\n</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;Scores&#39;</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="mi">50</span><span class="p">))</span>
+<span class="linenos"> 94</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Areas:&quot;</span><span class="p">)</span>
+<span class="linenos"> 95</span>     <span class="nb">print</span><span class="p">(</span><span class="n">gmm_matrix</span><span class="p">)</span>
+<span class="linenos"> 96</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Ratios:&quot;</span><span class="p">)</span>
+<span class="linenos"> 97</span>     <span class="nb">print</span><span class="p">(</span><span class="n">gmm_ratios</span><span class="p">)</span>
+<span class="linenos"> 98</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Ratio (sum v1):&quot;</span><span class="p">)</span>
+<span class="linenos"> 99</span>     <span class="nb">print</span><span class="p">(</span><span class="n">ratio_sum_v1</span><span class="p">)</span>
+<span class="linenos">100</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Ratio (sum v2):&quot;</span><span class="p">)</span>
+<span class="linenos">101</span>     <span class="nb">print</span><span class="p">(</span><span class="n">ratio_sum_v2</span><span class="p">)</span>
+<span class="linenos">102</span>
+<span class="linenos">103</span>     <span class="c1"># Compute scores</span>
+<span class="linenos">104</span>     <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;float&#39;</span><span class="p">)</span>
+<span class="linenos">105</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;gmm_intersection_area&#39;</span><span class="p">]</span> <span class="o">=</span> \
+<span class="linenos">106</span>         <span class="n">gmm_intersection_area</span><span class="p">(</span><span class="n">gmm_matrix</span><span class="o">=</span><span class="n">gmm_matrix</span><span class="p">)</span>
+<span class="linenos">107</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;gmm_intersection_area_norm&#39;</span><span class="p">]</span> <span class="o">=</span> \
+<span class="linenos">108</span>         <span class="n">gmm_intersection_area</span><span class="p">(</span><span class="n">gmm_matrix</span><span class="o">=</span><span class="n">gmm_matrix</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">109</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;silhouette&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">silhouette_score</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s2">&quot;sqeuclidean&quot;</span><span class="p">)</span>
+<span class="linenos">110</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;calinski_h&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">calinski_harabasz_score</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="linenos">111</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;davies_bouldin&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">davies_bouldin_score</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+<span class="linenos">112</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;homogeneity&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">homogeneity_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>      <span class="c1"># useless</span>
+<span class="linenos">113</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;completeness&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">completeness_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>    <span class="c1"># useless</span>
+<span class="linenos">114</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;v_measure&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">v_measure_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>          <span class="c1"># useless</span>
+<span class="linenos">115</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;adj_rs&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">adjusted_rand_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>         <span class="c1"># useless</span>
+<span class="linenos">116</span>     <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;adj_mis&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">adjusted_mutual_info_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="c1"># useless</span>
+<span class="linenos">117</span>
+<span class="linenos">118</span>     <span class="c1"># Show</span>
+<span class="linenos">119</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Scores:&quot;</span><span class="p">)</span>
+<span class="linenos">120</span>     <span class="nb">print</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+<span class="linenos">121</span>
+<span class="linenos">122</span>     <span class="c1"># ------------------</span>
+<span class="linenos">123</span>     <span class="c1"># Show</span>
+<span class="linenos">124</span>     <span class="c1"># ------------------</span>
+<span class="linenos">125</span>     <span class="c1"># Libraries</span>
+<span class="linenos">126</span>     <span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="linenos">127</span>
+<span class="linenos">128</span>     <span class="c1"># Construct variables</span>
+<span class="linenos">129</span>     <span class="n">means</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
+<span class="linenos">130</span>         <span class="n">gmm</span><span class="o">.</span><span class="n">means_</span> <span class="k">for</span> <span class="n">gmm</span> <span class="ow">in</span> <span class="n">gmms</span>
+<span class="linenos">131</span>     <span class="p">])</span>
+<span class="linenos">132</span>     <span class="n">covs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span>
+<span class="linenos">133</span>         <span class="n">gmm</span><span class="o">.</span><span class="n">covariances_</span> <span class="k">for</span> <span class="n">gmm</span> <span class="ow">in</span> <span class="n">gmms</span>
+<span class="linenos">134</span>     <span class="p">])</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span>     <span class="c1"># Create ellipses (shapely)</span>
+<span class="linenos">137</span>     <span class="n">ells_shp</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">138</span>         <span class="n">create_ellipse_shapely</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="linenos">139</span>         <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">covs</span><span class="p">)]</span>
+<span class="linenos">140</span>
+<span class="linenos">141</span>     <span class="c1"># Create ellipses (matplotlib)</span>
+<span class="linenos">142</span>     <span class="n">ells_mpl</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">143</span>         <span class="n">create_ellipse_mpl</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+<span class="linenos">144</span>         <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">covs</span><span class="p">)]</span>
+<span class="linenos">145</span>
+<span class="linenos">146</span>     <span class="c1"># Create figure</span>
+<span class="linenos">147</span>     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="linenos">148</span>     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">y_pred</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">y</span><span class="p">)</span>
+<span class="linenos">149</span>
+<span class="linenos">150</span>     <span class="c1"># Display ellipses (shapely)</span>
+<span class="linenos">151</span>     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ells_shp</span><span class="p">:</span>
+<span class="linenos">152</span>         <span class="n">verts1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">coords</span><span class="o">.</span><span class="n">xy</span><span class="p">)</span>
+<span class="linenos">153</span>         <span class="n">patch1</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">verts1</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="linenos">154</span>         <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">patch1</span><span class="p">)</span>
+<span class="linenos">155</span>
+<span class="linenos">156</span>     <span class="c1"># Display ellipses (matplotlib)</span>
+<span class="linenos">157</span>     <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">ells_mpl</span><span class="p">:</span>
+<span class="linenos">158</span>         <span class="n">ax</span><span class="o">.</span><span class="n">add_artist</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+<span class="linenos">159</span>
+<span class="linenos">160</span>     <span class="c1"># Show</span>
+<span class="linenos">161</span>     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  1.057 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-plot-check-metrics-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/1e00cf9047ca6a4f1c1e38cbd9f3b8e2/plot_check_metrics.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_check_metrics.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/67f21596dff1c3e16af9505b5a264115/plot_check_metrics.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_check_metrics.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Tutorial" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="plot_create_pipeline_v1.html" class="btn btn-neutral float-right" title="Create pipeline manually" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

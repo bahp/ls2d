@@ -45,7 +45,13 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
 <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#set-up-the-repository-locally">Set up the repository locally</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installing-your-pkg-in-editable-mode">Installing your pkg in editable mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generating-documentation">Generating documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#running-tests">Running tests</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart.html">Quickstart</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
@@ -83,6 +89,99 @@
              
   <section id="installation">
 <h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline"></a></h1>
+<section id="set-up-the-repository-locally">
+<h2>Set up the repository locally<a class="headerlink" href="#set-up-the-repository-locally" title="Permalink to this headline"></a></h2>
+<p>Clone each branch in a different folder:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>git clone -b main https://github.com/bahp/fyp2020-bahp.git
+<span class="gp">$ </span>mv &lt;repository_name&gt; main
+<span class="gp">$ </span>git clone -b gh-pages https://github.com/bahp/fyp2020-bahp.gi
+<span class="gp">$ </span>mv &lt;repository_name&gt; gh-pages
+</pre></div>
+</div>
+<p>The main branch contains all the source files and the gh-pages will be
+just used to host the documentation in html. Brief summary of the
+contents below:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">gh-pages</span>
+<span class="go">    |- docs</span>
+<span class="go">        - documentation</span>
+<span class="go">main</span>
+<span class="go">    |- docs</span>
+<span class="go">        |- build</span>
+<span class="go">        |- source</span>
+<span class="go">            |- conf.py    # config - sphinx documentation</span>
+<span class="go">            |- index.rst  # index - sphinx documentation</span>
+<span class="go">        make.bat</span>
+<span class="go">        Makefile          # run to create documentation</span>
+<span class="go">    |- examples</span>
+<span class="go">    |- pkgname            # your library</span>
+<span class="go">        |- core           # contains your pkg core classes</span>
+<span class="go">        |- tests          # contains your pkg tests - pytest</span>
+<span class="go">        |- utils          # contains your pkg utils</span>
+</pre></div>
+</div>
+</section>
+<section id="installing-your-pkg-in-editable-mode">
+<h2>Installing your pkg in editable mode<a class="headerlink" href="#installing-your-pkg-in-editable-mode" title="Permalink to this headline"></a></h2>
+<p>It is recommended to install the package in editable (develop) mode. It puts
+a link (actually *.pth files) into the python installation to your code,
+so that your package is installed, but any changes will immediately take effect.
+This way all your can import your package the usual way.</p>
+<p>First, ensure that the repository is in your local machine (we just did it
+on the previous section)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/&lt;</span><span class="n">username</span><span class="o">&gt;/&lt;</span><span class="n">reponame</span><span class="o">&gt;.</span><span class="n">git</span>
+</pre></div>
+</div>
+<p>Let’s install the requirements. Move to the folder where requirements.txt is
+and install all the required libraries as shown in the statements below. In
+the scenario of missing libraries, just install them using pip.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">-</span><span class="n">r</span> <span class="n">requirements</span><span class="o">.</span><span class="n">txt</span>   <span class="c1"># Install al the requirements</span>
+</pre></div>
+</div>
+<p>Move to the directory where the setup.py is. Please note that although <code class="docutils literal notranslate"><span class="pre">setup.py</span></code> is
+a python script, it is not recommended to install it executing that file with python
+directly. Instead lets use the package manager pip.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">pip</span> <span class="n">install</span> <span class="o">--</span><span class="n">editable</span>  <span class="o">.</span>         <span class="c1"># Install in editable mode</span>
+</pre></div>
+</div>
+</section>
+<section id="generating-documentation">
+<h2>Generating documentation<a class="headerlink" href="#generating-documentation" title="Permalink to this headline"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>To generate autodocs automatically look at sphinx-napoleon and sphinx-autodocs.
+In general the numpy documentation style is used thorough the code.</p>
+</div>
+<p>Let’s use Sphinx to generate the documentation. First, you will need to install sphinx,
+sphinx-gallery, sphinx-std-theme and matplotlib. Note that they might have been already
+installed through the <code class="docutils literal notranslate"><span class="pre">requirements.txt</span></code>.</p>
+<p>Let’s install the required libraries.</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install sphinx            # Install sphinx</span>
+<span class="go">python -m pip install sphinx-gallery    # Install sphinx-gallery for examples</span>
+<span class="go">python -m pip install sphinx-std-theme  # Install sphinx-std-theme CSS</span>
+<span class="go">python -m pip install matplotlib        # Install matplotlib for plot examples</span>
+</pre></div>
+</div>
+<p>Then go to the docs folder within main and run:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make github</span>
+</pre></div>
+</div>
+<p>Note that make github is defined within the Makefile and it is equivalent to:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">make clean html</span>
+<span class="go">cp -a _build/html/. ../../gh-pages/docs</span>
+</pre></div>
+</div>
+<p>These commands first generate the sphinx documentation in html and then copies
+the html folder into the gh-pages branch. You can see how the documentation
+looks like locally by opening the gh-pages/docs/index.html file.</p>
+</section>
+<section id="running-tests">
+<h2>Running tests<a class="headerlink" href="#running-tests" title="Permalink to this headline"></a></h2>
+<p>Just go to the main folder and run:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span>
+</pre></div>
+</div>
+<p>Read more about <a class="reference external" href="https://docs.pytest.org/en/stable/">pytest</a></p>
+</section>
 </section>
 
 

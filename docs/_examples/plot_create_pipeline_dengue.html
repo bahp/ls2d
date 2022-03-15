@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create pipeline &mdash; ls2d 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-binder.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-dataframe.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/sg_gallery-rendered-html.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/custom.css" type="text/css" />
+    <link rel="shortcut icon" href="../_static/logo-ls2d-icon.png"/>
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> ls2d
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Tutorial</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../usage/installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage/quickstart.html">Quickstart</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Example Galleries</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../_apidoc/ls2d.html">ls2d package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">ls2d</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Create pipeline</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/_examples/plot_create_pipeline_dengue.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <div class="sphx-glr-download-link-note admonition note">
+<p class="admonition-title">Note</p>
+<p>Click <a class="reference internal" href="#sphx-glr-download-examples-plot-create-pipeline-dengue-py"><span class="std std-ref">here</span></a>
+to download the full example code</p>
+</div>
+<section class="sphx-glr-example-title" id="create-pipeline">
+<span id="sphx-glr-examples-plot-create-pipeline-dengue-py"></span><h1>Create pipeline<a class="headerlink" href="#create-pipeline" title="Permalink to this headline"></a></h1>
+<p>Sample file to create a pipeline.</p>
+<ul class="sphx-glr-horizontal">
+<li><img src="../_images/sphx_glr_plot_create_pipeline_dengue_001.png" srcset="../_images/sphx_glr_plot_create_pipeline_dengue_001.png" alt="plot create pipeline dengue" class = "sphx-glr-multi-img"/></li>
+<li><img src="../_images/sphx_glr_plot_create_pipeline_dengue_002.png" srcset="../_images/sphx_glr_plot_create_pipeline_dengue_002.png" alt="plot create pipeline dengue" class = "sphx-glr-multi-img"/></li>
+</ul>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>C:\Users\kelda\Desktop\repositories\virtualenvs\venv-py39-oss1017\lib\site-packages\sphinx_gallery\gen_rst.py:516: DtypeWarning:
+
+Columns (3,5,7,9,12,14,15,16,17,18,19,20,21,23,24,25,26,27,28,29,30,33,34,37,40,41,42,43,44,48,49,50,51,52,53,54,55,56,57,61,62,64,66,67,68,69,70,73,74,75,77,79,80,81,82,83,84,85,87,88,89,90,95,96,97,99,101,102,103,104,107,108,110,113,115,117,119,120,121,122,125,126,127,129,130,132,133,134,135,136,137,143,152,153,155,156,157,159,161,162,163,164,165,166,167,168,174,175,176,177,178,182,184,193,197,198,199,200,202,203,207,208,209,213,214,215,218,219,220,221,224,225,226,227,229,232,233,234,235,236,237,238,240,241,242,244,247,250,253,254,255,259,261,262,263,264,265,266,267,268,270,271,272,273,274,275,276,277,278,279,280,281,283,284,285,286,287,288,289,290,291,292,293,294,295,296,297,301,302,303,304,305,307,308,309,310,311,312,313,314,315,317,318,319,320,324,325,326,327,328,330,333,334,335,336,337,338,339,340,343,344,345,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362,363,364,365,366,367,368,369,370,371,372,373,374,375,376,377,378,379,381,382,384,385,386,391,392,393,395,398,403,404,407,408,409,410,411,412,413,414,415,416,417,418,419,424) have mixed types.Specify dtype option on import or set low_memory=False.
+
+
+Data:
+       Unnamed: 0        study_no        date abdominal_pain abdominal_tenderness abscess  ...  severe_leak severe_bleed  severe_organ severe  warning   mild
+0             409  01nva-003-2008  2020-07-14           True                False     NaN  ...        False        False          True   True     True  False
+1             410  01nva-003-2008  2020-07-15           True                  NaN     NaN  ...        False        False         False   True     True  False
+2             411  01nva-003-2008  2020-07-16           True                  NaN   False  ...        False        False         False   True     True  False
+3             412  01nva-003-2008  2020-07-17           True                  NaN     NaN  ...        False        False         False   True     True  False
+4             415  01nva-003-2009  2020-07-28           True                 True   False  ...         True        False          True   True     True  False
+...           ...             ...         ...            ...                  ...     ...  ...          ...          ...           ...    ...      ...    ...
+35296       33914          md-994  2003-07-21          False                False     NaN  ...        False        False          True   True     True  False
+35304       33924          md-995  2003-07-22          False                False     NaN  ...        False        False          True   True     True  False
+35311       33935          md-996  2003-07-22          False                False     NaN  ...        False        False          True   True     True  False
+35321       33955          md-998  2003-07-23          False                False     NaN  ...        False        False          True   True     True  False
+35328       33966          md-999  2003-07-23          False                False     NaN  ...        False        False          True   True     True  False
+
+[19516 rows x 431 columns]
+
+Features:
+[&#39;age&#39;, &#39;weight&#39;, &#39;plt&#39;, &#39;haematocrit_percent&#39;, &#39;body_temperature&#39;]
+
+Original:
+AE(
+  (encoder): Sequential(
+    (0): Linear(in_features=5, out_features=3, bias=True)
+    (1): Sigmoid()
+    (2): Linear(in_features=3, out_features=2, bias=True)
+    (3): Sigmoid()
+  )
+  (decoder): Sequential(
+    (0): Linear(in_features=2, out_features=3, bias=True)
+    (1): Sigmoid()
+    (2): Linear(in_features=3, out_features=5, bias=True)
+    (3): Sigmoid()
+  )
+)
+
+Encoder &amp; Decoder:
+AE(
+  (encoder): Sequential(
+    (0): Linear(in_features=5, out_features=3, bias=True)
+    (1): Sigmoid()
+    (2): Linear(in_features=3, out_features=2, bias=True)
+    (3): Sigmoid()
+  )
+  (decoder): Sequential(
+    (0): Linear(in_features=2, out_features=3, bias=True)
+    (1): Sigmoid()
+    (2): Linear(in_features=3, out_features=5, bias=True)
+    (3): Sigmoid()
+  )
+)
+
+AE predictions:
+[[0.18149151 0.13353479]]
+[[0.18149151 0.13353479]]
+[[0.02911366 0.89030117]
+ [0.11158583 0.46830496]
+ [0.19075419 0.24918039]
+ [0.5017319  0.01422104]
+ [0.02911366 0.89030117]
+ [0.02911366 0.89030117]
+ [0.02911366 0.89030117]
+ [0.02911366 0.89030117]
+ [0.02911366 0.89030117]
+ [0.5017319  0.01422104]]
+
+SAE predictions:
+[[0.6052549  0.41290045]]
+[[0.58957446 0.43685725]
+ [0.5644926  0.4883661 ]
+ [0.554924   0.5079493 ]
+ [0.552785   0.52838033]
+ [0.6012582  0.41295636]
+ [0.60172284 0.41200313]
+ [0.601541   0.41237304]
+ [0.6016089  0.41223466]
+ [0.6014169  0.41262665]
+ [0.60623026 0.4184039 ]]
+C:\Users\kelda\Desktop\repositories\virtualenvs\venv-py39-oss1017\lib\site-packages\sklearn\base.py:441: UserWarning:
+
+X does not have valid feature names, but MinMaxScaler was fitted with feature names
+
+
+Pipeline predictions:
+[[0.15198551 0.7532829 ]
+ [0.15412663 0.684167  ]
+ [0.15069985 0.65018857]
+ [0.1379731  0.56179947]
+ [0.26788324 0.6923924 ]
+ [0.2565043  0.7356769 ]
+ [0.23942485 0.7403491 ]
+ [0.2361245  0.7458317 ]
+ [0.2263407  0.72031516]
+ [0.18126181 0.55919725]]
+</pre></div>
+</div>
+<div class="line-block">
+<div class="line"><br /></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="linenos">  9</span> <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="linenos"> 10</span>
+<span class="linenos"> 11</span>     <span class="c1"># Generic</span>
+<span class="linenos"> 12</span>     <span class="kn">import</span> <span class="nn">yaml</span>
+<span class="linenos"> 13</span>     <span class="kn">import</span> <span class="nn">time</span>
+<span class="linenos"> 14</span>     <span class="kn">import</span> <span class="nn">torch</span>
+<span class="linenos"> 15</span>     <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="linenos"> 16</span>     <span class="kn">import</span> <span class="nn">pprint</span>
+<span class="linenos"> 17</span>     <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="linenos"> 18</span>     <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="linenos"> 19</span>     <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="linenos"> 20</span>
+<span class="linenos"> 21</span>     <span class="c1"># Libraries</span>
+<span class="linenos"> 22</span>     <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span>     <span class="c1"># Own</span>
+<span class="linenos"> 25</span>     <span class="kn">from</span> <span class="nn">ls2d.utils</span> <span class="kn">import</span> <span class="n">_load_pickle</span>
+<span class="linenos"> 26</span>     <span class="kn">from</span> <span class="nn">ls2d.utils</span> <span class="kn">import</span> <span class="n">_dump_pickle</span>
+<span class="linenos"> 27</span>
+<span class="linenos"> 28</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 29</span>     <span class="c1"># Load config</span>
+<span class="linenos"> 30</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 31</span>     <span class="c1"># Configuration file</span>
+<span class="linenos"> 32</span>     <span class="n">YAML_PATH</span> <span class="o">=</span> <span class="s1">&#39;../datasets/dengue/settings.dengue.yaml&#39;</span>
+<span class="linenos"> 33</span>
+<span class="linenos"> 34</span>     <span class="c1"># Load configuration from file</span>
+<span class="linenos"> 35</span>     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">YAML_PATH</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+<span class="linenos"> 36</span>         <span class="n">config</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">full_load</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="linenos"> 37</span>
+<span class="linenos"> 38</span>     <span class="c1"># Variables</span>
+<span class="linenos"> 39</span>     <span class="n">FEATURES</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;features&#39;</span><span class="p">]</span>
+<span class="linenos"> 40</span>     <span class="n">DATAPATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;..&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">Path</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;filepath&#39;</span><span class="p">])</span>
+<span class="linenos"> 41</span>
+<span class="linenos"> 42</span>
+<span class="linenos"> 43</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 44</span>     <span class="c1"># Load data</span>
+<span class="linenos"> 45</span>     <span class="c1"># ------------------</span>
+<span class="linenos"> 46</span>     <span class="c1"># Load data</span>
+<span class="linenos"> 47</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">DATAPATH</span><span class="p">)</span>
+<span class="linenos"> 48</span>     <span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;any&#39;</span><span class="p">,</span> <span class="n">subset</span><span class="o">=</span><span class="n">FEATURES</span><span class="p">)</span>
+<span class="linenos"> 49</span>
+<span class="linenos"> 50</span>     <span class="c1"># Test data</span>
+<span class="linenos"> 51</span>     <span class="n">u1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span><span class="mf">2.</span><span class="p">,</span><span class="mf">3.</span><span class="p">,</span><span class="mf">4.</span><span class="p">,</span><span class="mf">5.</span><span class="p">]])</span> \
+<span class="linenos"> 52</span>         <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos"> 53</span>
+<span class="linenos"> 54</span>     <span class="n">u2</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">]</span> \
+<span class="linenos"> 55</span>             <span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> \
+<span class="linenos"> 56</span>             <span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> \
+<span class="linenos"> 57</span>             <span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="linenos"> 58</span>
+<span class="linenos"> 59</span>     <span class="c1"># Show</span>
+<span class="linenos"> 60</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Data:&quot;</span><span class="p">)</span>
+<span class="linenos"> 61</span>     <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="linenos"> 62</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Features:&quot;</span><span class="p">)</span>
+<span class="linenos"> 63</span>     <span class="nb">print</span><span class="p">(</span><span class="n">FEATURES</span><span class="p">)</span>
+<span class="linenos"> 64</span>
+<span class="linenos"> 65</span>     <span class="c1"># -------------------</span>
+<span class="linenos"> 66</span>     <span class="c1"># Create transformers</span>
+<span class="linenos"> 67</span>     <span class="c1"># -------------------</span>
+<span class="linenos"> 68</span>     <span class="c1"># Libraries</span>
+<span class="linenos"> 69</span>     <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="linenos"> 70</span>     <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="linenos"> 71</span>
+<span class="linenos"> 72</span>     <span class="c1"># Transformers</span>
+<span class="linenos"> 73</span>     <span class="n">mmx</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">])</span>
+<span class="linenos"> 74</span>     <span class="n">std</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">])</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>
+<span class="linenos"> 77</span>     <span class="c1"># ----------------------------------------</span>
+<span class="linenos"> 78</span>     <span class="c1"># Create/Load model</span>
+<span class="linenos"> 79</span>     <span class="c1"># ----------------------------------------</span>
+<span class="linenos"> 80</span>     <span class="c1"># Libraries</span>
+<span class="linenos"> 81</span>     <span class="kn">from</span> <span class="nn">ls2d.autoencoder</span> <span class="kn">import</span> <span class="n">AE</span>
+<span class="linenos"> 82</span>     <span class="kn">from</span> <span class="nn">ls2d.autoencoder</span> <span class="kn">import</span> <span class="n">SkorchAE</span>
+<span class="linenos"> 83</span>     <span class="kn">from</span> <span class="nn">ls2d.pipeline</span> <span class="kn">import</span> <span class="n">PipelineMemory</span>
+<span class="linenos"> 84</span>
+<span class="linenos"> 85</span>     <span class="c1"># Path</span>
+<span class="linenos"> 86</span>     <span class="n">PATH</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;../datasets/dengue/models&#39;</span><span class="p">)</span>
+<span class="linenos"> 87</span>
+<span class="linenos"> 88</span>     <span class="c1"># Load OLD model</span>
+<span class="linenos"> 89</span>     <span class="n">m_old</span> <span class="o">=</span> <span class="n">_load_pickle</span><span class="p">(</span><span class="n">PATH</span> <span class="o">/</span> <span class="s1">&#39;ae_sig_3&#39;</span><span class="p">)</span>
+<span class="linenos"> 90</span>
+<span class="linenos"> 91</span>
+<span class="linenos"> 92</span>
+<span class="linenos"> 93</span>     <span class="c1"># Autoencoder</span>
+<span class="linenos"> 94</span>     <span class="c1"># -----------</span>
+<span class="linenos"> 95</span>     <span class="c1"># Create</span>
+<span class="linenos"> 96</span>     <span class="n">ae</span> <span class="o">=</span> <span class="n">AE</span><span class="p">(</span><span class="n">layers</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span>     <span class="c1"># Show</span>
+<span class="linenos"> 99</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Original:&quot;</span><span class="p">)</span>
+<span class="linenos">100</span>     <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">)</span>
+<span class="linenos">101</span>
+<span class="linenos">102</span>     <span class="c1"># Set encoder and decoder</span>
+<span class="linenos">103</span>     <span class="n">ae</span><span class="o">.</span><span class="n">encoder</span> <span class="o">=</span> <span class="n">m_old</span><span class="o">.</span><span class="n">_modules</span><span class="p">[</span><span class="s1">&#39;encoder&#39;</span><span class="p">]</span>
+<span class="linenos">104</span>     <span class="n">ae</span><span class="o">.</span><span class="n">decoder</span> <span class="o">=</span> <span class="n">m_old</span><span class="o">.</span><span class="n">_modules</span><span class="p">[</span><span class="s1">&#39;decoder&#39;</span><span class="p">]</span>
+<span class="linenos">105</span>
+<span class="linenos">106</span>     <span class="c1"># Sow</span>
+<span class="linenos">107</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Encoder &amp; Decoder:&quot;</span><span class="p">)</span>
+<span class="linenos">108</span>     <span class="nb">print</span><span class="p">(</span><span class="n">ae</span><span class="p">)</span>
+<span class="linenos">109</span>
+<span class="linenos">110</span>     <span class="c1"># Predictions</span>
+<span class="linenos">111</span>     <span class="n">x1</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">encode_inputs</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span>
+<span class="linenos">112</span>     <span class="n">x2</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span>
+<span class="linenos">113</span>     <span class="n">x3</span> <span class="o">=</span> <span class="n">ae</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">u2</span><span class="p">)</span>
+<span class="linenos">114</span>
+<span class="linenos">115</span>     <span class="c1"># Show</span>
+<span class="linenos">116</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">AE predictions:&quot;</span><span class="p">)</span>
+<span class="linenos">117</span>     <span class="nb">print</span><span class="p">(</span><span class="n">x1</span><span class="p">)</span>
+<span class="linenos">118</span>     <span class="nb">print</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span>
+<span class="linenos">119</span>     <span class="nb">print</span><span class="p">(</span><span class="n">x3</span><span class="p">)</span>
+<span class="linenos">120</span>
+<span class="linenos">121</span>     <span class="c1"># Skorch</span>
+<span class="linenos">122</span>     <span class="c1"># ------</span>
+<span class="linenos">123</span>     <span class="c1"># Create</span>
+<span class="linenos">124</span>     <span class="n">sae</span> <span class="o">=</span> <span class="n">SkorchAE</span><span class="p">(</span>
+<span class="linenos">125</span>         <span class="n">module</span><span class="o">=</span><span class="n">AE</span><span class="p">,</span>
+<span class="linenos">126</span>         <span class="n">module__layers</span><span class="o">=</span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span>
+<span class="linenos">127</span>         <span class="n">criterion</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">MSELoss</span><span class="p">)</span>
+<span class="linenos">128</span>
+<span class="linenos">129</span>     <span class="c1"># Initialize</span>
+<span class="linenos">130</span>     <span class="n">sae</span> <span class="o">=</span> <span class="n">sae</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+<span class="linenos">131</span>
+<span class="linenos">132</span>     <span class="c1"># Predictions</span>
+<span class="linenos">133</span>     <span class="n">x4</span> <span class="o">=</span> <span class="n">sae</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">u1</span><span class="p">)</span>
+<span class="linenos">134</span>     <span class="n">x5</span> <span class="o">=</span> <span class="n">sae</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">u2</span><span class="p">)</span>
+<span class="linenos">135</span>
+<span class="linenos">136</span>     <span class="c1"># .. note: Why sae predictions are different than those in</span>
+<span class="linenos">137</span>     <span class="c1">#          the AE model? They also vary for each execution</span>
+<span class="linenos">138</span>     <span class="c1">#          so probably not properly initialised. Skorch is</span>
+<span class="linenos">139</span>     <span class="c1">#          not needed if the model is created manually as</span>
+<span class="linenos">140</span>     <span class="c1">#          far as AE has transform and fit.</span>
+<span class="linenos">141</span>
+<span class="linenos">142</span>     <span class="c1"># Show</span>
+<span class="linenos">143</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">SAE predictions:&quot;</span><span class="p">)</span>
+<span class="linenos">144</span>     <span class="nb">print</span><span class="p">(</span><span class="n">x4</span><span class="p">)</span>
+<span class="linenos">145</span>     <span class="nb">print</span><span class="p">(</span><span class="n">x5</span><span class="p">)</span>
+<span class="linenos">146</span>
+<span class="linenos">147</span>     <span class="c1"># Pipeline</span>
+<span class="linenos">148</span>     <span class="c1"># --------</span>
+<span class="linenos">149</span>     <span class="c1"># Create pipeline</span>
+<span class="linenos">150</span>     <span class="n">pipe</span> <span class="o">=</span> <span class="n">PipelineMemory</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="p">[</span>
+<span class="linenos">151</span>         <span class="p">(</span><span class="s1">&#39;minmax&#39;</span><span class="p">,</span> <span class="n">mmx</span><span class="p">),</span>
+<span class="linenos">152</span>         <span class="p">(</span><span class="s1">&#39;ae&#39;</span><span class="p">,</span> <span class="n">ae</span><span class="p">)</span>
+<span class="linenos">153</span>     <span class="p">])</span>
+<span class="linenos">154</span>
+<span class="linenos">155</span>     <span class="c1"># Predictions</span>
+<span class="linenos">156</span>     <span class="n">x6</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">u2</span><span class="p">)</span>
+<span class="linenos">157</span>
+<span class="linenos">158</span>     <span class="c1"># Show</span>
+<span class="linenos">159</span>     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Pipeline predictions:&quot;</span><span class="p">)</span>
+<span class="linenos">160</span>     <span class="nb">print</span><span class="p">(</span><span class="n">x6</span><span class="p">)</span>
+<span class="linenos">161</span>
+<span class="linenos">162</span>     <span class="c1"># ------------------------</span>
+<span class="linenos">163</span>     <span class="c1"># Save all</span>
+<span class="linenos">164</span>     <span class="c1"># ------------------------</span>
+<span class="linenos">165</span>     <span class="c1"># Define pipeline path</span>
+<span class="linenos">166</span>     <span class="n">uuid</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">-%H%M%S&quot;</span><span class="p">)</span>
+<span class="linenos">167</span>     <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s1">&#39;./objects&#39;</span><span class="p">)</span> <span class="o">/</span> <span class="n">uuid</span>
+<span class="linenos">168</span>
+<span class="linenos">169</span>     <span class="c1"># Create folder</span>
+<span class="linenos">170</span>     <span class="n">path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">171</span>
+<span class="linenos">172</span>     <span class="c1"># Save</span>
+<span class="linenos">173</span>     <span class="n">_dump_pickle</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;pipe.p&#39;</span><span class="p">,</span> <span class="n">pipe</span><span class="p">)</span>
+<span class="linenos">174</span>     <span class="n">_dump_pickle</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;mmx.p&#39;</span><span class="p">,</span> <span class="n">mmx</span><span class="p">)</span>
+<span class="linenos">175</span>     <span class="n">_dump_pickle</span><span class="p">(</span><span class="n">path</span> <span class="o">/</span> <span class="s1">&#39;std.p&#39;</span><span class="p">,</span> <span class="n">std</span><span class="p">)</span>
+<span class="linenos">176</span>
+<span class="linenos">177</span>     <span class="c1"># ------------------------</span>
+<span class="linenos">178</span>     <span class="c1"># Double check</span>
+<span class="linenos">179</span>     <span class="c1"># ------------------------</span>
+<span class="linenos">180</span>     <span class="c1"># Libraries</span>
+<span class="linenos">181</span>
+<span class="linenos">182</span>     <span class="c1"># Format data</span>
+<span class="linenos">183</span>     <span class="n">aux</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">copy</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">184</span>     <span class="n">aux</span> <span class="o">=</span> <span class="n">aux</span><span class="p">[</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;aggregations&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()]</span> \
+<span class="linenos">185</span>         <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;study_no&#39;</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+<span class="linenos">186</span>         <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;aggregations&#39;</span><span class="p">])</span>
+<span class="linenos">187</span>
+<span class="linenos">188</span>     <span class="c1"># Add projections</span>
+<span class="linenos">189</span>     <span class="n">aux</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">aux</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">])</span>
+<span class="linenos">190</span>     <span class="n">data</span><span class="p">[[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">FEATURES</span><span class="p">])</span>
+<span class="linenos">191</span>
+<span class="linenos">192</span>     <span class="c1"># Display</span>
+<span class="linenos">193</span>     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">194</span>     <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="linenos">195</span>     <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">aux</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">aux</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="linenos">196</span>     <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  3.525 seconds)</p>
+<div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-examples-plot-create-pipeline-dengue-py">
+<div class="sphx-glr-download sphx-glr-download-python docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/bb72c9a51245b57462dc867d064eb99d/plot_create_pipeline_dengue.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">plot_create_pipeline_dengue.py</span></code></a></p>
+</div>
+<div class="sphx-glr-download sphx-glr-download-jupyter docutils container">
+<p><a class="reference download internal" download="" href="../_downloads/ed960a370521885ac830e9ff2fae13af/plot_create_pipeline_dengue.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Jupyter</span> <span class="pre">notebook:</span> <span class="pre">plot_create_pipeline_dengue.ipynb</span></code></a></p>
+</div>
+</div>
+<p class="sphx-glr-signature"><a class="reference external" href="https://sphinx-gallery.github.io">Gallery generated by Sphinx-Gallery</a></p>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Bernard Hernandez.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
