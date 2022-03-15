@@ -17,7 +17,7 @@ Step by step tutorial.
 .. only:: html
 
  .. figure:: /_examples/images/thumb/sphx_glr_plot_check_metrics_thumb.png
-     :alt: Compute GMM metrics
+     :alt: Compute metrics
 
      :ref:`sphx_glr__examples_plot_check_metrics.py`
 
