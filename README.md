@@ -206,7 +206,9 @@ For more information, check the heroku official page
 
 Go to the docs folder and run
 
-$ make github
+```console
+    $ make github
+```
 
 This will clean the folder and thengenerate the documentation and copy it into gh-pages folder
 
