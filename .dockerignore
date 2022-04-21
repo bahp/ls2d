@@ -1,6 +1,6 @@
-outputs/dengue
+#outputs/dengue
 
-datasets/dengue
+#datasets/dengue
 datasets/covid
 datasets/fungal
 datasets/sepsis
