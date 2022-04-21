@@ -135,7 +135,7 @@ if __name__ == '__main__':
 
     # Create ellipses (shapely)
     ells_shp = [
-        create_ellipse_shapely(m, c)
+        create_ellipse_shapely(m, c, factor=1.5) # factor=2
         for m, c in zip(means, covs)]
 
     # Create ellipses (matplotlib)
@@ -145,17 +145,31 @@ if __name__ == '__main__':
 
     # Create figure
     fig, ax = plt.subplots()
-    plt.scatter(y_pred[:, 0], y_pred[:, 1], c=y)
+    plt.scatter(y_pred[:, 0], y_pred[:, 1], c=y, s=8,
+        cmap='viridis', alpha=0.75)
+
+
+    # .. note: Not working yet but the idea would be to
+    #          get the colors used during the scatter
+    #          plot and reuse the to plot the ellipses.
+    # Get colors from cycle
+    #prop_cycle = plt.rcParams['axes.prop_cycle']
+    #colors = prop_cycle.by_key()['color']
+
+    # Get colors (viridis)
+    colors = ['#fde725', '#5ec962', '#21918c', '#3b528b', '#440154']
+    colors.reverse()
 
     # Display ellipses (shapely)
-    for e in ells_shp:
+    for i,e in enumerate(ells_shp):
         verts1 = np.array(e.exterior.coords.xy)
-        patch1 = Polygon(verts1.T, color='blue', alpha=0.25)
+        patch1 = Polygon(verts1.T, color=colors[i], alpha=0.25)
         ax.add_patch(patch1)
 
     # Display ellipses (matplotlib)
-    for e in ells_mpl:
-        ax.add_artist(e)
+    #for i,e in enumerate(ells_mpl):
+    #    e.set_color(colors[i])
+    #    ax.add_artist(e)
 
     # Show
     plt.show()
