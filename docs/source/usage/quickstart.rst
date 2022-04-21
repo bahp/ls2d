@@ -36,3 +36,11 @@ Run the app using docker at https://localhost:8000 :
 
     $ docker-compose build # Build
     $ docker-compose up    # Run
+
+Notes
+-----
+
+Remember that some data has been included in the ``.dockerignore`` file so that docker does
+not load it into the image as it is sensitivity data. To see these data in the UI remember
+to comment both the dataset folder (e.g. ``datasets/dengue``) and the outputs folder (e.g.
+``outputs/dengue``).
