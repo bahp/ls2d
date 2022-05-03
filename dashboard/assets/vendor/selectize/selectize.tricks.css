@@ -1,0 +1,38 @@
+/* This CSS is used to style the selectize element. In particular
+    we are changing the background color and the text of the tags
+    so that it matches the octopus template.
+ */
+.selectize-control.multi .selectize-input [data-value] {
+    background-color: #2baab1;
+    background-image: none!important;
+    color: white;
+    font-size: 75%;
+    font-weight: bold;
+    /*line-height: 1;*/
+}
+
+.selectize-control.multi .selectize-input > div.item.active {
+    background-color: #2baab1;
+    background-image: none!important;
+    color: white;
+    font-size: 75%;
+    font-weight: bold;
+    /*line-height: 1;*/
+}
+
+/* Style selectize-input box frmo the very beginning so that
+   the load of the page seems smoother. It might be necessary
+   to re-assess what the id will be like for this type of
+   selectize inputs. and generalise.
+ */
+input[id*='id_tag'] {
+    border: 1px solid #d0d0d0;
+    padding: 8px 8px;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    box-shadow: inset 0 1px 1px rgb(0 0 0 / 10%);
+    border-radius: 3px;
+}

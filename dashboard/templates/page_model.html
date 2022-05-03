@@ -15,6 +15,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
           integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
 
+    <!-- Selectize CSS -->
+    <link rel="stylesheet" href="/assets/vendor/selectize/selectize.default.css" />
+    <link rel="stylesheet" href="/assets/vendor/selectize/selectize.css" />
+    <link rel="stylesheet" href="/assets/vendor/selectize/selectize.tricks.css" />
+
+    <!-- JQuery is a requirement -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
     <!-- Head Libs -->
     <script src="/assets/vendor/modernizr/modernizr.min.js"></script>
 
@@ -83,6 +91,7 @@
                         Loading latent space...
                     </div>
                 </div>
+
                 <div class="panel-footer">
 
                     <div id="selectK" class="mt-lg mb-lg slider-primary"
@@ -117,6 +126,13 @@
                     </p>
                 </header>
                 <div class="panel-body">
+
+                    <form action="#" method="POST">
+                        <select type="text" name="tags" placeholder="Search..."></select>
+                    </form>
+
+                    <br>
+
                     <div class="row">
 
                         <!--
@@ -278,13 +294,59 @@
 <script src="https://cdn.datatables.net/fixedcolumns/4.0.0/js/dataTables.fixedColumns.min.js"></script>
 
 
+<!-- Selectize JS -->
+<script src="/assets/vendor/selectize/selectize.js"></script>
+
 <!-- Examples -->
 <script src="/assets/custom/script/main.js"></script>
 <script src="/assets/custom/script/datatables.query.js"></script>
 <script src="/assets/custom/script/datatables.demographics.js"></script>
 <script src="/assets/custom/script/datatables.retrieved.js"></script>
 
+<script>
 
+    $(document).ready(function() {
+
+        $("select[type='text'][name='tags']").selectize({
+            options: [],
+            valueField: 'value',
+            labelField: 'text',
+            searchField: ['text'],
+            placeholder: "Search...",
+            delimiter: ',',
+            create: false,       // Create new tags
+            openOnFocus: true,  // Open dropdown on click,
+            //plugins: ["remove_button"],
+            preload: true,      // Only on load.
+            load: function (query, callback) {
+                $.ajax({
+                    url: "/api/data/",
+                    type: 'GET',
+                    error: function () {
+                        callback();
+                    },
+                    success: function (res) {
+                        // Create records
+                        var records = []
+                        for (let i = 0; i < res.ids.length; i++) {
+                          records.push({
+                              'value': res.ids[i],
+                              'text': res.text[i]
+                          })
+                        }
+                        // Feed
+                        callback(records);
+                    }
+                })
+            },
+            onChange(value) {
+                update({'points': [{ 'pointIndex': value }]})
+            }
+        });
+
+    });
+
+</script>
 
 
 {% endblock %}

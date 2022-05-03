@@ -579,52 +579,59 @@ async function main() {
 
     // Add onOnclick handle.
     document.getElementById('latentSpace')
-        .on('plotly_click', function (data) {
-
-            // Create query
-            let id = data.points[0].pointIndex;
-            let k = $("#selectK").slider("option", "value");
-            let query_url = new URL(url_knearest);
-            query_url.searchParams.append('id', id);
-            query_url.searchParams.append('k', k);
-
-            // Update interface
-            getData(query_url).then((data) => {
-
-                // Information
-                console.log("K-Nearest:", data)
-
-                // Define colors.
-                let colours = Array(N).fill(MARKER_N);
-                let sizes = Array(N).fill(2);
-                for (let i = 0; i < data.indexes.length; i++) {
-                    colours[data.indexes[i]] = MARKER_Y; //#ff7f0e
-                    sizes[data.indexes[i]] = 3;
-                }
-
-                // Update style
-                Plotly.restyle('latentSpace', 'marker.color', [colours])
-                Plotly.restyle('latentSpace', 'marker.size', [sizes])
-
-                // Remove all traces but first.
-                // Need to assign len to a variable because plt.data.length
-                // is reevaluated on every iteration and the length of it
-                // is reduced every time we delete a trace.
-                var plt = document.getElementById('latentSpace');
-                var len = plt.data.length;
-                for (var i = 1; i < len; i++) {
-                    Plotly.deleteTraces('latentSpace', 1);
-                }
-
-                // Update demographics table
-                updateDemographics(data);
-
-                // Update retrieved table
-                updateKNearestInfo(data);
-
-            });
-        });
+        .on('plotly_click', update);
 }
+
+
+function update(data, arg2) {
+
+    console.log("Data: ", data)
+    console.log("Arg2: ", arg2)
+
+    // Create query
+    let id = data.points[0].pointIndex;
+    let k = $("#selectK").slider("option", "value");
+    let query_url = new URL(url_knearest);
+    query_url.searchParams.append('id', id);
+    query_url.searchParams.append('k', k);
+
+    // Update interface
+    getData(query_url).then((data) => {
+
+        // Information
+        console.log("K-Nearest:", data)
+
+        // Define colors.
+        let colours = Array(N).fill(MARKER_N);
+        let sizes = Array(N).fill(2);
+        for (let i = 0; i < data.indexes.length; i++) {
+            colours[data.indexes[i]] = MARKER_Y; //#ff7f0e
+            sizes[data.indexes[i]] = 3;
+        }
+
+        // Update style
+        Plotly.restyle('latentSpace', 'marker.color', [colours])
+        Plotly.restyle('latentSpace', 'marker.size', [sizes])
+
+        // Remove all traces but first.
+        // Need to assign len to a variable because plt.data.length
+        // is reevaluated on every iteration and the length of it
+        // is reduced every time we delete a trace.
+        var plt = document.getElementById('latentSpace');
+        var len = plt.data.length;
+        for (var i = 1; i < len; i++) {
+            Plotly.deleteTraces('latentSpace', 1);
+        }
+
+        // Update demographics table
+        updateDemographics(data);
+
+        // Update retrieved table
+        updateKNearestInfo(data);
+
+    });
+}
+
 
 // Initialise
 main()
