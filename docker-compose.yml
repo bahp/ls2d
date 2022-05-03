@@ -9,7 +9,7 @@ services:
     build: .
     #docker-compose command: python server.py
     ports:
-      - "8000:5000"
+      - "9200:5000"
     #volumes:
     #  - /:/
     environment:
